@@ -36,4 +36,13 @@ begin
     wait for MCLK_HALF_PERIOD;
 end process;
 
-    
+stimulus : process
+A <= 00;
+    begin 
+       wait for MCLK_HALF_PERIOD; 
+       A <= 01;
+       wait for MCLK_HALF_PERIOD;
+       A <= 10;
+       wait for MCLK_HALF_PERIOD;
+       A <= 11;
+end process;
