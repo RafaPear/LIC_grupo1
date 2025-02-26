@@ -31,26 +31,26 @@ architecture test of PENC_tb is
     simulus: process
     I <= "0000";
     begin
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0001";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0010";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0100";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "1000";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "1001";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "1010";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "1100";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0101";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0110";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0111";
-        wait for MCLK_HALF_PERIOD;
+        wait for MCLK_HALF_PERIOD*3;
         I <= "0011";
     end process;
