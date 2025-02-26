@@ -28,7 +28,7 @@ architecture test of PENC_tb is
         GS => GS_TB
     );
 
-    simulus: process
+    stimulus: process
     I <= "0000";
     begin
         wait for MCLK_HALF_PERIOD*3;
