@@ -21,28 +21,31 @@ signal temp_S: in std_logic_vector(1 downto 0);
 signal temp_D: out std_logic_vector(3 downto 0);
 
 begin 
-
 -- Unit Under Test~
 UUT: Decoder port map (
     S => temp_S, 
     D => temp_D
     );
 
-clk_gen : process
-begin
-    clk_tb <= '0';
-    wait for MCLK_HALF_PERIOD*3;
-    clk_tb <= '1';
-    wait for MCLK_HALF_PERIOD*3;
-end process;
-
 stimulus : process
-S <= 00;
-    begin 
-       wait for MCLK_HALF_PERIOD*3; 
-       S <= 01;
-       wait for MCLK_HALF_PERIOD*3;
-       S <= 10;
-       wait for MCLK_HALF_PERIOD*3;
-       S <= 11;
+begin 
+    temp_S <= "00";
+    wait for MCLK_HALF_PERIOD*3;
+    assert temp_D = "0001" report "Erro: Saída incorreta para a entrada 00" severity error;
+    
+    temp_S <= "01";
+    wait for MCLK_HALF_PERIOD*3;
+    assert temp_D = "0010" report "Erro: Saída incorreta para a entrada 01" severity error;
+    
+    temp_S <= "10";
+    wait for MCLK_HALF_PERIOD*3;
+    assert temp_D = "0100" report "Erro: Saída incorreta para a entrada 10" severity error;
+    
+    temp_S <= "11";
+    wait for MCLK_HALF_PERIOD*3;
+    assert temp_D = "1000" report "Erro: Saída incorreta para a entrada 11" severity error;
+    
+    report "Testbench concluída sem erros" severity note;
+    wait;
 end process;
+end behavioral;
