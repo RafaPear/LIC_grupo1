@@ -29,28 +29,57 @@ architecture test of PENC_tb is
     );
 
     stimulus: process
-    I <= "0000";
     begin
-        wait for MCLK_HALF_PERIOD;
-        I <= "0001";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0010";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0100";
-        wait for MCLK_HALF_PERIOD;
-        I <= "1000";
-        wait for MCLK_HALF_PERIOD;
-        I <= "1001";
-        wait for MCLK_HALF_PERIOD;
-        I <= "1010";
-        wait for MCLK_HALF_PERIOD;
-        I <= "1100";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0101";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0110";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0111";
-        wait for MCLK_HALF_PERIOD;
-        I <= "0011";
+        I_TB <= "0000";
+        wait for MCLK_HALF_PERIOD*3;
+        assert GS_TB = '0' report "Erro: GS deveria ser 0 para entrada 0000" severity error;
+        
+        I_TB <= "0001";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "00" report "Erro: Saída incorreta para entrada 0001" severity error;
+        
+        I_TB <= "0010";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "01" report "Erro: Saída incorreta para entrada 0010" severity error;
+        
+        I_TB <= "0100";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "10" report "Erro: Saída incorreta para entrada 0100" severity error;
+        
+        I_TB <= "1000";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "11" report "Erro: Saída incorreta para entrada 1000" severity error;
+        
+        I_TB <= "1001";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "11" report "Erro: Saída incorreta para entrada 1001" severity error;
+        
+        I_TB <= "1010";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "11" report "Erro: Saída incorreta para entrada 1010" severity error;
+        
+        I_TB <= "1100";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "11" report "Erro: Saída incorreta para entrada 1100" severity error;
+        
+        I_TB <= "0101";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "10" report "Erro: Saída incorreta para entrada 0101" severity error;
+        
+        I_TB <= "0110";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "10" report "Erro: Saída incorreta para entrada 0110" severity error;
+        
+        I_TB <= "0111";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "10" report "Erro: Saída incorreta para entrada 0111" severity error;
+        
+        I_TB <= "0011";
+        wait for MCLK_HALF_PERIOD*3;
+        assert Y_TB = "01" report "Erro: Saída incorreta para entrada 0011" severity error;
+
+        report "Testbench concluído sem erros" severity note;
+        wait;
     end process;
+end test;
+
