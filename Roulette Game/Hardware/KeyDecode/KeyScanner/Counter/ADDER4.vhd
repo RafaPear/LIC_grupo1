@@ -22,13 +22,13 @@ component fulladder
 	);
 end component;
 
-signal C1, C2: std_logic;
+signal C1: std_logic;
 
 begin 
 	FA0: fulladder port map (
 		A => A(0), 
 		B => B(0), 
-		Cin => C0, 
+		Cin => CIN, 
 		R => S(0), 
 		Cout => C1
 	);
@@ -38,6 +38,6 @@ begin
 		B => B(1), 
 		Cin => C1, 
 		R => S(1), 
-		Cout => C2
+		Cout => COUT
 	);
 end arch_adder;		

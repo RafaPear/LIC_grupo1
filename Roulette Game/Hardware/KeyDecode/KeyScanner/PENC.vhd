@@ -13,5 +13,5 @@ architecture arc_penc of PENC is
     begin
       GS <= I(0) or I(1) or I(2) or I(3);
       Y(1) <= I(3) or I(2);
-      Y(0) <= I(3) or (not I(2) and I(1))
+      Y(0) <= I(3) or (not I(2) and I(1));
 end arc_penc;

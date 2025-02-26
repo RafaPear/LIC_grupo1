@@ -1,0 +1,88 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity KeyScan is
+    port(
+        CLK: in std_logic;
+        RESET: in std_logic;
+        Kscan: in std_logic;
+        LIN: in std_logic_vector(3 downto 0);
+        COL: out std_logic_vector(3 downto 0);
+        K: out std_logic_vector(3 downto 0);
+        Kpress: out std_logic
+    );
+end KeyScan;
+
+architecture arch_KeyScan of KeyScan is
+    
+    component Counter is
+        port(
+            RESET: in std_logic;
+            CE: in std_logic;
+            CLK: in std_logic;
+            Q: out std_logic_vector(1 downto 0)
+        );
+    end component;
+    
+    component REG2 is
+        port(	
+            D: in std_logic_vector(1 downto 0);
+            RESET: in std_logic;
+            SET: in std_logic;
+            EN: in std_logic;
+            CLK: in std_logic;
+            Q: out std_logic_vector(1 downto 0)
+        );
+    end component;
+    
+    component Decoder is
+        port(
+            A : in std_logic_vector(1 downto 0);
+            D : out std_logic_vector(3 downto 0)
+        );
+    end component;
+
+    component PENC is
+        port (
+            I: in std_logic_vector (3 downto 0);
+            Y: out std_logic_vector (1 downto 0);
+            GS: out std_logic
+        );
+    end component;
+
+    signal temp_column, not_LIN: std_logic_vector(3 downto 0);
+    signal temp_Q,temp_Y: std_logic_vector(1 downto 0);
+    
+begin
+    not_LIN <= not LIN;
+   
+    Counter_inst: Counter port map(
+        RESET => RESET,
+        CE => Kscan,
+        CLK => CLK,
+        Q => temp_Q
+    );
+    REG2_inst: REG2 port map(
+        D => temp_Y,
+        RESET => RESET,
+        SET => '1',
+        EN => '1',
+        CLK => Kscan,
+        Q(0) => K(0),
+        Q(1) => K(1)
+    );
+
+    Decoder_inst: Decoder port map(
+        A => temp_Q,
+        D => temp_column
+    );
+    PENC_inst: PENC port map(
+        I => not_LIN,
+        Y => temp_Y,
+        GS => Kpress
+    );
+
+    K(2) <= temp_Q(0);
+    K(3) <= temp_Q(1);
+    COL <= not temp_column;
+end arch_KeyScan;
