@@ -62,4 +62,4 @@ java -jar jogo-roleta.jar
 Este projeto é de uso educacional e não possui uma licença específica. Caso pretenda utilizá-lo ou modificá-lo, cite a fonte original.
 
 ---
-🚀 Desenvolvido para o **Laboratório de Informática e Computadores - 2024/2025**
+🚀 Desenvolvido para o **Laboratório de Informática e Computadores - 2024/2025** 
