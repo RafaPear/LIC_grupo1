@@ -8,15 +8,15 @@ LIN[0] => PENC:PENC_inst.I[0]
 LIN[1] => PENC:PENC_inst.I[1]
 LIN[2] => PENC:PENC_inst.I[2]
 LIN[3] => PENC:PENC_inst.I[3]
-COL[0] << Decoder:Decoder_inst.D[0]
-COL[1] << Decoder:Decoder_inst.D[1]
-COL[2] << Decoder:Decoder_inst.D[2]
-COL[3] << Decoder:Decoder_inst.D[3]
-K[0] << REG2:REG2_inst.Q[0]
-K[1] << REG2:REG2_inst.Q[1]
-K[2] << Counter:Counter_inst.Q[0]
-K[3] << Counter:Counter_inst.Q[1]
-Kpress << PENC:PENC_inst.GS
+COL[0] <= Decoder:Decoder_inst.D[0]
+COL[1] <= Decoder:Decoder_inst.D[1]
+COL[2] <= Decoder:Decoder_inst.D[2]
+COL[3] <= Decoder:Decoder_inst.D[3]
+K[0] <= REG2:REG2_inst.Q[0]
+K[1] <= REG2:REG2_inst.Q[1]
+K[2] <= Counter:Counter_inst.Q[0]
+K[3] <= Counter:Counter_inst.Q[1]
+Kpress <= PENC:PENC_inst.GS
 
 
 |KeyScan|Counter:Counter_inst
@@ -131,14 +131,14 @@ Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
 |KeyScan|DECODER:Decoder_inst
-A[0] => D.IN0
-A[0] => D.IN0
-A[0] => D.IN0
-A[0] => D.IN0
-A[1] => D.IN1
-A[1] => D.IN1
-A[1] => D.IN1
-A[1] => D.IN1
+S[0] => D.IN0
+S[0] => D.IN0
+S[0] => D.IN0
+S[0] => D.IN0
+S[1] => D.IN1
+S[1] => D.IN1
+S[1] => D.IN1
+S[1] => D.IN1
 D[0] <= D.DB_MAX_OUTPUT_PORT_TYPE
 D[1] <= D.DB_MAX_OUTPUT_PORT_TYPE
 D[2] <= D.DB_MAX_OUTPUT_PORT_TYPE

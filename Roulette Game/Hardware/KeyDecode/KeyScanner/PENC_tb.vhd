@@ -1,84 +1,107 @@
-library ieee;
-use ieee.std_logic_1164.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
 
-entity PENC_tb is
-end PENC_tb;
+ENTITY PENC_tb IS
+END PENC_tb;
 
-architecture test of PENC_tb is
-    component PENC
-        port (
-            I: in std_logic_vector (3 downto 0);
-            Y: out std_logic_vector (1 downto 0);
-            GS: out std_logic
+ARCHITECTURE test OF PENC_tb IS
+    COMPONENT PENC
+        PORT (
+            I : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
+            Y : OUT STD_LOGIC_VECTOR (1 DOWNTO 0);
+            GS : OUT STD_LOGIC
         );
-    end component;
+    END COMPONENT;
 
-    constant MCLK_PERIOD: time := 20 ns;
-    constant MCLK_HALF_PERIOD: time := MCLK_PERIOD / 2;
+    CONSTANT MCLK_PERIOD : TIME := 20 ns;
+    CONSTANT MCLK_HALF_PERIOD : TIME := MCLK_PERIOD / 2;
 
-    signal I_TB: std_logic_vector (3 downto 0);
-    signal Y_TB: std_logic_vector (1 downto 0);
-    signal GS_TB: std_logic;
+    SIGNAL I_TB : STD_LOGIC_VECTOR (3 DOWNTO 0);
+    SIGNAL Y_TB : STD_LOGIC_VECTOR (1 DOWNTO 0);
+    SIGNAL GS_TB : STD_LOGIC;
 
-    begin 
-    
-    UUT: PENC port map (
+BEGIN
+
+    UUT : PENC PORT MAP(
         I => I_TB,
-        Y => Y_TB, 
+        Y => Y_TB,
         GS => GS_TB
     );
 
-    stimulus: process
-    I <= "0000";
-    assert (GS_TB = '0') report "Error: GS_TB = 1" severity error;
-    begin
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0001";
-        assert (Y_TB = "00") report "Error: Y_TB != 00" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0010";
-        assert (Y_TB = "01") report "Error: Y_TB != 01" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0100";
-        assert (Y_TB = "10") report "Error: Y_TB != 10" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "1000";
-        assert (Y_TB = "11") report "Error: Y_TB != 11" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "1001";
-        assert (Y_TB = "11") report "Error: Y_TB != 11" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "1010";
-        assert (Y_TB = "11") report "Error: Y_TB != 11" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "1100";
-        assert (Y_TB = "11") report "Error: Y_TB != 11" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0101";
-        assert (Y_TB = "10") report "Error: Y_TB != 10" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0110";
-        assert (Y_TB = "10") report "Error: Y_TB != 10" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0111";
-        assert (Y_TB = "10") report "Error: Y_TB != 10" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
-        wait for MCLK_HALF_PERIOD*3;
-        I <= "0011";
-        assert (Y_TB = "01") report "Error: Y_TB != 01" severity error;
-        assert (GS_TB = '1') report "Error: GS_TB = 0" severity error;
+    stimulus : PROCESS
+    BEGIN
         I_TB <= "0000";
-        wait;
-        report "Testbench concluÃ­do sem erros" severity note;
-    end process;
-end test;
+        WAIT FOR 10 ns;
+        ASSERT (GS_TB = '0') REPORT "Error: GS_TB = 1" SEVERITY error;
 
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0001";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "00") REPORT "Error: Y_TB /= 00" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0010";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "01") REPORT "Error: Y_TB /= 01" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0100";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "10") REPORT "Error: Y_TB /= 10" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "1000";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "11") REPORT "Error: Y_TB /= 11" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "1001";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "11") REPORT "Error: Y_TB /= 11" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "1010";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "11") REPORT "Error: Y_TB /= 11" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "1100";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "11") REPORT "Error: Y_TB /= 11" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0101";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "10") REPORT "Error: Y_TB /= 10" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0110";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "10") REPORT "Error: Y_TB /= 10" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0111";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "10") REPORT "Error: Y_TB /= 10" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        WAIT FOR MCLK_HALF_PERIOD * 3;
+        I_TB <= "0011";
+        WAIT FOR 10 ns;
+        ASSERT (Y_TB = "01") REPORT "Error: Y_TB /= 01" SEVERITY error;
+        ASSERT (GS_TB = '1') REPORT "Error: GS_TB = 0" SEVERITY error;
+
+        I_TB <= "0000";
+        WAIT;
+        REPORT "Testbench concluído sem erros" SEVERITY note;
+    END PROCESS;
+END test;
