@@ -76,4 +76,9 @@ architecture test of PENC_tb is
         I <= "0011";
         assert (Y_TB != "01") report "Error: Y_TB != 01" severity error;
         assert (GS_TB = '0') report "Error: GS_TB = 0" severity error;
+        I_TB <= "0000";
+        wait;
+        report "Testbench concluído sem erros" severity note;
     end process;
+end test;
+
