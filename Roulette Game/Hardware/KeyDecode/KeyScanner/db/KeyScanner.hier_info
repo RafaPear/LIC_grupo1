@@ -8,15 +8,15 @@ LIN[0] => PENC:PENC_inst.I[0]
 LIN[1] => PENC:PENC_inst.I[1]
 LIN[2] => PENC:PENC_inst.I[2]
 LIN[3] => PENC:PENC_inst.I[3]
-COL[0] <= Decoder:Decoder_inst.D[0]
-COL[1] <= Decoder:Decoder_inst.D[1]
-COL[2] <= Decoder:Decoder_inst.D[2]
-COL[3] <= Decoder:Decoder_inst.D[3]
-K[0] <= REG2:REG2_inst.Q[0]
-K[1] <= REG2:REG2_inst.Q[1]
-K[2] <= Counter:Counter_inst.Q[0]
-K[3] <= Counter:Counter_inst.Q[1]
-Kpress <= PENC:PENC_inst.GS
+COL[0] << Decoder:Decoder_inst.D[0]
+COL[1] << Decoder:Decoder_inst.D[1]
+COL[2] << Decoder:Decoder_inst.D[2]
+COL[3] << Decoder:Decoder_inst.D[3]
+K[0] << REG2:REG2_inst.Q[0]
+K[1] << REG2:REG2_inst.Q[1]
+K[2] << Counter:Counter_inst.Q[0]
+K[3] << Counter:Counter_inst.Q[1]
+Kpress << PENC:PENC_inst.GS
 
 
 |KeyScan|Counter:Counter_inst

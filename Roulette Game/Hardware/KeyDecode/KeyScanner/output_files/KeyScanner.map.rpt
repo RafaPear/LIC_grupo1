@@ -1,5 +1,5 @@
 Analysis & Elaboration report for KeyScanner
-Wed Feb 26 20:26:36 2025
+Thu Feb 27 18:40:16 2025
 Quartus Prime Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
 
 
@@ -40,7 +40,7 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Analysis & Elaboration Summary                                                   ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Elaboration Status      ; Successful - Wed Feb 26 20:26:36 2025       ;
+; Analysis & Elaboration Status      ; Successful - Thu Feb 27 18:40:16 2025       ;
 ; Quartus Prime Version              ; 19.1.0 Build 670 09/22/2019 SJ Lite Edition ;
 ; Revision Name                      ; KeyScanner                                  ;
 ; Top-level Entity Name              ; KeyScan                                     ;
@@ -64,8 +64,8 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 12          ;
-; Maximum allowed            ; 6           ;
+; Number detected on machine ; 16          ;
+; Maximum allowed            ; 16          ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
 ; Maximum used               ; 1           ;
@@ -198,46 +198,46 @@ https://fpgasoftware.intel.com/eula.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Elaboration
     Info: Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
-    Info: Processing started: Wed Feb 26 20:26:28 2025
+    Info: Processing started: Thu Feb 27 18:40:09 2025
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off KeyScanner -c KeyScanner --analysis_and_elaboration
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
-Info (20030): Parallel compilation is enabled and will use 6 of the 6 processors detected
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
 Info (12021): Found 2 design units, including 1 entities, in source file keyscan.vhd
-    Info (12022): Found design unit 1: KeyScan-arch_KeyScan File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 16
-    Info (12023): Found entity 1: KeyScan File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 4
+    Info (12022): Found design unit 1: KeyScan-arch_KeyScan File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 16
+    Info (12023): Found entity 1: KeyScan File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file counter/reg2.vhd
-    Info (12022): Found design unit 1: Reg2-arc_reg2 File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 15
-    Info (12023): Found entity 1: Reg2 File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 4
+    Info (12022): Found design unit 1: Reg2-arc_reg2 File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 15
+    Info (12023): Found entity 1: Reg2 File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file counter/fulladder.vhd
-    Info (12022): Found design unit 1: FULLADDER-logicfulladder File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FULLADDER.vhd Line: 14
-    Info (12023): Found entity 1: FULLADDER File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FULLADDER.vhd Line: 4
+    Info (12022): Found design unit 1: FULLADDER-logicfulladder File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FULLADDER.vhd Line: 14
+    Info (12023): Found entity 1: FULLADDER File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FULLADDER.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file counter/ffd.vhd
-    Info (12022): Found design unit 1: FFD-logicFunction File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FFD.vhd Line: 15
-    Info (12023): Found entity 1: FFD File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FFD.vhd Line: 4
+    Info (12022): Found design unit 1: FFD-logicFunction File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FFD.vhd Line: 15
+    Info (12023): Found entity 1: FFD File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/FFD.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file counter/counter.vhd
-    Info (12022): Found design unit 1: Counter-arc_counter File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 13
-    Info (12023): Found entity 1: Counter File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 4
+    Info (12022): Found design unit 1: Counter-arc_counter File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 13
+    Info (12023): Found entity 1: Counter File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file counter/adder4.vhd
-    Info (12022): Found design unit 1: ADDER2-arch_adder File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 14
-    Info (12023): Found entity 1: ADDER2 File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 4
+    Info (12022): Found design unit 1: ADDER2-arch_adder File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 14
+    Info (12023): Found entity 1: ADDER2 File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file penc.vhd
-    Info (12022): Found design unit 1: PENC-arc_penc File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/PENC.vhd Line: 12
-    Info (12023): Found entity 1: PENC File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/PENC.vhd Line: 4
+    Info (12022): Found design unit 1: PENC-arc_penc File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/PENC.vhd Line: 12
+    Info (12023): Found entity 1: PENC File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/PENC.vhd Line: 4
 Info (12021): Found 2 design units, including 1 entities, in source file decoder.vhd
-    Info (12022): Found design unit 1: DECODER-arch_decoder File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Decoder.vhd Line: 11
-    Info (12023): Found entity 1: DECODER File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Decoder.vhd Line: 4
+    Info (12022): Found design unit 1: DECODER-arch_decoder File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Decoder.vhd Line: 11
+    Info (12023): Found entity 1: DECODER File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Decoder.vhd Line: 4
 Info (12127): Elaborating entity "KeyScan" for the top level hierarchy
-Info (12128): Elaborating entity "Counter" for hierarchy "Counter:Counter_inst" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 59
-Info (12128): Elaborating entity "ADDER2" for hierarchy "Counter:Counter_inst|ADDER2:ADDER2_inst" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 40
-Info (12128): Elaborating entity "FULLADDER" for hierarchy "Counter:Counter_inst|ADDER2:ADDER2_inst|FULLADDER:FA0" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 28
-Info (12128): Elaborating entity "Reg2" for hierarchy "Counter:Counter_inst|Reg2:REG2_inst" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 48
-Info (12128): Elaborating entity "FFD" for hierarchy "Counter:Counter_inst|Reg2:REG2_inst|FFD:UFFD9" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 29
-Info (12128): Elaborating entity "DECODER" for hierarchy "DECODER:Decoder_inst" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 75
-Info (12128): Elaborating entity "PENC" for hierarchy "PENC:PENC_inst" File: C:/Users/ianfr/OneDrive/Ambiente de Trabalho/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 79
+Info (12128): Elaborating entity "Counter" for hierarchy "Counter:Counter_inst" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 59
+Info (12128): Elaborating entity "ADDER2" for hierarchy "Counter:Counter_inst|ADDER2:ADDER2_inst" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 40
+Info (12128): Elaborating entity "FULLADDER" for hierarchy "Counter:Counter_inst|ADDER2:ADDER2_inst|FULLADDER:FA0" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/ADDER4.vhd Line: 28
+Info (12128): Elaborating entity "Reg2" for hierarchy "Counter:Counter_inst|Reg2:REG2_inst" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Counter.vhd Line: 48
+Info (12128): Elaborating entity "FFD" for hierarchy "Counter:Counter_inst|Reg2:REG2_inst|FFD:UFFD9" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/Counter/Reg2.vhd Line: 29
+Info (12128): Elaborating entity "DECODER" for hierarchy "DECODER:Decoder_inst" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 75
+Info (12128): Elaborating entity "PENC" for hierarchy "PENC:PENC_inst" File: C:/Users/gusta/Desktop/LIC/LIC_grupo1/Roulette Game/Hardware/KeyDecode/KeyScanner/KeyScan.vhd Line: 79
 Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4779 megabytes
-    Info: Processing ended: Wed Feb 26 20:26:36 2025
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:15
+    Info: Peak virtual memory: 4788 megabytes
+    Info: Processing ended: Thu Feb 27 18:40:16 2025
+    Info: Elapsed time: 00:00:07
+    Info: Total CPU time (on all processors): 00:00:10
 
 

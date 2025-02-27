@@ -31,21 +31,21 @@ stimulus : process
 begin 
     S_tb <= "00";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0001" report "Erro: Saída incorreta para a entrada 00" severity error;
+    assert D_tb = "0001" report "Erro: SaÃ­da incorreta para a entrada 00" severity error;
     
     S_tb <= "01";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0010" report "Erro: Saída incorreta para a entrada 01" severity error;
+    assert D_tb = "0010" report "Erro: SaÃ­da incorreta para a entrada 01" severity error;
     
     S_tb <= "10";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0100" report "Erro: Saída incorreta para a entrada 10" severity error;
+    assert D_tb = "0100" report "Erro: SaÃ­da incorreta para a entrada 10" severity error;
     
     S_tb <= "11";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "1000" report "Erro: Saída incorreta para a entrada 11" severity error;
+    assert D_tb = "1000" report "Erro: SaÃ­da incorreta para a entrada 11" severity error;
     
-    report "Testbench conclída sem erros" severity note;
+    report "Testbench concluÃ­da sem erros" severity note;
     wait;
 end process;
 end behavioral;

@@ -1,5 +1,5 @@
 Flow report for KeyScanner
-Wed Feb 26 20:26:36 2025
+Thu Feb 27 18:40:16 2025
 Quartus Prime Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
 
 
@@ -41,7 +41,7 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Wed Feb 26 20:26:36 2025       ;
+; Flow Status                        ; Successful - Thu Feb 27 18:40:16 2025       ;
 ; Quartus Prime Version              ; 19.1.0 Build 670 09/22/2019 SJ Lite Edition ;
 ; Revision Name                      ; KeyScanner                                  ;
 ; Top-level Entity Name              ; KeyScan                                     ;
@@ -67,7 +67,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/26/2025 20:26:28 ;
+; Start date & time ; 02/27/2025 18:40:09 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; KeyScanner          ;
 +-------------------+---------------------+
@@ -78,7 +78,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 215519982678383.174060158817500        ; --            ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 213533729703551.174068160918948        ; --            ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_signal_integrity ;
@@ -103,18 +103,18 @@ https://fpgasoftware.intel.com/eula.
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name            ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Elaboration ; 00:00:08     ; 1.0                     ; 4779 MB             ; 00:00:15                           ;
-; Total                  ; 00:00:08     ; --                      ; --                  ; 00:00:15                           ;
+; Analysis & Elaboration ; 00:00:07     ; 1.0                     ; 4788 MB             ; 00:00:10                           ;
+; Total                  ; 00:00:07     ; --                      ; --                  ; 00:00:10                           ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
-+--------------------------------------------------------------------------------------+
-; Flow OS Summary                                                                      ;
-+------------------------+------------------+------------+------------+----------------+
-; Module Name            ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
-+------------------------+------------------+------------+------------+----------------+
-; Analysis & Elaboration ; IanBonito        ; Windows 10 ; 10.0       ; x86_64         ;
-+------------------------+------------------+------------+------------+----------------+
++-------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                     ;
++------------------------+------------------+-----------+------------+----------------+
+; Module Name            ; Machine Hostname ; OS Name   ; OS Version ; Processor type ;
++------------------------+------------------+-----------+------------+----------------+
+; Analysis & Elaboration ; GustavoCosta     ; Windows 8 ; 6.2        ; x86_64         ;
++------------------------+------------------+-----------+------------+----------------+
 
 
 ------------
