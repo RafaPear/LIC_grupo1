@@ -50,7 +50,7 @@ architecture arch_KeyScan of KeyScan is
         );
     end component;
 
-    signal temp_column, not_LIN: std_logic_vector(3 downto 0);
+    signal temp_COL, not_LIN: std_logic_vector(3 downto 0);
     signal temp_Q,temp_Y: std_logic_vector(1 downto 0);
     
 begin
@@ -62,6 +62,7 @@ begin
         CLK => CLK,
         Q => temp_Q
     );
+    
     REG2_inst: REG2 port map(
         D => temp_Y,
         RESET => RESET,
@@ -74,8 +75,9 @@ begin
 
     Decoder_inst: Decoder port map(
         A => temp_Q,
-        D => temp_column
+        D => temp_COL
     );
+
     PENC_inst: PENC port map(
         I => not_LIN,
         Y => temp_Y,
@@ -84,5 +86,5 @@ begin
 
     K(2) <= temp_Q(0);
     K(3) <= temp_Q(1);
-    COL <= not temp_column;
+    COL <= not temp_COL;
 end arch_KeyScan;
