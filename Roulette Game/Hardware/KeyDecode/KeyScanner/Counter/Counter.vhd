@@ -38,9 +38,9 @@ signal temp_Q: std_logic_vector(1 downto 0);
 begin
 
     ADDER2_inst: ADDER2 port map(
-        A => "01",
+        A => "00",
         B => temp_Q,
-        CIN => '0',
+        CIN => '1',
         S => temp_S,
         COUT => open
     );
@@ -48,7 +48,7 @@ begin
     REG2_inst: REG2 port map(
         D => temp_S,
         RESET => RESET,
-        SET => '1',
+        SET => '0',
         EN => CE,
         CLK => CLK,
         Q => temp_Q

@@ -37,8 +37,8 @@ architecture arch_KeyScan of KeyScan is
     
     component Decoder is
         port(
-            S : in std_logic_vector(1 downto 0);
-            D : out std_logic_vector(3 downto 0)
+            S: in std_logic_vector(1 downto 0);
+            D: out std_logic_vector(3 downto 0)
         );
     end component;
 
@@ -74,7 +74,7 @@ begin
     );
 
     Decoder_inst: Decoder port map(
-        A => temp_Q,
+        S => temp_Q,
         D => temp_COL
     );
 
