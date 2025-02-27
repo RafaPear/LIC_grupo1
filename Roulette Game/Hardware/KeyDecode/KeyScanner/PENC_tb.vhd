@@ -102,6 +102,6 @@ BEGIN
 
         I_TB <= "0000";
         WAIT;
-        REPORT "Testbench concluído sem erros" SEVERITY note;
+        REPORT "Testbench concluï¿½do sem erros" SEVERITY note;
     END PROCESS;
 END test;
