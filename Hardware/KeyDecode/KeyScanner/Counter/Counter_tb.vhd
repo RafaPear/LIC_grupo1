@@ -45,17 +45,33 @@ stimulus: process
 begin 
     -- Reset Counter
     RESET_tb <= '1';
-    CE_tb <= '0';
-    wait for MCLK_PERIOD*2;
-
-    -- Assert Counter
-    Assert Q_tb = "00" report "Counter failed to initialize" 
-    severity error;
+    CE_tb <= '0';    
+    wait for MCLK_PERIOD;
 
     -- Enable Counter
     RESET_tb <= '0';
     CE_tb <= '1';
-    wait for MCLK_PERIOD*2;
 
+    assert Q_tb = "00" report "Counter failed to initialize" severity failure;
+    report "Counter initialized successfully" severity note;
+    wait for MCLK_PERIOD;
+
+    -- Did increment from 00 to 01?
+    assert Q_tb = "01" report "Counter failed to count from 00 to 01" severity failure;
+    wait for MCLK_PERIOD;
+
+    -- Did increment from 01 to 10?
+    assert Q_tb = "10" report "Counter failed to count from 01 to 10" severity failure;
+    wait for MCLK_PERIOD;
+
+    -- Did increment from 10 to 11?
+    assert Q_tb = "11" report "Counter failed to count from 10 to 11" severity failure;
+    wait for MCLK_PERIOD;
+
+    -- Did increment from 11 to 00?
+    assert Q_tb = "00" report "Counter failed to count from 11 to 00" severity failure;
+    report "UUT Counter passed" severity note;
+    wait for MCLK_PERIOD;
     wait;
-end process;
+end process stimulus;
+end architecture behavioral;

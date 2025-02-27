@@ -31,21 +31,23 @@ stimulus : process
 begin 
     S_tb <= "00";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0001" report "Erro: Saída incorreta para a entrada 00" severity error;
+    assert D_tb = "0001" report "D_tb should be equal to 00" severity failure;
     
     S_tb <= "01";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0010" report "Erro: Saída incorreta para a entrada 01" severity error;
+    assert D_tb = "0010" report "D_tb should be equal to 01" severity failure;
     
     S_tb <= "10";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "0100" report "Erro: Saída incorreta para a entrada 10" severity error;
+    assert D_tb = "0100" report "D_tb should be equal to 10" severity failure;
     
     S_tb <= "11";
     wait for MCLK_HALF_PERIOD*3;
-    assert D_tb = "1000" report "Erro: Saída incorreta para a entrada 11" severity error;
+    assert D_tb = "1000" report "D_tb should be equal to 11" severity failure;
     
-    report "Testbench conclída sem erros" severity note;
+    report "UUT Decoder passed" severity note;
+
+    wait for MCLK_HALF_PERIOD;
     wait;
-end process;
-end behavioral;
+end process stimulus;
+end architecture behavioral;
