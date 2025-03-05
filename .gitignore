@@ -4,3 +4,5 @@ Hardware/KeyDecode/KeyScanner/PENC_tb.vhd.bak
 Hardware/KeyDecode/KeyScanner/db/
 Hardware/KeyDecode/KeyScanner/output_files/
 Hardware/KeyDecode/KeyScanner/simulation/
+Hardware/KeyDecode/KeyControl/output_files
+Hardware/KeyDecode/KeyControl/db
