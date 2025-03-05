@@ -1,6 +1,9 @@
 **/db
 **/output_files
 **/simulation
+**/devkits
+**/incremental_db
 **/*.bak
 **/*.rpt
-**/incremental_db
+**/*.done
+**/*.summary

@@ -1,5 +1,5 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
 
 entity KScan_tb is
 end KScan_tb;
@@ -15,8 +15,8 @@ architecture behavioral of KScan_tb is
         );
     end component;
 
-    constant MCLK_PERIOD : time := 20 ns;
-    constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
+    constant MCLK_PERIOD: time := 20 ns;
+    constant MCLK_HALF_PERIOD: time := MCLK_PERIOD / 2;
 
     signal CLK_tb: std_logic;
     signal RESET_tb: std_logic;
@@ -77,6 +77,6 @@ begin
 
         LIN_tb <= "1111";
         
-	    wait for MCLK_HALF_PERIOD / 2;
+	    \wait for MCLK_HALF_PERIOD / 2;
     end process;
 end behavioral;

@@ -15,7 +15,7 @@ entity KeyControl is
 end KeyControl;
 
 architecture behavioral of KeyControl is
-    signal state, next_state : std_logic;
+    signal state, next_state: std_logic;
     
 begin
     process (clk, rst)

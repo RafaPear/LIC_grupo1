@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C6GES
-set_global_assignment -name TOP_LEVEL_ENTITY KeyControl
+set_global_assignment -name TOP_LEVEL_entity KeyControl
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 19.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:31:23  MARCH 05, 2025"
 set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
