@@ -47,8 +47,6 @@ begin
                 else
                     next_state <= '1';
                 end if;
-	     when others =>
-		next_state <= '0';
         end case;
     end process;
 end behavioral;
