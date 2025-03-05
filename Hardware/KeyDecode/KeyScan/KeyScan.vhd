@@ -4,10 +4,11 @@ use ieee.std_logic_1164.all;
 entity KeyScan is
     port(
         CLK: in std_logic;
-        CLK2: in std_logic;
         RESET: in std_logic;
+        Kscan: in std_logic;
         LIN: in std_logic_vector(3 downto 0);
         COL: out std_logic_vector(3 downto 0);
+        Kpress: out std_logic;
         K: out std_logic_vector(3 downto 0)
     );
 end KeyScan;
@@ -41,14 +42,6 @@ architecture arch_KeyScan of KeyScan is
         );
     end component;
 
-    component PulseSignal is
-        port (
-		    A: in std_logic;
-            CLK: in std_logic;
-		    S: out std_logic
-	    );
-    end component;
-
     component PENC is
         port (
             I: in std_logic_vector (3 downto 0);
@@ -58,18 +51,13 @@ architecture arch_KeyScan of KeyScan is
     end component;
 
     signal temp_COL, not_LIN: std_logic_vector(3 downto 0);
-    signal temp_Q,temp_Y: std_logic_vector(1 downto 0);
-
-    signal temp_GS, temp_not_GS, temp_pulsed, temp_not_pulsed: std_logic;
-    
+    signal temp_Q, temp_Y: std_logic_vector(1 downto 0);    
 begin
     not_LIN <= not LIN;
-    temp_not_GS <= not temp_GS;
-    temp_not_pulsed <= not temp_pulsed;
    
     Counter_inst: Counter port map(
         RESET => RESET,
-        CE => temp_not_GS,
+        CE => Kscan,
         CLK => CLK,
         Q => temp_Q
     );
@@ -79,7 +67,7 @@ begin
         RESET => RESET,
         SET => '0',
         EN => '1',
-        CLK => temp_not_pulsed,
+        CLK => Kscan,
         Q(0) => K(2),
         Q(1) => K(3)
     );
@@ -89,16 +77,10 @@ begin
         D => temp_COL
     );
 
-    PulseSignal_inst: PulseSignal port map(
-        A => temp_GS,
-        CLK => CLK2,
-        S => temp_pulsed
-    );
-
     PENC_inst: PENC port map(
         I => not_LIN,
         Y => temp_Y,
-        GS => temp_GS
+        GS => Kpress
     );
 
     K(0) <= temp_Q(0);

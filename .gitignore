@@ -1,8 +1,8 @@
-Hardware/KeyDecode/KeyScanner/KeyScanner_nativelink_simulation.rpt
-Hardware/KeyDecode/KeyScanner/KeyScanner.qws
-Hardware/KeyDecode/KeyScanner/PENC_tb.vhd.bak
-Hardware/KeyDecode/KeyScanner/db/
-Hardware/KeyDecode/KeyScanner/output_files/
-Hardware/KeyDecode/KeyScanner/simulation/
+Hardware/KeyDecode/KeyScan/KeyScan_nativelink_simulation.rpt
+Hardware/KeyDecode/KeyScan/KeyScan.qws
+Hardware/KeyDecode/KeyScan/PENC_tb.vhd.bak
+Hardware/KeyDecode/KeyScan/db/
+Hardware/KeyDecode/KeyScan/output_files/
+Hardware/KeyDecode/KeyScan/simulation/
 Hardware/KeyDecode/KeyControl/output_files
 Hardware/KeyDecode/KeyControl/db

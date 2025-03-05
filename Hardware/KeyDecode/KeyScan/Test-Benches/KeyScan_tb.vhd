@@ -8,7 +8,6 @@ architecture test of KScan_tb is
     component KeyScan
         port (
             CLK: in std_logic;
-            CLK2: in std_logic;
             RESET: in std_logic;
             LIN: in std_logic_vector(3 downto 0);
             COL: out std_logic_vector(3 downto 0);
@@ -20,7 +19,6 @@ architecture test of KScan_tb is
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
     signal CLK_tb: std_logic;
-    signal CLK2_tb: std_logic;
     signal RESET_tb: std_logic;
     signal LIN_tb: std_logic_vector(3 downto 0);
     signal COL_tb: std_logic_vector(3 downto 0);
@@ -28,7 +26,6 @@ architecture test of KScan_tb is
 begin
     test: KeyScan port map(
         CLK => CLK_tb,
-        CLK2 => CLK2_tb,
         RESET => RESET_tb,
         LIN => LIN_tb,
         COL => COL_tb,
@@ -38,16 +35,8 @@ begin
     CLK_gen: process
     begin
         CLK_tb <= '0';
-        wait for MCLK_PERIOD;
-        CLK_tb <= '1';
-        wait for MCLK_PERIOD;
-    end process;
-
-    CLK2_gen: process
-    begin
-        CLK2_tb <= '0';
         wait for MCLK_HALF_PERIOD;
-        CLK2_tb <= '1';
+        CLK_tb <= '1';
         wait for MCLK_HALF_PERIOD;
     end process;
 
