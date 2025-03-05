@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66d05c05-89d1-4e7c-a244-0a1ad2d5d863" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Software/Simul.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/Software.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/USB_PORT.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/ftd2xx64.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/hardware.simul" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/src/Main.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Software/usbPort.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/KeyDecode/KeyControl/KeyControl.vhd" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/KeyDecode/KeyControl/KeyControl.vhd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/KeyDecode/KeyControl/KeyControl_tb.vhd" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/KeyDecode/KeyControl/KeyControl_tb.vhd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/KeyDecode/KeyScan/Test-Benches/KeyScan_tb.vhd" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/KeyDecode/KeyScan/Test-Benches/KeyScan_tb.vhd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Software/src/HAL.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Software/Software.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Software/Software.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,46 +31,48 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "RafaPear"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;RafaPear&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/RafaPear/LIC_grupo1.git",
-    "accountId": "abbeadce-6c26-4bb0-8925-f12ddcd60907"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/RafaPear/LIC_grupo1.git&quot;,
+    &quot;accountId&quot;: &quot;abbeadce-6c26-4bb0-8925-f12ddcd60907&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2ttZTslvXcyOntsi4ouZTBLj1E4" />
   <component name="ProjectViewState">
     <option name="flattenModules" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "JAR Application.usbPort.jar.executor": "Run",
-    "Kotlin.MainKt (1).executor": "Run",
-    "Kotlin.MainKt.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/1-ISEL/Semestre 2/LIC/Software",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;JAR Application.usbPort.jar.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt (1).executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/1-ISEL/Semestre 2/LIC/Software&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\1-ISEL\Semestre 2\LIC\Software" />
@@ -129,7 +124,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1741173341662</updated>
-      <workItem from="1741173342657" duration="994000" />
+      <workItem from="1741173342657" duration="3145000" />
+      <workItem from="1741188403353" duration="218000" />
     </task>
     <servers />
   </component>
