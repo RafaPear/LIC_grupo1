@@ -5,7 +5,7 @@ entity KeyDecode is
     port(
         CLK: in std_logic;
         RESET: in std_logic;
-		  Kack: in std_logic;
+		Kack: in std_logic;
         LIN: in std_logic_vector(3 downto 0);
         Kval: out std_logic;
         COL: out std_logic_vector(3 downto 0);
@@ -14,7 +14,7 @@ entity KeyDecode is
 end KeyDecode;
 
 architecture arch_KeyDecode of KeyDecode is
-     component KeyScan is
+    component KeyScan is
         port(
         CLK: in std_logic;
         RESET: in std_logic;

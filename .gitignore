@@ -1,8 +1,6 @@
-
 **/db
 **/output_files
 **/simulation
 **/*.bak
 **/*.rpt
 **/incremental_db
-

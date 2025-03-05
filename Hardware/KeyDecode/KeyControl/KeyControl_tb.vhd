@@ -48,42 +48,42 @@ begin
         RST_tb <= '1';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '1' & Kval = '0') report "Test 1/7 Failed" severity failure;
+        Assert (KSCAN_tb = '1' and KVAL_tb = '0') report "Test 1/7 Failed" severity failure;
         report "Test 1/7 Passed" severity note;
         RST_tb <= '0';
         Kpress_tb <= '0';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '1' & Kval = '0') report "Test 2/7 Failed" severity failure;
+        Assert (KSCAN_tb = '1' and KVAL_tb = '0') report "Test 2/7 Failed" severity failure;
         report "Test 2/7 Passed" severity note;
         Kpress_tb <= '1';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '0' & Kval = '1') report "Test 3/7 Failed" severity failure;
+        Assert (KSCAN_tb = '0' and KVAL_tb = '1') report "Test 3/7 Failed" severity failure;
         report "Test 3/7 Passed" severity note;
         Kack_tb <= '0';
         Kpress_tb <= '0';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '0' & Kval = '1') report "Test 4/7 Failed" severity failure;
+        Assert (KSCAN_tb = '0' and KVAL_tb = '1') report "Test 4/7 Failed" severity failure;
         report "Test 4/7 Passed" severity note;
         Kack_tb <= '0';
         Kpress_tb <= '1';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '0' & Kval = '1') report "Test 5/7 Failed" severity failure;
+        Assert (KSCAN_tb = '0' and KVAL_tb = '1') report "Test 5/7 Failed" severity failure;
         report "Test 5/7 Passed" severity note;
         Kack_tb <= '1';
         Kpress_tb <= '1';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '0' & Kval = '1') report "Test 6/7 Failed" severity failure;
+        Assert (KSCAN_tb = '0' and KVAL_tb = '1') report "Test 6/7 Failed" severity failure;
         report "Test 6/7 Passed" severity note;
         Kack_tb <= '1';
         Kpress_tb <= '0';
         wait for MCLK_PERIOD;
 
-        Assert (Kscan = '1' & Kval = '0') report "Test 7/7 Failed" severity failure;
+        Assert (KSCAN_tb = '1' and KVAL_tb = '0') report "Test 7/7 Failed" severity failure;
         report "Test 7/7 Passed" severity note;
         wait for MCLK_PERIOD;
 
