@@ -54,23 +54,28 @@ begin
 
     assert Q_tb = "00" report "Counter failed to initialize" severity failure;
     report "Counter initialized successfully" severity note;
+    report "Test 1/5 Passed!" severity note;
     wait for MCLK_PERIOD;
 
     -- Did increment from 00 to 01?
     assert Q_tb = "01" report "Counter failed to count from 00 to 01" severity failure;
+    report "Test 2/5 Passed!" severity note;
     wait for MCLK_PERIOD;
 
     -- Did increment from 01 to 10?
     assert Q_tb = "10" report "Counter failed to count from 01 to 10" severity failure;
+    report "Test 3/5 Passed!" severity note;
     wait for MCLK_PERIOD;
 
     -- Did increment from 10 to 11?
     assert Q_tb = "11" report "Counter failed to count from 10 to 11" severity failure;
+    report "Test 4/5 Passed!" severity note;
     wait for MCLK_PERIOD;
 
     -- Did increment from 11 to 00?
     assert Q_tb = "00" report "Counter failed to count from 11 to 00" severity failure;
-    report "UUT Counter passed" severity note;
+    report "Test 5/5 Passed!" severity note;
+    report "UUT Counter passed all tests!" severity note;
     wait for MCLK_PERIOD;
     wait;
 end process stimulus;
