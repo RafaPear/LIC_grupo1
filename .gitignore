@@ -6,3 +6,9 @@ Hardware/KeyDecode/KeyScan/output_files/
 Hardware/KeyDecode/KeyScan/simulation/
 Hardware/KeyDecode/KeyControl/output_files
 Hardware/KeyDecode/KeyControl/db
+Hardware/KeyDecode/KeyDecode/db
+Hardware/KeyDecode/KeyDecode/devkits
+Hardware/KeyDecode/KeyDecode/incremental_db
+Hardware/KeyDecode/KeyDecode/output_files
+Hardware/KeyDecode/KeyDecode/simulation
+
