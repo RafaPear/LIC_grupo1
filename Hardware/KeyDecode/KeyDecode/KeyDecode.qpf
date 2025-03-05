@@ -19,27 +19,13 @@
 #
 # Quartus Prime
 # Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
-# Date created = 09:10:56  March 05, 2025
-#
-# -------------------------------------------------------------------------- #
-#
-# Notes:
-#
-# 1) The default values for assignments are stored in the file:
-#		KeyScan_assignment_defaults.qdf
-#    If this file doesn't exist, see file:
-#		assignment_defaults.qdf
-#
-# 2) Altera recommends that you do not modify this file. This
-#    file is updated automatically by the Quartus Prime software
-#    and any changes you make may be lost or overwritten.
+# Date created = 11:05:00  March 05, 2025
 #
 # -------------------------------------------------------------------------- #
 
+QUARTUS_VERSION = "19.1"
+DATE = "11:05:00  March 05, 2025"
 
-set_global_assignment -name FAMILY "MAX 10"
-set_global_assignment -name DEVICE 10M08DAF484C8G
-set_global_assignment -name TOP_LEVEL_ENTITY KeyScan
-set_global_assignment -name ORIGINAL_QUARTUS_VERSION 19.1.0
-set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:10:56  MARCH 05, 2025"
-set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
+# Revisions
+
+PROJECT_REVISION = "KeyDecode"
