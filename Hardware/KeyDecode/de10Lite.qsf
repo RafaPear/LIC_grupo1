@@ -52,7 +52,11 @@ set_location_assignment PIN_B10 -to K[3]
 # Keyboard (Expansion Board)
 #============================================================
 
-#set_location_assignment PIN_W5     -to LIN[0]
-#set_location_assignment PIN_AA14   -to	LIN[1]
-#set_location_assignment PIN_W12    -to LIN[2]
-#set_location_assignment PIN_AB12   -to	LIN[3]
+set_location_assignment PIN_W5     -to LIN[0]
+set_location_assignment PIN_AA14   -to	LIN[1]
+set_location_assignment PIN_W12    -to LIN[2]
+set_location_assignment PIN_AB12   -to	LIN[3]
+set_location_assignment PIN_AB11   -to	COL[0]
+set_location_assignment PIN_AB10   -to	COL[1]
+set_location_assignment PIN_AA9    -to	COL[2]
+set_location_assignment PIN_AA8    -to	COL[3]
