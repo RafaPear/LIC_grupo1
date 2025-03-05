@@ -1,3 +1,8 @@
+import isel.leic.UsbPort
+
 fun main() {
-    println("Hello World!")
+    while(true) {
+        val value = UsbPort.read()
+        UsbPort.write(value)
+    }
 }

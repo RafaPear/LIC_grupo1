@@ -4,7 +4,7 @@ USE ieee.std_logic_1164.ALL;
 entity KScan_tb is
 end KScan_tb;
 
-architecture test of KScan_tb is
+architecture behavioral of KScan_tb is
     component KeyScan
         port (
             CLK: in std_logic;
@@ -79,4 +79,4 @@ begin
         
 	    wait for MCLK_HALF_PERIOD / 2;
     end process;
-end test;
+end behavioral;
