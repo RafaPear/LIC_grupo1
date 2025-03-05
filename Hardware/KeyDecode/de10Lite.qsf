@@ -2,7 +2,6 @@
 # Altera DE10-Lite board settings
 #============================================================
 
-
 set_global_assignment -name FAMILY "MAX 10 FPGA"
 set_global_assignment -name DEVICE 10M50DAF484C6GES
 set_global_assignment -name TOP_LEVEL_ENTITY "DE10_Lite"
