@@ -1,15 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity KScan_tb is
-end KScan_tb;
+entity KeyDecode_tb is
+end KeyDecode_tb;
 
-architecture behavioral of KScan_tb is
-    component KeyScan
-        port (
+architecture behavioral of KeyDecode_tb is
+    component KeyDecode
+        port(
             CLK: in std_logic;
             RESET: in std_logic;
+            Kack: in std_logic;
             LIN: in std_logic_vector(3 downto 0);
+            Kval: out std_logic;
             COL: out std_logic_vector(3 downto 0);
             K: out std_logic_vector(3 downto 0)
         );
@@ -20,13 +22,18 @@ architecture behavioral of KScan_tb is
 
     signal CLK_tb: std_logic;
     signal RESET_tb: std_logic;
+    signal KACK_tb: std_logic;
+    signal KVAL_tb: std_logic;
     signal LIN_tb: std_logic_vector(3 downto 0);
     signal COL_tb: std_logic_vector(3 downto 0);
     signal K_tb: std_logic_vector(3 downto 0);
-begin
-    test: KeyScan port map(
+
+    begin
+    test: KeyDecode port map(
         CLK => CLK_tb,
         RESET => RESET_tb,
+        KACK => KACK_tb,
+        Kval => KVAL_tb,
         LIN => LIN_tb,
         COL => COL_tb,
         K => K_tb
@@ -43,40 +50,34 @@ begin
     stimulus: process
     begin
         RESET_tb <= '1';
+        KACK_tb <= '1';
         LIN_tb <= "1111";
         wait for MCLK_PERIOD;
+
         RESET_tb <= '0';
-        
         LIN_tb <= "1110";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 2;
 
         LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 5;
 
         LIN_tb <= "1101";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 3;
 
         LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 7;
 
         LIN_tb <= "1011";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 2;
 
         LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD;
 
         LIN_tb <= "0111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 5;
 
         LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        wait for MCLK_PERIOD * 6;
+        wait;
     end process;
 end behavioral;

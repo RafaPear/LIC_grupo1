@@ -5,3 +5,7 @@ fun pow(base: Int, exponent: Int): Int{
     }
     return temp
 }
+
+fun Int.toBitPlace(): Int{
+    return pow(2, this)
+}

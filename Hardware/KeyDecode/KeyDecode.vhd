@@ -16,25 +16,25 @@ end KeyDecode;
 architecture arch_KeyDecode of KeyDecode is
     component KeyScan is
         port(
-        CLK: in std_logic;
-        RESET: in std_logic;
-        Kscan: in std_logic;
-        LIN: in std_logic_vector(3 downto 0);
-        COL: out std_logic_vector(3 downto 0);
-        Kpress: out std_logic;
-        K: out std_logic_vector(3 downto 0)
-    );
+            CLK: in std_logic;
+            RESET: in std_logic;
+            Kscan: in std_logic;
+            LIN: in std_logic_vector(3 downto 0);
+            COL: out std_logic_vector(3 downto 0);
+            Kpress: out std_logic;
+            K: out std_logic_vector(3 downto 0)
+        );
     end component;
 
     component KeyControl is
         port (
-        clk: in std_logic;
-        rst: in std_logic;
-        Kack: in std_logic;
-        Kpress: in std_logic;
-        Kscan: out std_logic;
-        Kval: out std_logic
-    );
+            clk: in std_logic;
+            rst: in std_logic;
+            Kack: in std_logic;
+            Kpress: in std_logic;
+            Kscan: out std_logic;
+            Kval: out std_logic
+        );
     end component;
 
     signal temp_Kpress, temp_Kscan: std_logic;

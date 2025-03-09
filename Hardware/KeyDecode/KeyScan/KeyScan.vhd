@@ -25,7 +25,7 @@ architecture arch_KeyScan of KeyScan is
     end component;
     
     component REG2 is
-        port(	
+        port(
             D: in std_logic_vector(1 downto 0);
             RESET: in std_logic;
             SET: in std_logic;
@@ -51,10 +51,11 @@ architecture arch_KeyScan of KeyScan is
     end component;
 
     signal temp_COL, not_LIN: std_logic_vector(3 downto 0);
-    signal temp_Q, temp_Y: std_logic_vector(1 downto 0);    
+    signal temp_Q, temp_Y: std_logic_vector(1 downto 0);
+    
 begin
     not_LIN <= not LIN;
-   
+
     Counter_inst: Counter port map(
         RESET => RESET,
         CE => Kscan,
@@ -67,7 +68,7 @@ begin
         RESET => RESET,
         SET => '0',
         EN => '1',
-        CLK => Kscan,
+        CLK => KScan,
         Q(0) => K(2),
         Q(1) => K(3)
     );
