@@ -1,8 +1,8 @@
 import isel.leic.UsbPort
 
-fun main() {
+fun main(){
+
     while(true) {
-        val value = UsbPort.read()
-        UsbPort.write(value)
+        Thread.sleep(1000)
     }
 }

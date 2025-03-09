@@ -5,7 +5,7 @@ entity DECODER is
     port (
         S: in std_logic_vector(1 downto 0);
         D: out std_logic_vector(3 downto 0)
-    );  
+    );
 end DECODER;
 
 architecture arch_decoder of DECODER is
