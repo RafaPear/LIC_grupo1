@@ -19,7 +19,7 @@ architecture behavioral of KeyControl is
     signal temp_Kscan: std_logic;
     
 begin
-    process (clk, rst)
+    process (clk, rst, next_state)
     begin
         if rst = '1' then
             state <= '0';
@@ -28,16 +28,21 @@ begin
         end if;
     end process;
 
-    process (clk, temp_Kscan)
-    begin
-        Kscan <= temp_Kscan and clk;
-    end process;
+    -- process (clk, temp_Kscan)
+    -- begin
+    --     -- if rising_edge(clk) then
+    --     --     Kscan <= temp_Kscan;
+    --     -- end if;
+    --     Kscan <= temp_Kscan and clk;
+    -- end process;
 
-    process (state, Kack, Kpress, clk)
+    -- Kscan <= temp_Kscan and clk;
+
+    process (state, Kack, Kpress)
     begin
         case state is
             when '0' =>
-                temp_Kscan <= '1';
+                Kscan <= '1';
                 Kval <= '0';
                 if Kpress = '1' then
                     next_state <= '1';
@@ -46,7 +51,7 @@ begin
                 end if;
             
             when '1' =>
-                temp_Kscan <= '0';
+                Kscan <= '0';
                 Kval <= '1';
                 if (Kpress = '0' and Kack = '1') then
                     next_state <= '0';

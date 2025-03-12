@@ -52,14 +52,17 @@ architecture arch_KeyScan of KeyScan is
 
     signal temp_COL, not_LIN: std_logic_vector(3 downto 0);
     signal temp_Q, temp_Y: std_logic_vector(1 downto 0);
+    signal not_Kscan, not_clk: std_logic;
     
 begin
     not_LIN <= not LIN;
+    not_Kscan <= not Kscan;
+    not_clk <= not CLK;
 
     Counter_inst: Counter port map(
         RESET => RESET,
         CE => Kscan,
-        CLK => CLK,
+        CLK => not_clk,
         Q => temp_Q
     );
     
@@ -68,7 +71,7 @@ begin
         RESET => RESET,
         SET => '0',
         EN => '1',
-        CLK => KScan,
+        CLK => not_Kscan,
         Q(0) => K(2),
         Q(1) => K(3)
     );

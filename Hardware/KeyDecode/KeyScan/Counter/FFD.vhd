@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity FFD is
-	port(	
+	port(
 		CLK: in std_logic;
 		RESET: in std_logic;
 		SET: in std_logic;

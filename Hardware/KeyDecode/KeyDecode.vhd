@@ -37,11 +37,26 @@ architecture arch_KeyDecode of KeyDecode is
         );
     end component;
 
-    signal temp_Kpress, temp_Kscan: std_logic;
+    component clkDIV is
+        generic(div: natural := 5000000);
+        port (
+            clk_in: in std_logic;
+            clk_out: out std_logic
+        );
+    end component;
+
+    signal temp_Kpress, temp_Kscan, CLK_div: std_logic;
 
 begin
+
+    clkDiv_inst: clkDIV generic map (div => 5000000)
+    port map (
+        clk_in => CLK,
+        clk_out => CLK_div
+    );
+
     KeyScan_inst: KeyScan port map(
-        CLK => CLK,
+        CLK => CLK_div,
         RESET => RESET,
         Kscan => temp_Kscan,
         LIN => LIN,
@@ -51,12 +66,13 @@ begin
     );
 
     KeyControl_inst: KeyControl port map(
-        clk => CLK,
+        clk => CLK_div,
         rst => RESET,
         Kack => Kack,
         Kpress => temp_Kpress,
         Kscan => temp_Kscan,
         Kval => Kval
     );
+
 
 end arch_KeyDecode;
