@@ -17,12 +17,20 @@ object LCD {
 
     // Escreve um nibble de comando/dados no LCD em paralelo.
     private fun writeNibbleParallel(rs: Boolean, data: Int) {
+        // Envia rs
+        HAL.writeBits(RS_MASK, rs.toInt())
+
+        Time.sleep(1)
+
         // Envia E On
         HAL.setBits(E_MASK)
 
-        // Envia rs
-        HAL.writeBits(RS_MASK, rs.toInt())
+        Time.sleep(1)
+
+        // Envia data
         HAL.writeBits(NIBBLE_MASK, data)
+
+        Time.sleep(1)
 
         // Envia E Off
         HAL.clrBits(E_MASK)
@@ -45,17 +53,15 @@ object LCD {
 
     // Escreve um nibble de comando/dados no LCD.
     private fun writeNibble(rs: Boolean, data: Int) {
-        if (data.countOneBits() < 5){
-            if (SERIAL_INTERFACE)
-                writeNibbleSerial(rs, data)
-            else
-                writeNibbleParallel(rs, data)
-        }
+        if (SERIAL_INTERFACE)
+            writeNibbleSerial(rs, data)
+        else
+            writeNibbleParallel(rs, data)
     }
 
     // Escreve um byte de comando/dados no LCD.
     private fun writeByte(rs: Boolean, data: Int) {
-        writeNibble(rs, data shr 4)
+        writeNibble(rs, data.rotateRight(4))
         writeNibble(rs, data and 0b0000_1111)
     }
 
@@ -70,25 +76,31 @@ object LCD {
     }
     // Envia a sequência de iniciação para comunicação a 4 bits.
     fun init() {
+        HAL.init()
         val time_list = longArrayOf(15L,5L,1L)
         val init_Code = intArrayOf(
             0b0000_0011,
             0b0000_0010,
             0b0000_0010,
-            0b0000_1100,
+            0b0000_1000,
             0b0000_0000,
             0b0000_1000,
             0b0000_0000,
             0b0000_0001,
             0b0000_0000,
-            0b0000_0111
+            0b0000_0111,
+            0b0000_0001, // Clear display
+            0b0000_0010, // Return home
+            0b0000_1111 // Cursor On / Blinking On
         )
         for (time in time_list){
             Time.sleep(time)
             writeDATA(init_Code[0])
+            Time.sleep(500)
         }
         for(i in 1..<init_Code.size){
             writeDATA(init_Code[i])
+            Time.sleep(500)
         }
     }
 
@@ -112,14 +124,14 @@ object LCD {
 
     // Envia comando para posicionar o cursor.
     // (line: 0..LINES-1, column: 0..COLS-1)
-    fun cursor(line: Int, column: Int) { /* Implementação */
+    fun cursor(line: Int, column: Int) {
         if (line in 0 until LINES && column in 0 until COLS) {
             val address = when (line) {
                 0 -> column // 1.ª linha
                 1 -> (column + 0b0100_0000) // 0b0100_0000 -> 64, passa para a próx. linha
-                else -> throw IllegalArgumentException("Linha Inválida.") // exceção
+                else -> 0
             }
-            writeCMD(0b1000_0000 or address)
+            writeCMD(address)
             println("Posição do Cursor: $line, $column")
         }
         else {
@@ -129,7 +141,8 @@ object LCD {
 
     // Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
     fun clear() { /* Implementação */
-        writeCMD(0b0000_0001)
+        writeCMD(1)
+        cursor(0,0)
         println("LCD limpo e cursor posicionado em (0,0)")
     }
 }
