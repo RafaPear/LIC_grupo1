@@ -1,3 +1,6 @@
+import kotlin.concurrent.thread
+import isel.leic.utils.Time
+
 // Escreve no LCD usando a interface a 4 bits.
 object LCD {
     // Dimensão do display.
@@ -65,9 +68,29 @@ object LCD {
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
-
     // Envia a sequência de iniciação para comunicação a 4 bits.
-    fun init() { /* Implementação */ }
+    fun init() {
+        val time_list = longArrayOf(15L,5L,1L)
+        val init_Code = intArrayOf(
+            0b0000_0011,
+            0b0000_0010,
+            0b0000_0010,
+            0b0000_1100,
+            0b0000_0000,
+            0b0000_1000,
+            0b0000_0000,
+            0b0000_0001,
+            0b0000_0000,
+            0b0000_0111
+        )
+        for (time in time_list){
+            Time.sleep(time)
+            writeDATA(init_Code[0])
+        }
+        for(i in 1..<init_Code.size){
+            writeDATA(init_Code[i])
+        }
+    }
 
     // Escreve um caractere na posição corrente.
     fun write(c: Char) {
