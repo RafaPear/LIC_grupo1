@@ -76,8 +76,14 @@ object LCD {
 
     // Escreve uma string na posição corrente.
     fun write(text: String) {
+        var count = 0
         for (c in text) {
+            if (count == COLS) {
+                cursor(1, 0)
+                count = 0
+            }
             write(c)
+            count++
         }
     }
 
