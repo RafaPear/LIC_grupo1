@@ -1,8 +1,25 @@
+import kotlin.concurrent.thread
+
 fun main(){
     HAL.init()
     while (true){
-        HAL.writeBits(0b0001_1111, HAL.readBits(0b0001_1111))
-        println(KBD.waitKey(500))
+        val key = KBD.waitKeyVal(1000)
+
+        thread {
+            if (key == -1) {
+                HAL.setBits(0b1000_0000)
+                Thread.sleep(50)
+                HAL.clrBits(0b1000_0000)
+                Thread.sleep(50)
+            }
+        }
+
+        if (key != -1){
+            HAL.writeBits(0b1111_1111, key)
+        }
+        else {
+            HAL.writeBits(0b1111_1111, 0b1000_0000)
+        }
     }
 }
 

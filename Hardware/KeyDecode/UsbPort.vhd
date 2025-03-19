@@ -22,7 +22,7 @@ USE ieee.std_logic_1164.all;
 
 LIBRARY work;
 
-ENTITY UsbPort IS 
+ENTITY UsbPort IS
 	PORT
 	(
 		inputPort:  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
