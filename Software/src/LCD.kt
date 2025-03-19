@@ -87,10 +87,10 @@ object LCD {
         if (line in 0 until LINES && column in 0 until COLS) {
             val address = when (line) {
                 0 -> column // 1.ª linha
-                1 -> (column + 0x40) // 0x40 -> 64, passa para a próx. linha
+                1 -> (column + 0b0100_0000) // 0b0100_0000 -> 64, passa para a próx. linha
                 else -> throw IllegalArgumentException("Linha Inválida.") // exceção
             }
-            writeCMD(0x80 or address)
+            writeCMD(0b1000_0000 or address)
             println("Posição do Cursor: $line, $column")
         }
         else {
@@ -100,7 +100,7 @@ object LCD {
 
     // Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
     fun clear() { /* Implementação */
-        writeCMD(0x01)
+        writeCMD(0b0000_0001)
         println("LCD limpo e cursor posicionado em (0,0)")
     }
 }
