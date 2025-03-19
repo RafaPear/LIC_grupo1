@@ -1,4 +1,3 @@
-import kotlin.concurrent.thread
 import isel.leic.utils.Time
 
 // Escreve no LCD usando a interface a 4 bits.
@@ -18,7 +17,7 @@ object LCD {
     // Escreve um nibble de comando/dados no LCD em paralelo.
     private fun writeNibbleParallel(rs: Boolean, data: Int) {
         // Envia rs
-        HAL.writeBits(RS_MASK, rs.toInt())
+       if (rs) HAL.setBits(RS_MASK) else HAL.clrBits(RS_MASK)
 
         Time.sleep(1)
 
@@ -26,14 +25,14 @@ object LCD {
         HAL.setBits(E_MASK)
 
         Time.sleep(1)
-
         // Envia data
         HAL.writeBits(NIBBLE_MASK, data)
 
         Time.sleep(1)
-
         // Envia E Off
         HAL.clrBits(E_MASK)
+
+        Time.sleep(1)
     }
 
     // Escreve um nibble de comando/dados no LCD em série.
@@ -91,16 +90,17 @@ object LCD {
             0b0000_0111,
             0b0000_0001, // Clear display
             0b0000_0010, // Return home
-            0b0000_1111 // Cursor On / Blinking On
+            0b0000_1111 /// Cursor On / Blinking On
         )
         for (time in time_list){
             Time.sleep(time)
-            writeDATA(init_Code[0])
-            Time.sleep(500)
+            writeCMD(init_Code[0])
+            ///Time.sleep(1000)
         }
         for(i in 1..<init_Code.size){
-            writeDATA(init_Code[i])
-            Time.sleep(500)
+            Time.sleep(1)
+            writeCMD(init_Code[i])
+            //Time.sleep(1000)
         }
     }
 

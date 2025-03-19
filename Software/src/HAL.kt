@@ -25,7 +25,7 @@ object HAL {
 
     // NOTE: Escreve nos bits representados por mask os valores dos bits correspondentes em value
     fun writeBits(mask: Int, value: Int){
-        light = mask.and(value)
+        light = (mask.inv().and(light)).or(value.and(mask))
         UsbPort.write(light)
     }
 
