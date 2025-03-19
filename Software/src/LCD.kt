@@ -9,7 +9,8 @@ object LCD {
     private const val SERIAL_INTERFACE = false
 
     // Escreve um nibble de comando/dados no LCD em paralelo.
-    private fun writeNibbleParallel(rs: Boolean, data: Int) { /* Implementação */ }
+    private fun writeNibbleParallel(rs: Boolean, data: Int) { /* Implementação */
+    }
 
     // Escreve um nibble de comando/dados no LCD em série.
     private fun writeNibbleSerial(rs: Boolean, data: Int) {
@@ -67,8 +68,24 @@ object LCD {
 
     // Envia comando para posicionar o cursor.
     // (line: 0..LINES-1, column: 0..COLS-1)
-    fun cursor(line: Int, column: Int) { /* Implementação */ }
+    fun cursor(line: Int, column: Int) { /* Implementação */
+        if (line in 0 until LINES && column in 0 until COLS) {
+            val address = when (line) {
+                0 -> column // 1.ª linha
+                1 -> (column + 0x40) // 0x40 -> 64, passa para a próx. linha
+                else -> throw IllegalArgumentException("Linha Inválida.") // exceção
+            }
+            writeCMD(0x80 or address)
+            println("Posição do Cursor: $line, $column")
+        }
+        else {
+            throw IllegalArgumentException ("Posição Inválida.")
+        }
+    }
 
     // Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
-    fun clear() { /* Implementação */ }
+    fun clear() { /* Implementação */
+        writeCMD(0x01)
+        println("LCD limpo e cursor posicionado em (0,0)")
+    }
 }
