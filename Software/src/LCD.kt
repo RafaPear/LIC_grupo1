@@ -1,4 +1,5 @@
 import isel.leic.utils.Time
+import kotlin.text.iterator
 
 // Escreve no LCD usando a interface a 4 bits.
 object LCD {
@@ -17,22 +18,16 @@ object LCD {
     // Escreve um nibble de comando/dados no LCD em paralelo.
     private fun writeNibbleParallel(rs: Boolean, data: Int) {
         // Envia rs
-       if (rs) HAL.setBits(RS_MASK) else HAL.clrBits(RS_MASK)
-
-        Time.sleep(1)
+        if (rs) HAL.setBits(RS_MASK) else HAL.clrBits(RS_MASK)
 
         // Envia E On
         HAL.setBits(E_MASK)
 
-        Time.sleep(1)
         // Envia data
         HAL.writeBits(NIBBLE_MASK, data)
 
-        Time.sleep(1)
         // Envia E Off
         HAL.clrBits(E_MASK)
-
-        Time.sleep(1)
     }
 
     // Escreve um nibble de comando/dados no LCD em série.
@@ -73,10 +68,11 @@ object LCD {
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
+
     // Envia a sequência de iniciação para comunicação a 4 bits.
     fun init() {
         HAL.init()
-        val time_list = longArrayOf(15L,5L,1L)
+        val time_list = longArrayOf(15,5,1)
         val init_Code = intArrayOf(
             0b0000_0011,
             0b0000_0010,
@@ -87,20 +83,22 @@ object LCD {
             0b0000_0000,
             0b0000_0001,
             0b0000_0000,
-            0b0000_0111,
+            0b0000_0110,
+
             0b0000_0001, // Clear display
             0b0000_0010, // Return home
             0b0000_1111 /// Cursor On / Blinking On
         )
+
         for (time in time_list){
             Time.sleep(time)
-            writeCMD(init_Code[0])
-            ///Time.sleep(1000)
+            writeNibble(false, init_Code[0])
         }
-        for(i in 1..<init_Code.size){
-            Time.sleep(1)
-            writeCMD(init_Code[i])
-            //Time.sleep(1000)
+
+        writeNibble(false, init_Code[1])
+
+        for(i in 2 until init_Code.size){
+            writeByte(false, init_Code[i])
         }
     }
 
@@ -111,9 +109,13 @@ object LCD {
 
     // Escreve uma string na posição corrente.
     fun write(text: String) {
+        if (text.length > LINES * COLS) {
+            throw IllegalArgumentException("Texto demasiado longo.")
+        }
+
         var count = 0
         for (c in text) {
-            if (count == COLS) {
+            if (count != 0 && count % COLS == 0) {
                 cursor(1, 0)
                 count = 0
             }
@@ -122,17 +124,87 @@ object LCD {
         }
     }
 
+    fun writeSplited(text: String) {
+        if (text.length > LINES * COLS) {
+            throw IllegalArgumentException("Texto demasiado longo.")
+        }
+
+        var count = 0
+        var words = text.split(Regex("(?<=\\s)|(?=\\s)"))
+        for (word in words) {
+            if (count + word.length > COLS) {
+                cursor(1, 0)
+                count = 0
+            }
+            for (i in word)
+                write(i)
+            count += word.length
+        }
+    }
+
+
+    fun writeCenter(text: String) {
+        if (text.length > LINES * COLS) {
+            throw IllegalArgumentException("Texto demasiado longo.")
+        }
+
+        val words = text.split(Regex(" +"))
+        var line = ""
+
+        for (word in words) {
+            if (line.length + word.length >= COLS) {
+                val padding = (COLS - line.length) / 2
+                val centeredLine = " ".repeat(padding) + line.trim()
+                for (i in centeredLine)
+                    write(i)
+                cursor(1, 0)
+                line = ""
+            }
+
+            if (line.isNotEmpty()) {
+                line += " "
+            }
+            line += word
+        }
+
+        if (line.isNotEmpty()) {
+            val padding = (COLS - line.length) / 2
+            val centeredLine = " ".repeat(padding) + line.trim()
+            for (i in centeredLine)
+                write(i)
+        }
+    }
+
+    fun loadingScreen(time: Long, condition: () -> Boolean){
+        clear()
+        writeCenter("Loading")
+
+        var i = 0
+        while (condition()){
+            write(".")
+
+            if (i == 3) {
+                i = -1
+                clear()
+                writeCenter("Loading")
+            }
+            i++
+            Time.sleep(time)
+        }
+        clear()
+    }
+
     // Envia comando para posicionar o cursor.
     // (line: 0..LINES-1, column: 0..COLS-1)
     fun cursor(line: Int, column: Int) {
         if (line in 0 until LINES && column in 0 until COLS) {
             val address = when (line) {
-                0 -> column // 1.ª linha
-                1 -> (column + 0b0100_0000) // 0b0100_0000 -> 64, passa para a próx. linha
+                0 -> column
+                1 -> (column + 0b1100_0000)
                 else -> 0
             }
             writeCMD(address)
-            println("Posição do Cursor: $line, $column")
+            writeCMD(address)
         }
         else {
             throw IllegalArgumentException ("Posição Inválida.")
@@ -142,7 +214,5 @@ object LCD {
     // Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
     fun clear() { /* Implementação */
         writeCMD(1)
-        cursor(0,0)
-        println("LCD limpo e cursor posicionado em (0,0)")
     }
 }
