@@ -1,16 +1,34 @@
 import isel.leic.utils.Time
-import kotlin.concurrent.thread
 
-fun main(){
-    LCD.init()
+fun main() {
+	LCD.init()
 
-    var read = ""
+	var canWrite = true
+	var lastKey = KBD.NONE
 
-    thread {
-        while (read.isEmpty()){
-            read = readln()
-        }
-    }
+	while (true){
+		var key = KBD.getKey()
 
-    LCD.loadingScreen(500L) { read != "exit" }
+		if (key == '*') {
+			LCD.clear()
+		}
+		else if (canWrite && key != KBD.NONE) {
+			LCD.write(key)
+			/*key = KBD.NONE*/
+			canWrite = false
+		}
+		else if (key == KBD.NONE)
+			canWrite = true
+
+	}
 }
+
+/*
+var read = false
+
+thread {
+	readln()
+	read = true
+}
+TUI.loadingScreen(500L) { read }
+*/

@@ -35,14 +35,10 @@ set_location_assignment PIN_C11     -to    RESET
 # LED
 #============================================================
 
-set_location_assignment PIN_A8 -to LED[0]
-set_location_assignment PIN_A9 -to LED[1]
-set_location_assignment PIN_A10 -to LED[2]
-set_location_assignment PIN_B10 -to LED[3]
-set_location_assignment PIN_D13 -to LED[4]
-set_location_assignment PIN_C13 -to LED[5]
-set_location_assignment PIN_E14 -to LED[6]
-set_location_assignment PIN_D14 -to LED[7]
+#set_location_assignment PIN_A8      -to    K[0]
+#set_location_assignment PIN_A9      -to    K[1]
+#set_location_assignment PIN_A10     -to    K[2]
+#set_location_assignment PIN_B10     -to    K[3]
 
 #============================================================
 # Keyboard (Expansion Board)
@@ -56,3 +52,19 @@ set_location_assignment PIN_AB11    -to	   COL[0]
 set_location_assignment PIN_AB10    -to	   COL[1]
 set_location_assignment PIN_AA9     -to	   COL[2]
 set_location_assignment PIN_AA8     -to	   COL[3]
+
+#============================================================
+# LCD (Expansion Board)
+#============================================================
+
+set_location_assignment PIN_W8     -to LCD_RS
+set_location_assignment PIN_V5     -to LCD_EN
+
+set_location_assignment PIN_AA15   -to LCD_DATA[0]
+set_location_assignment PIN_W13    -to LCD_DATA[1]
+set_location_assignment PIN_AB13   -to LCD_DATA[2]
+set_location_assignment PIN_Y11    -to LCD_DATA[3]
+set_location_assignment PIN_W11    -to LCD_DATA[4]
+set_location_assignment PIN_AA10   -to LCD_DATA[5]
+set_location_assignment PIN_Y8     -to LCD_DATA[6]
+set_location_assignment PIN_Y7     -to LCD_DATA[7]

@@ -8,7 +8,9 @@ entity RouletteGame is
         Kack: in std_logic;
         LIN: in std_logic_vector(3 downto 0);
         COL: out std_logic_vector(3 downto 0);
-        LED: out std_logic_vector(7 downto 0)
+        LCD_DATA: out std_logic_vector(7 downto 4);
+        LCD_RS: out std_logic;
+        LCD_EN: out std_logic
     );
 end RouletteGame;
 
@@ -35,6 +37,7 @@ architecture arch_RouletteGame of RouletteGame is
     signal temp_Kval: std_logic;
     signal temp_K: std_logic_vector(3 downto 0);
     signal temp_inPort: std_logic_vector(7 downto 0);
+    signal temp_outPort: std_logic_vector(7 downto 0);
 
 begin
 
@@ -50,9 +53,13 @@ begin
 
     UsbPort_inst: UsbPort port map(
         inputPort => temp_inPort,
-        outputPort => LED
+        outputPort => temp_outPort
     );
 
     temp_inPort(3 downto 0) <= temp_K;
     temp_inPort(4) <= temp_Kval;
+
+    LCD_DATA <= temp_outPort(3 downto 0);
+    LCD_RS <= temp_outPort(4);
+    LCD_EN <= temp_outPort(5);
 end arch_RouletteGame;
