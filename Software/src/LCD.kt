@@ -18,8 +18,8 @@ object LCD {
 	// Escreve um nibble de comando/dados no LCD em paralelo.
 	private fun writeNibbleParallel(rs: Boolean, data: Int) {
 		// Envia rs
-		if (rs) HAL.setBits(RS_MASK) else HAL.clrBits(RS_MASK)
-
+        rs.toBit(RS_MASK)
+    
 		Time.sleep(1)
 
 		// Envia E On

@@ -87,14 +87,12 @@ object TUI {
             for (i in a * 40 + 1 until (a + 1) * 40 + 1) {
                 if (LCD.COLS - i >= 0) {
                     LCD.cursor(0, LCD.COLS - i)
-                    write(newText, false)
                     var count = 0
                     for (c in newText) {
                         LCD.write(c)
                         count++
                     }
                 } else {
-                    write(newText.drop(-(LCD.COLS - i)), false)
                     var count = 0
                     for (c in newText) {
                         LCD.write(c)
