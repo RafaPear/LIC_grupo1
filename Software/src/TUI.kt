@@ -107,16 +107,4 @@ object TUI {
         }
         Time.sleep(time)
     }
-
-    private fun write(text: String, wrap: Boolean = true) {
-        var count = 0
-        for (c in text) {
-            if (wrap && count != 0 && count % LCD.COLS == 0) {
-                LCD.cursor(1, 0)
-                count = 0
-            }
-            LCD.write(c)
-            count++
-        }
-    }
 }
