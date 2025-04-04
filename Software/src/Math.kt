@@ -19,10 +19,3 @@ fun Int.isBit(index: Int) : Boolean{
 fun Boolean.toInt(): Int{
     return if (this) 1 else 0
 }
-
-//NOTE: transforma um booleano
-fun Boolean.toBit(mask:Int){
-    if (mask.countOneBits() == 1){
-        if (this) HAL.setBits(mask) else HAL.clrBits(mask)
-    } else error("Parameter 'mask' has a bit count different than 1.")
-}
