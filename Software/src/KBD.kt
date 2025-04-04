@@ -12,7 +12,7 @@ object KBD {
 
 	// Inicia a classe
 	fun init() {
-
+		HAL.init()
 	}
 
 	// Retorna de imediato a tecla premida ou NONE se nao ha tecla premida.

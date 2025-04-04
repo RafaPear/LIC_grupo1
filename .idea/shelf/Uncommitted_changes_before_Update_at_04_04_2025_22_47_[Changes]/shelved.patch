@@ -1,0 +1,80 @@
+Index: Software/src/TUI.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import isel.leic.utils.Time\r\n\r\nobject TUI {\r\n\r\n    fun writeSplited(text: String) {\r\n\r\n        var count = 0\r\n        var words = text.split(Regex(\"(?<=\\\\s)|(?=\\\\s)\"))\r\n        for (word in words) {\r\n            if (count + word.length > LCD.COLS) {\r\n                LCD.cursor(1, 0)\r\n                count = 0\r\n            }\r\n            for (i in word)\r\n                LCD.write(i)\r\n            count += word.length\r\n        }\r\n    }\r\n\r\n    fun writeRight(text: String) {\r\n\r\n        val newText = \" \".repeat(LCD.COLS - text.length) + text\r\n\r\n        var count = 0\r\n        for (c in newText) {\r\n            if (count != 0 && count % LCD.COLS == 0) {\r\n                LCD.cursor(1, 0)\r\n                count = 0\r\n            }\r\n            LCD.write(c)\r\n            count++\r\n        }\r\n    }\r\n\r\n\r\n    fun writeCenter(text: String) {\r\n\r\n        val words = text.split(Regex(\" +\"))\r\n        var line = \"\"\r\n\r\n        for (word in words) {\r\n            if (line.length + word.length >= LCD.COLS) {\r\n                val padding = (LCD.COLS - line.length) / 2\r\n                val centeredLine = \" \".repeat(padding) + line.trim()\r\n                for (i in centeredLine)\r\n                    LCD.write(i)\r\n                LCD.cursor(1, 0)\r\n                line = \"\"\r\n            }\r\n\r\n            if (line.isNotEmpty()) {\r\n                line += \" \"\r\n            }\r\n            line += word\r\n        }\r\n\r\n        if (line.isNotEmpty()) {\r\n            val padding = (LCD.COLS - line.length) / 2\r\n            val centeredLine = \" \".repeat(padding) + line.trim()\r\n            for (i in centeredLine)\r\n                LCD.write(i)\r\n        }\r\n    }\r\n\r\n    fun loadingScreen(time: Long, condition: () -> Boolean) {\r\n        LCD.clear()\r\n        writeCenter(\"Loading\")\r\n\r\n        var i = 0\r\n        while (!condition()) {\r\n            LCD.write(\".\")\r\n\r\n            if (i == 3) {\r\n                i = -1\r\n                LCD.clear()\r\n                writeCenter(\"Loading\")\r\n            }\r\n            i++\r\n            Time.sleep(time)\r\n        }\r\n        LCD.clear()\r\n    }\r\n\r\n    fun writeWalkText(time: Long, text: String) {\r\n        for (a in 0..text.length / 40) {\r\n            val newText = text.subSequence(0, ((a + 1) * 40).coerceIn(0, text.length)).toString()\r\n            for (i in a * 40 + 1 until (a + 1) * 40 + 1) {\r\n                if (LCD.COLS - i >= 0) {\r\n                    LCD.cursor(0, LCD.COLS - i)\r\n                    var count = 0\r\n                    for (c in newText) {\r\n                        LCD.write(c)\r\n                        count++\r\n                    }\r\n                } else {\r\n                    var count = 0\r\n                    for (c in newText) {\r\n                        LCD.write(c)\r\n                        count++\r\n                    }\r\n                }\r\n                Time.sleep(time)\r\n                LCD.clear()\r\n            }\r\n        }\r\n        Time.sleep(time)\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Software/src/TUI.kt b/Software/src/TUI.kt
+--- a/Software/src/TUI.kt	(revision 23c8cb0c0325d69390d4518f650e68c4294c6bf7)
++++ b/Software/src/TUI.kt	(date 1743803156111)
+@@ -1,7 +1,30 @@
+ import isel.leic.utils.Time
+ 
+ object TUI {
++    fun init(){
++        LCD.init()
++        KBD.init()
++
++        var canWrite = true
++        var lastKey = KBD.NONE
+ 
++        while (true){
++            var key = KBD.getKey()
++            println(key)
++
++            if (key == '*') {
++                LCD.clear()
++            }
++            else if (canWrite && key != KBD.NONE) {
++                LCD.write(key)
++                /*key = KBD.NONE*/
++                canWrite = false
++            }
++            else if (key == KBD.NONE)
++                canWrite = true
++
++        }
++    }
+     fun writeSplited(text: String) {
+ 
+         var count = 0
+Index: Software/src/Main.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import isel.leic.utils.Time\r\n\r\nfun main() {\r\n\tLCD.init()\r\n\r\n\tvar canWrite = true\r\n\tvar lastKey = KBD.NONE\r\n\r\n\twhile (true){\r\n\t\tvar key = KBD.getKey()\r\n\t\tprintln(key)\r\n\r\n\t\tif (key == '*') {\r\n\t\t\tLCD.clear()\r\n\t\t}\r\n\t\telse if (canWrite && key != KBD.NONE) {\r\n\t\t\tLCD.write(key)\r\n\t\t\t/*key = KBD.NONE*/\r\n\t\t\tcanWrite = false\r\n\t\t}\r\n\t\telse if (key == KBD.NONE)\r\n\t\t\tcanWrite = true\r\n\r\n\t}\r\n}\r\n\r\n/*\r\nvar read = false\r\n\r\nthread {\r\n\treadln()\r\n\tread = true\r\n}\r\nTUI.loadingScreen(500L) { read }\r\n*/\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Software/src/Main.kt b/Software/src/Main.kt
+--- a/Software/src/Main.kt	(revision 23c8cb0c0325d69390d4518f650e68c4294c6bf7)
++++ b/Software/src/Main.kt	(date 1743803167392)
+@@ -1,27 +1,7 @@
+ import isel.leic.utils.Time
+ 
+ fun main() {
+-	LCD.init()
+-
+-	var canWrite = true
+-	var lastKey = KBD.NONE
+-
+-	while (true){
+-		var key = KBD.getKey()
+-		println(key)
+-
+-		if (key == '*') {
+-			LCD.clear()
+-		}
+-		else if (canWrite && key != KBD.NONE) {
+-			LCD.write(key)
+-			/*key = KBD.NONE*/
+-			canWrite = false
+-		}
+-		else if (key == KBD.NONE)
+-			canWrite = true
+-
+-	}
++    TUI.init()
+ }
+ 
+ /*

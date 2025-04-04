@@ -1,6 +1,27 @@
 import isel.leic.utils.Time
 
 object TUI {
+    private var canWrite: Boolean = true
+
+    fun init(){
+        LCD.init()
+        KBD.init()
+        canWrite = true
+
+        while (true){
+            var key = KBD.getKey()
+
+            if (key == '*') {
+                LCD.clear()
+            }
+            else if (canWrite && key != KBD.NONE) {
+                LCD.write(key)
+                canWrite = false
+            }
+            else if (key == KBD.NONE)
+                canWrite = true
+        }
+    }
 
     fun writeSplited(text: String) {
 
@@ -22,13 +43,9 @@ object TUI {
         val newText = " ".repeat(LCD.COLS - text.length) + text
 
         var count = 0
+
         for (c in newText) {
-            if (count != 0 && count % LCD.COLS == 0) {
-                LCD.cursor(1, 0)
-                count = 0
-            }
             LCD.write(c)
-            count++
         }
     }
 
@@ -68,7 +85,7 @@ object TUI {
 
         var i = 0
         while (!condition()) {
-            LCD.write(".")
+            LCD.write(".",false)
 
             if (i == 3) {
                 i = -1
@@ -89,13 +106,13 @@ object TUI {
                     LCD.cursor(0, LCD.COLS - i)
                     var count = 0
                     for (c in newText) {
-                        LCD.write(c)
+                        LCD.write(c,false)
                         count++
                     }
                 } else {
                     var count = 0
                     for (c in newText) {
-                        LCD.write(c)
+                        LCD.write(c,false)
                         count++
                     }
                 }

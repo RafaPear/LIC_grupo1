@@ -3,6 +3,9 @@ import kotlin.text.iterator
 
 // Escreve no LCD usando a interface a 4 bits.
 object LCD {
+	//para ter uma melhor noção por onde anda o cursor
+	var cursorPos: Pair<Int,Int> = Pair(0,0) // (linha, coluna)
+
 	// Dimensão do display.
 	const val LINES = 2
 	const val COLS = 16
@@ -112,20 +115,15 @@ object LCD {
 	}
 
 	// Escreve um caractere na posição corrente.
-	fun write(c: Char) {
+	fun write(c: Char, wrap: Boolean = true) {
+		autoCursor(wrap)
 		writeDATA(c.code)
 	}
 
 	// Escreve uma string na posição corrente.
 	fun write(text: String, wrap: Boolean = true) {
-		var count = 0
 		for (c in text) {
-			if (wrap && count != 0 && count % COLS == 0) {
-				cursor(1, 0)
-				count = 0
-			}
-			write(c)
-			count++
+			write(c,wrap)
 		}
 	}
 
@@ -140,7 +138,7 @@ object LCD {
 				1 -> (column + 0b1100_0000)
 				else -> 0
 			}
-			writeCMD(address)
+			cursorPos = Pair(line,column)
 			writeCMD(address)
 		} else {
 			throw IllegalArgumentException("Posição Inválida.")
@@ -150,5 +148,11 @@ object LCD {
 	// Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
 	fun clear() { /* Implementação */
 		writeCMD(1)
+		cursorPos = Pair(0,0)
+	}
+
+	fun autoCursor(wrap: Boolean) {
+		if (wrap && cursorPos == Pair(0,16)) cursor(1,0)
+		else cursorPos = cursorPos.copy(second = cursorPos.second + 1)
 	}
 }
