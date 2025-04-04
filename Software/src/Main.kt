@@ -8,7 +8,6 @@ fun main() {
 
 	while (true){
 		var key = KBD.getKey()
-		println(key)
 
 		if (key == '*') {
 			LCD.clear()

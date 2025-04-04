@@ -19,6 +19,7 @@ object KBD {
 	fun getKey(): Char {
 		return if (HAL.isBit(0b0001_0000))
 			CHAR_LIST[HAL.readBits(0b0000_1111)]
+
 		else NONE
 	}
 
