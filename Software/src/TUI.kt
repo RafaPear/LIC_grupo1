@@ -3,28 +3,28 @@ import isel.leic.utils.Time
 object TUI {
     private var canWrite: Boolean = true
 
-    fun init(){
+    fun init() {
         LCD.init()
         KBD.init()
     }
+
     fun write(str: String) = LCD.write(str)
 
     fun capture() {
-        while (true){
+        while (true) {
             var key = KBD.getKey()
 
             if (key == '*') {
                 LCD.clear()
-            }
-            else if (canWrite && key != KBD.NONE) {
+            } else if (canWrite && key != KBD.NONE) {
                 LCD.write(key)
-                key ==KBD.NONE
+                key == KBD.NONE
                 canWrite = false
-            }
-            else if (key == KBD.NONE)
+            } else if (key == KBD.NONE)
                 canWrite = true
         }
     }
+
     fun writeSplited(text: String) {
 
         var count = 0
@@ -40,7 +40,15 @@ object TUI {
         }
     }
 
-    fun writeRight(text: String) {
+    fun writeRight(str: String) {
+        if (str.length > LCD.COLS * 2) error("String very Big")
+        if (str.length > LCD.COLS) {
+            // se a String for maior que a primeira linha ele quebra e escreve nas duas linhas
+            writeRightLine(str.substring(0, LCD.COLS))
+            writeRightLine(str.substring(LCD.COLS, str.length))
+        } else writeCenterLine(str)
+    }
+    fun writeRightLine(text: String) {
 
         val newText = " ".repeat(LCD.COLS - text.length) + text
 
@@ -50,12 +58,13 @@ object TUI {
             LCD.write(c)
         }
     }
+
     fun writeCenter(str: String) {
-        if (str.length > LCD.COLS*2) error("String verry Big")
+        if (str.length > LCD.COLS * 2) error("String verry Big")
         if (str.length > LCD.COLS) {
             // se a String for maior que a primeira linha ele quebra e escreve nas duas linhas
-            writeCenterLine(str.substring(0,LCD.COLS),0)
-            writeCenterLine(str.substring(LCD.COLS,str.length),1)
+            writeCenterLine(str.substring(0, LCD.COLS), 0)
+            writeCenterLine(str.substring(LCD.COLS, str.length), 1)
         } else writeCenterLine(str)
     }
 
@@ -68,7 +77,7 @@ object TUI {
         //serve para ajustar quando a frase for ímpar e não ficar exatamente no centro
         val parity = if (str.length % 2 == 0) 0 else 1
 
-        for (i in str.indices){//adiciona a frase a lista
+        for (i in str.indices) {//adiciona a frase a lista
             listChar[i] = str[i]
         }
 
@@ -82,8 +91,8 @@ object TUI {
             rightSize--
         }
 
-        LCD.cursor(line,leftSize)
-        LCD.write(str,false)
+        LCD.cursor(line, leftSize)
+        LCD.write(str, false)
     }
 
     fun moveStrInArray(str: CharArray, dir: Int = 1) {//move 1 posição a frase dentro do array
@@ -102,7 +111,7 @@ object TUI {
 
         var i = 0
         while (!condition()) {
-            LCD.write('.',false)
+            LCD.write('.', false)
 
             if (i == 3) {
                 i = -1
@@ -115,28 +124,33 @@ object TUI {
         LCD.clear()
     }
 
-    fun writeWalkText(time: Long, text: String) {
-        for (a in 0..text.length / 40) {
-            val newText = text.subSequence(0, ((a + 1) * 40).coerceIn(0, text.length)).toString()
-            for (i in a * 40 + 1 until (a + 1) * 40 + 1) {
-                if (LCD.COLS - i >= 0) {
-                    LCD.cursor(0, LCD.COLS - i)
-                    var count = 0
-                    for (c in newText) {
-                        LCD.write(c,false)
-                        count++
-                    }
-                } else {
-                    var count = 0
-                    for (c in newText) {
-                        LCD.write(c,false)
-                        count++
-                    }
-                }
-                Time.sleep(time)
-                LCD.clear()
-            }
+    fun writeWalkText(time: Long = 200, str: String) {
+        var window = ""
+
+        for (i in 0 until LCD.COLS - 1) {
+            window += " "
         }
-        Time.sleep(time)
+        window += str
+
+        for (i in 0 until LCD.COLS - 1) {
+            window += " "
+        }
+        var l = 0
+        var r = LCD.COLS - 1
+
+        while (true) {
+            if (r == window.length) {
+                r = LCD.COLS - 1
+                l = 0
+            }
+            for (i in l..r) {
+                println(window[i])
+                LCD.write(window[i], false)
+            }
+            l++
+            r++
+            Time.sleep(time)
+            LCD.clear()
+        }
     }
 }
