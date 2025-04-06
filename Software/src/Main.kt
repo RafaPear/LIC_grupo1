@@ -2,6 +2,7 @@ import isel.leic.utils.Time
 
 fun main() {
     TUI.init()
+    TUI.capture()
 }
 
 /*

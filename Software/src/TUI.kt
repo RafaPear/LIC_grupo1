@@ -14,8 +14,9 @@ object TUI {
         while (true) {
             var key = KBD.getKey()
 
-            if (key == '*') {
+            if (key == '*' && canWrite) {
                 LCD.clear()
+                canWrite = false
             } else if (canWrite && key != KBD.NONE) {
                 LCD.write(key)
                 key == KBD.NONE
