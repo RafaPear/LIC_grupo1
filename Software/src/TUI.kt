@@ -105,7 +105,7 @@ object TUI {
         }
     }
 
-    fun loadingScreen(time: Long, condition: () -> Boolean) {
+    fun loadingScreen(time: Long = 200, condition: () -> Boolean) {
         LCD.clear()
         writeCenter("Loading")
 
@@ -124,7 +124,7 @@ object TUI {
         LCD.clear()
     }
 
-    fun writeWalkText(time: Long = 200, str: String) {
+    fun writeWalkText(str: String,time: Long = 200) {
         var window = ""
 
         for (i in 0 until LCD.COLS - 1) {
@@ -144,7 +144,6 @@ object TUI {
                 l = 0
             }
             for (i in l..r) {
-                println(window[i])
                 LCD.write(window[i], false)
             }
             l++
