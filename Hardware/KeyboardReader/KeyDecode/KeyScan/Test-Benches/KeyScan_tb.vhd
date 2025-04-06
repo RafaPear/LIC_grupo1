@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity KScan_tb is
 end KScan_tb;
@@ -9,8 +10,10 @@ architecture behavioral of KScan_tb is
         port (
             CLK: in std_logic;
             RESET: in std_logic;
+            Kscan: in std_logic;
             LIN: in std_logic_vector(3 downto 0);
             COL: out std_logic_vector(3 downto 0);
+            Kpress: out std_logic;  
             K: out std_logic_vector(3 downto 0)
         );
     end component;
@@ -20,15 +23,19 @@ architecture behavioral of KScan_tb is
 
     signal CLK_tb: std_logic;
     signal RESET_tb: std_logic;
+    signal Kscan_tb: std_logic;
     signal LIN_tb: std_logic_vector(3 downto 0);
     signal COL_tb: std_logic_vector(3 downto 0);
     signal K_tb: std_logic_vector(3 downto 0);
+    signal Kpress_tb: std_logic;
 begin
     test: KeyScan port map(
         CLK => CLK_tb,
         RESET => RESET_tb,
+        Kscan => Kscan_tb,
         LIN => LIN_tb,
         COL => COL_tb,
+        Kpress => Kpress_tb,
         K => K_tb
     );
 
@@ -40,43 +47,30 @@ begin
         wait for MCLK_HALF_PERIOD;
     end process;
 
+    Kscan_gen: process(CLK_tb)
+    begin
+        if rising_edge(CLK_tb) then
+            Kscan_tb <= not Kpress_tb; 
+        end if;
+    end process;
+
     stimulus: process
+        variable n: unsigned(3 downto 0) := "0001";
+        variable i: integer;
     begin
         RESET_tb <= '1';
         LIN_tb <= "1111";
         wait for MCLK_PERIOD;
         RESET_tb <= '0';
         
-        LIN_tb <= "1110";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1101";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1011";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "0111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
-
-        LIN_tb <= "1111";
-        
-        wait for MCLK_HALF_PERIOD / 2;
+        for i in 0 to 4 loop
+            wait for MCLK_PERIOD*2;
+            LIN_tb <= not std_logic_vector(n);
+            wait for MCLK_PERIOD*2;
+            n := shift_left(n, 1); 
+            LIN_tb <= "1111"; 
+        end loop;
+    
+        wait;
     end process;
 end behavioral;

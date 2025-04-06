@@ -52,7 +52,6 @@ object TUI {
 
         val newText = " ".repeat(LCD.COLS - text.length) + text
 
-        var count = 0
 
         for (c in newText) {
             LCD.write(c)
