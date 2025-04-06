@@ -6,8 +6,10 @@ object TUI {
     fun init(){
         LCD.init()
         KBD.init()
-        canWrite = true
+    }
+    fun write(str: String) = LCD.write(str)
 
+    fun capture() {
         while (true){
             var key = KBD.getKey()
 
@@ -16,13 +18,13 @@ object TUI {
             }
             else if (canWrite && key != KBD.NONE) {
                 LCD.write(key)
+                key ==KBD.NONE
                 canWrite = false
             }
             else if (key == KBD.NONE)
                 canWrite = true
         }
     }
-
     fun writeSplited(text: String) {
 
         var count = 0
@@ -48,34 +50,49 @@ object TUI {
             LCD.write(c)
         }
     }
+    fun writeCenter(str: String) {
+        if (str.length > LCD.COLS*2) error("String verry Big")
+        if (str.length > LCD.COLS) {
+            // se a String for maior que a primeira linha ele quebra e escreve nas duas linhas
+            writeCenterLine(str.substring(0,LCD.COLS),0)
+            writeCenterLine(str.substring(LCD.COLS,str.length),1)
+        } else writeCenterLine(str)
+    }
 
+    fun writeCenterLine(str: String, line: Int = 0) {
+        if (line !in 0..1) error("invalid line")
 
-    fun writeCenter(text: String) {
+        val cols = LCD.COLS
+        val listChar = CharArray(cols) // cada elemento do array corresponde a uma coluna do LCD
 
-        val words = text.split(Regex(" +"))
-        var line = ""
+        //serve para ajustar quando a frase for ímpar e não ficar exatamente no centro
+        val parity = if (str.length % 2 == 0) 0 else 1
 
-        for (word in words) {
-            if (line.length + word.length >= LCD.COLS) {
-                val padding = (LCD.COLS - line.length) / 2
-                val centeredLine = " ".repeat(padding) + line.trim()
-                for (i in centeredLine)
-                    LCD.write(i)
-                LCD.cursor(1, 0)
-                line = ""
-            }
-
-            if (line.isNotEmpty()) {
-                line += " "
-            }
-            line += word
+        for (i in str.indices){//adiciona a frase a lista
+            listChar[i] = str[i]
         }
 
-        if (line.isNotEmpty()) {
-            val padding = (LCD.COLS - line.length) / 2
-            val centeredLine = " ".repeat(padding) + line.trim()
-            for (i in centeredLine)
-                LCD.write(i)
+        var leftSize = 0
+        var rightSize = listChar.lastIndex - str.lastIndex
+
+        while (true) {//move para a direita a frase até estar centrada
+            if (leftSize == rightSize - parity) break
+            moveStrInArray(listChar)
+            leftSize++
+            rightSize--
+        }
+
+        LCD.cursor(line,leftSize)
+        LCD.write(str,false)
+    }
+
+    fun moveStrInArray(str: CharArray, dir: Int = 1) {//move 1 posição a frase dentro do array
+        val lastCH = str.indexOfLast { it != '\u0000' }
+        if (lastCH != str.lastIndex) {
+            for (i in lastCH downTo 0) {
+                str[i + dir] = str[i]
+                str[i] = '\u0000'
+            }
         }
     }
 
@@ -85,7 +102,7 @@ object TUI {
 
         var i = 0
         while (!condition()) {
-            LCD.write(".",false)
+            LCD.write('.',false)
 
             if (i == 3) {
                 i = -1
