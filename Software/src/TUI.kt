@@ -8,7 +8,10 @@ object TUI {
         KBD.init()
     }
 
-    fun write(str: String) = LCD.write(str)
+    fun write(str: String) =
+        if (str.length > LCD.COLS * 2)
+            error("String very Big")
+        else LCD.write(str)
 
     fun capture() {
         while (true) {
@@ -26,7 +29,7 @@ object TUI {
     }
 
     fun writeSplited(text: String) {
-
+        if (text.length > LCD.COLS * 2) error("String verry Big")
         var count = 0
         var words = text.split(Regex("(?<=\\s)|(?=\\s)"))
         for (word in words) {
@@ -46,13 +49,10 @@ object TUI {
             // se a String for maior que a primeira linha ele quebra e escreve nas duas linhas
             writeRightLine(str.substring(0, LCD.COLS))
             writeRightLine(str.substring(LCD.COLS, str.length))
-        } else writeCenterLine(str)
+        } else writeRightLine(str)
     }
-    fun writeRightLine(text: String) {
-
+    private fun writeRightLine(text: String) {
         val newText = " ".repeat(LCD.COLS - text.length) + text
-
-
         for (c in newText) {
             LCD.write(c)
         }
@@ -67,7 +67,7 @@ object TUI {
         } else writeCenterLine(str)
     }
 
-    fun writeCenterLine(str: String, line: Int = 0) {
+    private fun writeCenterLine(str: String, line: Int = 0) {
         if (line !in 0..1) error("invalid line")
 
         val cols = LCD.COLS
@@ -94,7 +94,8 @@ object TUI {
         LCD.write(str, false)
     }
 
-    fun moveStrInArray(str: CharArray, dir: Int = 1) {//move 1 posição a frase dentro do array
+    private fun moveStrInArray(str: CharArray, dir: Int = 1) {
+        if(dir != -1 && dir != 1) error("invalid direction")
         val lastCH = str.indexOfLast { it != '\u0000' }
         if (lastCH != str.lastIndex) {
             for (i in lastCH downTo 0) {

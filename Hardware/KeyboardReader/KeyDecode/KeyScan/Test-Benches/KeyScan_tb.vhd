@@ -28,6 +28,10 @@ architecture behavioral of KScan_tb is
     signal COL_tb: std_logic_vector(3 downto 0);
     signal K_tb: std_logic_vector(3 downto 0);
     signal Kpress_tb: std_logic;
+    signal S_tb: std_logic_vector(1 downto 0);
+    signal D_tb: std_logic_vector(3 downto 0);
+
+
 begin
     test: KeyScan port map(
         CLK => CLK_tb,
@@ -54,19 +58,26 @@ begin
         end if;
     end process;
 
+
+
     stimulus: process
         variable n: unsigned(3 downto 0) := "0001";
         variable i: integer;
+        variable col_2: integer := 4;
+        variable col_3: integer := 8;
+        variable col_4: integer := 12;
+        variable col_1: integer := 2;
     begin
         RESET_tb <= '1';
         LIN_tb <= "1111";
         wait for MCLK_PERIOD;
         RESET_tb <= '0';
-        
-        for i in 0 to 4 loop
-            wait for MCLK_PERIOD*2;
+        wait for MCLK_PERIOD;
+
+        for i in 0 to 16 loop
+            wait for MCLK_PERIOD*col_1;
             LIN_tb <= not std_logic_vector(n);
-            wait for MCLK_PERIOD*2;
+            wait for MCLK_PERIOD*col_1;
             n := shift_left(n, 1); 
             LIN_tb <= "1111"; 
         end loop;
