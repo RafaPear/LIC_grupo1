@@ -2,7 +2,7 @@ import isel.leic.utils.Time
 
 fun main() {
     TUI.init()
-    TUI.writeWalkText("ESTE RELATORIO MERECE UM 20")
+    TUI.capture()
 }
 
 /*
