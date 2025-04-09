@@ -66,18 +66,16 @@ begin
         variable col_2: integer := 4;
         variable col_3: integer := 8;
         variable col_4: integer := 12;
-        variable col_1: integer := 2;
     begin
         RESET_tb <= '1';
         LIN_tb <= "1111";
         wait for MCLK_PERIOD;
         RESET_tb <= '0';
-        wait for MCLK_PERIOD;
 
-        for i in 0 to 16 loop
-            wait for MCLK_PERIOD*col_1;
+        for i in 0 to 16 * col_2 loop
+            wait for MCLK_PERIOD*col_2;
             LIN_tb <= not std_logic_vector(n);
-            wait for MCLK_PERIOD*col_1;
+            wait for MCLK_PERIOD*col_2;
             n := shift_left(n, 1); 
             LIN_tb <= "1111"; 
         end loop;
