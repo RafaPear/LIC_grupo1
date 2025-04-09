@@ -93,7 +93,7 @@ begin
         wait for clk_period*2;
         init <= '0';
        
-         data_in <= '1'; wait for clk_period*2;
+        data_in <= '1'; wait for clk_period*2;
         data_in <= '1'; wait for clk_period*2;
         data_in <= '1'; wait for clk_period*2;
         data_in <= '1'; wait for clk_period*2;
