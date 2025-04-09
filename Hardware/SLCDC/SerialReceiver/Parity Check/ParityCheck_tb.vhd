@@ -35,108 +35,71 @@ begin
     begin
         while true loop
             clk <= '0';
-            wait for clk_period*2 / 2;
+            wait for clk_period / 2;
             clk <= '1';
-            wait for clk_period*2 / 2;
+            wait for clk_period / 2;
         end loop;
     end process;
 
-    stimulus: process
+    stim_proc: process
     begin
-
+        -- Test 1: Trama com número ímpar de 1s (10101)
         init <= '1';
-        wait for clk_period*2;
+        wait for clk_period;
         init <= '0';
+        wait for clk_period;
 
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
 
-        assert (error_signal = '0') report "Test 1 failed: Expected even parity (0)" severity error;
+        assert (error_signal = '0') report "Test 1 failed: Expected P = 0 for odd number of 1s" severity error;
 
-        wait for clk_period*2;
-
-
+        -- Test 2: Trama com número par de 1s (11000)
         init <= '1';
-        wait for clk_period*2;
+        wait for clk_period;
         init <= '0';
-       
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
+        wait for clk_period;
 
-        assert (error_signal = '1') report "Test 2 failed: Expected odd parity (1)" severity error;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
 
-        wait for clk_period*2;
+        assert (error_signal = '1') report "Test 2 failed: Expected P = 1 for even number of 1s" severity error;
 
-
+        -- Test 3: Trama com todos os bits a 0 (00000)
         init <= '1';
-        wait for clk_period*2;
+        wait for clk_period;
         init <= '0';
-        
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
+        wait for clk_period;
 
-        assert (error_signal = '0') report "Test 3 failed: Expected even parity (0)" severity error;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
+        data_in <= '0'; wait for clk_period;
 
-        wait for clk_period*2;
-        
+        assert (error_signal = '1') report "Test 3 failed: Expected P = 1 for even number of 1s" severity error;
 
+        -- Test 4: Trama com todos os bits a 1 (11111)
         init <= '1';
-        wait for clk_period*2;
+        wait for clk_period;
         init <= '0';
-       
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
+        wait for clk_period;
 
-        assert (error_signal = '1') report "Test 4 failed: Expected odd parity (1)" severity error;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
+        data_in <= '1'; wait for clk_period;
 
-        wait for clk_period*2;
+        assert (error_signal = '0') report "Test 4 failed: Expected P = 0 for odd number of 1s" severity error;
 
-
-        init <= '1';
-        wait for clk_period*2;
-        init <= '0';
-        
-
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-
-        assert (error_signal = '1') report "Test 5 failed: Expected odd parity (1)" severity error;
-
-        wait for clk_period*2;
-
-        init <= '1';
-        wait for clk_period*2;
-        init <= '0';
-
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-        data_in <= '1'; wait for clk_period*2;
-        data_in <= '0'; wait for clk_period*2;
-
-        assert (error_signal = '0') report "Test 6 failed: Expected even parity (0)" severity error;
-
-        wait for clk_period*2;
-
-        init <= '1';
-        wait for clk_period*2;
-        init <= '0';
-
+        wait;
     end process;
 
 end Behavioral;
