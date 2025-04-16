@@ -65,6 +65,7 @@ signal temp_dFlag: std_logic;
 signal temp_Q_counter: std_logic_vector(2 downto 0);
 signal five: std_logic_vector(2 downto 0) := "101";
 signal six: std_logic_vector(2 downto 0) := "110";
+
 begin
 
     shiftRegister1: ShiftRegister port map(
