@@ -1,0 +1,477 @@
+Index: Software/src/HAL.kt
+===================================================================
+diff --git a/Software/src/HAL.kt b/Software/src/HAL.kt
+deleted file mode 100644
+--- a/Software/src/HAL.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,44 +0,0 @@
+-import isel.leic.UsbPort
+-
+-object HAL {
+-    // Guarda o valor do array de LEDs
+-    var light = 0b0000_0000
+-
+-    // NOTE: Inicia o objeto
+-    fun init(){
+-        writeBits(0b1111_1111,light)
+-    }
+-
+-    // NOTE: Retorna 'true' se o bit definido pela mask está com o valor lógico '1' no UsbPort
+-    fun isBit(mask: Int): Boolean{
+-        if (mask.countOneBits() == 1){
+-            if (UsbPort.read().and(mask).countOneBits() == 1)
+-                return true
+-        }
+-        return false
+-    }
+-
+-    // NOTE: Retorna os valores dos bits representados por mask presentes no UsbPort
+-    fun readBits(mask: Int): Int{
+-        println(UsbPort.read().and(mask))
+-        return UsbPort.read().and(mask)
+-    }
+-
+-    // NOTE: Escreve nos bits representados por mask os valores dos bits correspondentes em value
+-    fun writeBits(mask: Int, value: Int){
+-        light = (mask.inv().and(light)).or(value.and(mask))
+-        UsbPort.write(light)
+-    }
+-
+-    // NOTE: Coloca os bits representados por mask no valor lógico '1'
+-    fun setBits(mask: Int){
+-        light = mask.or(light)
+-        UsbPort.write(light)
+-    }
+-
+-    // NOTE: Coloca os bits representados por mask no valor lógico '0'
+-    fun clrBits(mask: Int){
+-        light = mask.inv().and(light)
+-        UsbPort.write(light)
+-    }
+-}
+\ No newline at end of file
+Index: Software/src/TUI.kt
+===================================================================
+diff --git a/Software/src/TUI.kt b/Software/src/TUI.kt
+deleted file mode 100644
+--- a/Software/src/TUI.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,133 +0,0 @@
+-import isel.leic.utils.Time
+-
+-fun main(){
+-    TUI.init()
+-    TUI.loadingScreen(500) {false}
+-}
+-
+-object TUI {
+-    private var canWrite: Boolean = true
+-
+-    fun init(){
+-        KBD.init()
+-        LCD.init()
+-    }
+-
+-    fun capture(){
+-        canWrite = true
+-
+-        while (true){
+-            var key = KBD.getKey()
+-
+-            if (key == '*') {
+-                LCD.clear()
+-            }
+-            else if (canWrite && key != KBD.NONE) {
+-                LCD.write(key)
+-                canWrite = false
+-            }
+-            else if (key == KBD.NONE)
+-                canWrite = true
+-        }
+-    }
+-
+-    fun writeSplited(text: String) {
+-
+-        var count = 0
+-        var words = text.split(Regex("(?<=\\s)|(?=\\s)"))
+-        for (word in words) {
+-            if (count + word.length > LCD.COLS) {
+-                LCD.cursor(1, 0)
+-                count = 0
+-            }
+-            for (i in word)
+-                LCD.write(i)
+-            count += word.length
+-        }
+-    }
+-
+-    fun writeRight(text: String) {
+-
+-        val newText = " ".repeat(LCD.COLS - text.length) + text
+-
+-        var count = 0
+-
+-        for (c in newText) {
+-            LCD.write(c)
+-        }
+-    }
+-
+-
+-    fun writeCenter(text: String) {
+-
+-        val words = text.split(Regex(" +"))
+-        var line = ""
+-
+-        for (word in words) {
+-            if (line.length + word.length >= LCD.COLS) {
+-                val padding = (LCD.COLS - line.length) / 2
+-                val centeredLine = " ".repeat(padding) + line.trim()
+-                for (i in centeredLine)
+-                    LCD.write(i)
+-                LCD.cursor(1, 0)
+-                line = ""
+-            }
+-
+-            if (line.isNotEmpty()) {
+-                line += " "
+-            }
+-            line += word
+-        }
+-
+-        if (line.isNotEmpty()) {
+-            val padding = (LCD.COLS - line.length) / 2
+-            val centeredLine = " ".repeat(padding) + line.trim()
+-            for (i in centeredLine)
+-                LCD.write(i)
+-        }
+-    }
+-
+-    fun loadingScreen(time: Long, condition: () -> Boolean) {
+-        LCD.clear()
+-        writeCenter("Loading")
+-
+-        var i = 0
+-        while (!condition()) {
+-            LCD.write(".",false)
+-
+-            if (i == 3) {
+-                i = -1
+-                LCD.clear()
+-                writeCenter("Loading")
+-            }
+-            i++
+-            Time.sleep(time)
+-        }
+-        LCD.clear()
+-    }
+-
+-    fun writeWalkText(time: Long, text: String) {
+-        for (a in 0..text.length / 40) {
+-            val newText = text.subSequence(0, ((a + 1) * 40).coerceIn(0, text.length)).toString()
+-            for (i in a * 40 + 1 until (a + 1) * 40 + 1) {
+-                if (LCD.COLS - i >= 0) {
+-                    LCD.cursor(0, LCD.COLS - i)
+-                    var count = 0
+-                    for (c in newText) {
+-                        LCD.write(c,false)
+-                        count++
+-                    }
+-                } else {
+-                    var count = 0
+-                    for (c in newText) {
+-                        LCD.write(c,false)
+-                        count++
+-                    }
+-                }
+-                Time.sleep(time)
+-                LCD.clear()
+-            }
+-        }
+-        Time.sleep(time)
+-    }
+-}
+\ No newline at end of file
+Index: Software/src/Main.kt
+===================================================================
+diff --git a/Software/src/Main.kt b/Software/src/Main.kt
+deleted file mode 100644
+--- a/Software/src/Main.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,15 +0,0 @@
+-import isel.leic.utils.Time
+-
+-fun main() {
+-    TUI.init()
+-}
+-
+-/*
+-var read = false
+-
+-thread {
+-    readln()
+-    read = true
+-}
+-TUI.loadingScreen(500L) { read }
+-*/
+Index: Software/src/LCD.kt
+===================================================================
+diff --git a/Software/src/LCD.kt b/Software/src/LCD.kt
+deleted file mode 100644
+--- a/Software/src/LCD.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,158 +0,0 @@
+-import isel.leic.utils.Time
+-import kotlin.text.iterator
+-
+-// Escreve no LCD usando a interface a 4 bits.
+-object LCD {
+-	//para ter uma melhor noção por onde anda o cursor
+-	var cursorPos: Pair<Int,Int> = Pair(0,0) // (linha, coluna)
+-
+-	// Dimensão do display.
+-	const val LINES = 2
+-	const val COLS = 16
+-	private const val NIBBLE = 3
+-
+-	// Define se a interface é Série ou Paralela.
+-	private const val SERIAL_INTERFACE = false
+-
+-	var E_MASK = if (SERIAL_INTERFACE) 1 else 0b0010_0000
+-	var RS_MASK = if (SERIAL_INTERFACE) 1 else 0b0001_0000
+-	var NIBBLE_MASK = if (SERIAL_INTERFACE) 1 else 0b0000_1111
+-
+-	// Escreve um nibble de comando/dados no LCD em paralelo.
+-	private fun writeNibbleParallel(rs: Boolean, data: Int) {
+-		// Envia rs
+-        rs.toBit(RS_MASK)
+-    
+-		Time.sleep(1)
+-
+-		// Envia E On
+-		HAL.setBits(E_MASK)
+-
+-		Time.sleep(1)
+-
+-		// Envia data
+-		HAL.writeBits(NIBBLE_MASK, data)
+-
+-		Time.sleep(1)
+-
+-		// Envia E Off
+-		HAL.clrBits(E_MASK)
+-
+-		Time.sleep(1)
+-
+-	}
+-
+-	// Escreve um nibble de comando/dados no LCD em série.
+-	private fun writeNibbleSerial(rs: Boolean, data: Int) {
+-		// Envia rs
+-		HAL.writeBits(RS_MASK, rs.toInt())
+-		// Envia E On
+-		HAL.setBits(E_MASK)
+-		// Envia data
+-		for (i in NIBBLE..0) {
+-			val bit = data.isBit(i)
+-			HAL.writeBits(NIBBLE_MASK, bit.toInt())
+-		}
+-		// Envia E Off
+-		HAL.clrBits(E_MASK)
+-	}
+-
+-	// Escreve um nibble de comando/dados no LCD.
+-	private fun writeNibble(rs: Boolean, data: Int) {
+-		if (SERIAL_INTERFACE)
+-			writeNibbleSerial(rs, data)
+-		else
+-			writeNibbleParallel(rs, data)
+-	}
+-
+-	// Escreve um byte de comando/dados no LCD.
+-	private fun writeByte(rs: Boolean, data: Int) {
+-		writeNibble(rs, data.rotateRight(4))
+-		writeNibble(rs, data and 0b0000_1111)
+-	}
+-
+-	// Escreve um comando no LCD.
+-	private fun writeCMD(data: Int) {
+-		writeByte(false, data)
+-	}
+-
+-	// Escreve um dado no LCD.
+-	private fun writeDATA(data: Int) {
+-		writeByte(true, data)
+-	}
+-
+-	// Envia a sequência de iniciação para comunicação a 4 bits.
+-	fun init() {
+-		HAL.init()
+-		val time_list = longArrayOf(15, 5, 1)
+-		val init_Code = intArrayOf(
+-			0b0000_0011,
+-			0b0000_0010,
+-			0b0000_0010,
+-			0b0000_1000,
+-			0b0000_0000,
+-			0b0000_1000,
+-			0b0000_0000,
+-			0b0000_0001,
+-			0b0000_0000,
+-			0b0000_0110,
+-
+-			0b0000_0001, // Clear display
+-			0b0000_0010, // Return home
+-			0b0000_1100 /// Cursor On / Blinking On
+-		)
+-
+-		for (time in time_list) {
+-			Time.sleep(time)
+-			writeNibble(false, init_Code[0])
+-		}
+-
+-		writeNibble(false, init_Code[1])
+-
+-		for (i in 2 until init_Code.size) {
+-			writeByte(false, init_Code[i])
+-		}
+-	}
+-
+-	// Escreve um caractere na posição corrente.
+-	fun write(c: Char, wrap: Boolean = true) {
+-		autoCursor(wrap)
+-		writeDATA(c.code)
+-	}
+-
+-	// Escreve uma string na posição corrente.
+-	fun write(text: String, wrap: Boolean = true) {
+-		for (c in text) {
+-			write(c,wrap)
+-		}
+-	}
+-
+-
+-
+-	// Envia comando para posicionar o cursor.
+-	// (line: 0..LINES-1, column: 0..COLS-1)
+-	fun cursor(line: Int, column: Int) {
+-		if (line in 0 until LINES && column in 0 until COLS) {
+-			val address = when (line) {
+-				0 -> (column + 0b1000_0000)
+-				1 -> (column + 0b1100_0000)
+-				else -> 0
+-			}
+-			cursorPos = Pair(line,column)
+-			writeCMD(address)
+-		} else {
+-			throw IllegalArgumentException("Posição Inválida.")
+-		}
+-	}
+-
+-	// Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
+-	fun clear() { /* Implementação */
+-		writeCMD(1)
+-		cursorPos = Pair(0,0)
+-	}
+-
+-	fun autoCursor(wrap: Boolean) {
+-		if (wrap && cursorPos == Pair(0,16)) cursor(1,0)
+-		else cursorPos = cursorPos.copy(second = cursorPos.second + 1)
+-	}
+-}
+Index: Software/src/KBD.kt
+===================================================================
+diff --git a/Software/src/KBD.kt b/Software/src/KBD.kt
+deleted file mode 100644
+--- a/Software/src/KBD.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,55 +0,0 @@
+-import isel.leic.utils.Time
+-
+-// Ler teclas. Funcoes retornam '0'..'9','A'..'D','#','*' ou NONE.
+-object KBD {
+-	const val NONE = 0.toChar();
+-	val CHAR_LIST = charArrayOf(
+-		'1', '2', '3', 'A',
+-		'4', '5', '6', 'B',
+-		'7', '8', '9', 'C',
+-		'*', '0', '#', 'D'
+-	)
+-
+-	// Inicia a classe
+-	fun init() {
+-		HAL.init()
+-	}
+-
+-	// Retorna de imediato a tecla premida ou NONE se nao ha tecla premida.
+-	fun getKey(): Char {
+-		return if (HAL.isBit(0b0001_0000))
+-			CHAR_LIST[HAL.readBits(0b0000_1111)]
+-
+-		else NONE
+-	}
+-
+-	fun getKeyVal(): Int {
+-		return if (HAL.isBit(0b0001_0000))
+-			HAL.readBits(0b0000_1111)
+-		else -1
+-	}
+-
+-	// Retorna a tecla premida, caso ocorra antes do 'timeout' (em milissegundos),
+-	// ou NONE caso contrario.
+-	fun waitKey(timeout: Long): Char {
+-		val startTime = Time.getTimeInMillis()
+-		while (startTime + timeout > Time.getTimeInMillis()) {
+-			val key = getKey()
+-			if (key != NONE) {
+-				return key
+-			}
+-		}
+-		return NONE
+-	}
+-
+-	fun waitKeyVal(timeout: Long): Int {
+-		val startTime = Time.getTimeInMillis()
+-		while (startTime + timeout > Time.getTimeInMillis()) {
+-			val key = getKeyVal()
+-			if (key != -1) {
+-				return key
+-			}
+-		}
+-		return -1
+-	}
+-}
+Index: Software/src/Math.kt
+===================================================================
+diff --git a/Software/src/Math.kt b/Software/src/Math.kt
+deleted file mode 100644
+--- a/Software/src/Math.kt	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
++++ /dev/null	(revision 0ebd2eed8ae5b3a0f1c7be2748837f87a70a4a95)
+@@ -1,28 +0,0 @@
+-import kotlin.countOneBits
+-
+-fun pow(base: Int, exponent: Int): Int{
+-    var temp = 1
+-    for (i in 1..exponent){
+-        temp = temp * base
+-    }
+-    return temp
+-}
+-
+-fun Int.toBitPlace(): Int{
+-    return pow(2, this)
+-}
+-
+-fun Int.isBit(index: Int) : Boolean{
+-    return and(1.shl(index)).countOneBits() == 1
+-}
+-
+-fun Boolean.toInt(): Int{
+-    return if (this) 1 else 0
+-}
+-
+-//NOTE: transforma um booleano
+-fun Boolean.toBit(mask:Int){
+-    if (mask.countOneBits() == 1){
+-        if (this) HAL.setBits(mask) else HAL.clrBits(mask)
+-    } else error("Parameter 'mask' has a bit count different than 1.")
+-}

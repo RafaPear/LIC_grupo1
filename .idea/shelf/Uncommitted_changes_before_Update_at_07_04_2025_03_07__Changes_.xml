@@ -1,0 +1,14 @@
+<changelist name="Uncommitted_changes_before_Update_at_07_04_2025_03_07_[Changes]" date="1743991665850" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_04_2025_03_07_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 07/04/2025 03:07 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="Software/out/production/Software/TUI.class" />
+    <option name="AFTER_PATH" value="Software/out/production/Software/TUI.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_04_2025_03_07_[Changes]/TUI.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Software/out/production/Software/MainKt.class" />
+    <option name="AFTER_PATH" value="Software/out/production/Software/MainKt.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_04_2025_03_07_[Changes]/MainKt.class" />
+  </binary>
+</changelist>
