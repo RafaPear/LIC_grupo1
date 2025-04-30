@@ -6,9 +6,9 @@ entity Reg2 is
 		CLK: in std_logic;
 		RESET: in std_logic;
 		SET: in std_logic;
-		D: in std_logic_vector(1 downto 0);
+		D: in std_logic_vector(2 downto 0);
 		EN: in std_logic;
-		Q: out std_logic_vector(1 downto 0)
+		Q: out std_logic_vector(2 downto 0)
 		);
 end Reg2;
 
@@ -42,6 +42,15 @@ begin
         D => D(1),
         EN => EN,
         Q => Q(1)
+    );
+
+	    UFFD11: FFD port map(
+        CLK => CLK,
+        RESET => RESET,
+        SET => SET,
+        D => D(2),
+        EN => EN,
+        Q => Q(2)
     );
 
 

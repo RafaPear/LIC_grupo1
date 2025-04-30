@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 
 entity ADDER2 is
 	port (
-		A: in std_logic_vector (1 downto 0);
-		B: in std_logic_vector (1 downto 0);
+		A: in std_logic_vector (2 downto 0);
+		B: in std_logic_vector (2 downto 0);
 		CIN: in std_logic;
-		S: out std_logic_vector (1 downto 0);
+		S: out std_logic_vector (2 downto 0);
 		COUT: out std_logic
 	);
 	end ADDER2;
@@ -22,7 +22,7 @@ component fulladder
 	);
 end component;
 
-signal C1: std_logic;
+signal C1,C2: std_logic;
 
 begin 
 	FA0: fulladder port map (
@@ -38,6 +38,14 @@ begin
 		B => B(1), 
 		Cin => C1, 
 		R => S(1), 
+		Cout => C2
+	);
+	
+		FA2: fulladder port map (
+		A => A(2), 
+		B => B(2), 
+		Cin => C2, 
+		R => S(2), 
 		Cout => COUT
 	);
 end arch_adder;		

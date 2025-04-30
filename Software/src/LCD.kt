@@ -12,7 +12,7 @@ object LCD {
     private const val NIBBLE = 3
 
     // Define se a interface é Série ou Paralela.
-    private const val SERIAL_INTERFACE = false
+    private const val SERIAL_INTERFACE = true
 
     var E_MASK = if (SERIAL_INTERFACE) 1 else 0b0010_0000
     var RS_MASK = if (SERIAL_INTERFACE) 1 else 0b0001_0000
@@ -36,17 +36,21 @@ object LCD {
 
     // Escreve um nibble de comando/dados no LCD em série.
     private fun writeNibbleSerial(rs: Boolean, data: Int) {
-        // Envia rs
-        HAL.writeBits(RS_MASK, rs.toInt())
         // Envia E On
         HAL.setBits(E_MASK)
+        Time.sleep(1)
+
+        // Envia rs
+        HAL.writeBits(RS_MASK, rs.toInt())
+        Time.sleep(1)
         // Envia data
-        for (i in NIBBLE..0) {
-            val bit = data.isBit(i)
-            HAL.writeBits(NIBBLE_MASK, bit.toInt())
+        var i = 0b0000_0001
+        while(i <= 0b0000_1000) {
+            HAL.writeBits(i, data)
+            i = i.shl(1)
         }
-        // Envia E Off
-        HAL.clrBits(E_MASK)
+//        Envia E Off
+//        HAL.clrBits(E_MASK)
     }
 
     // Escreve um nibble de comando/dados no LCD.
