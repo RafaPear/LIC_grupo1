@@ -5,7 +5,9 @@ import isel.leic.utils.Time
 //    TUI.capture()
 //}
 fun main(){
-    LCD.write('A')
+    TUI.init()
+    TUI.capture()
+//    LCD.write('A')
 }
 /*
 var read = false

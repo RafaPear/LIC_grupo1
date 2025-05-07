@@ -12,7 +12,7 @@ object LCD {
     private const val NIBBLE = 3
 
     // Define se a interface é Série ou Paralela.
-    private const val SERIAL_INTERFACE = true
+    private const val SERIAL_INTERFACE = false
 
     var E_MASK = if (SERIAL_INTERFACE) 1 else 0b0010_0000
     var RS_MASK = if (SERIAL_INTERFACE) 1 else 0b0001_0000

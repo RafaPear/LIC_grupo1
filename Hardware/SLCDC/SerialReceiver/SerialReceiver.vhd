@@ -64,8 +64,6 @@ signal temp_err: std_logic;
 signal temp_pFlag: std_logic;
 signal temp_dFlag: std_logic;
 signal temp_Q_counter: std_logic_vector(2 downto 0);
-signal five: std_logic_vector(2 downto 0) := "101";
-signal six: std_logic_vector(2 downto 0) := "110";
 
 begin
 
@@ -84,8 +82,11 @@ begin
         Q => temp_Q_counter
     );
 
-    temp_dFlag <= (five(2) and temp_Q_counter(2)) and (five(1) nor temp_Q_counter(1)) and (five(0) and temp_Q_counter(0));
-    temp_pFlag <= (six(2) and temp_Q_counter(2)) and (six(1) and temp_Q_counter(1)) and (six(0) nor temp_Q_counter(0));
+    -- 5 101
+    -- 6 110
+
+    temp_dFlag <= temp_Q_counter(2) and not temp_Q_counter(1) and temp_Q_counter(0);
+    temp_pFlag <= temp_Q_counter(2) and temp_Q_counter(1) and temp_Q_counter(0);
 
     ParityCheck1: ParityCheck port map(
         clk => SCLK,
@@ -106,4 +107,3 @@ begin
         wr => temp_wr
     );
 end arc_serialreceiver;
--- end Behavioral;
