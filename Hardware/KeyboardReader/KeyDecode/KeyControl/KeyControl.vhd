@@ -15,14 +15,14 @@ entity KeyControl is
 end KeyControl;
 
 architecture behavioral of KeyControl is
-    signal state, next_state: std_logic;
+    signal state, next_state: std_logic_vector(1 downto 0);
     signal temp_Kscan: std_logic;
     
 begin
     process (clk, rst, next_state)
     begin
         if rst = '1' then
-            state <= '0';
+            state <= '00';
         elsif rising_edge(clk) then
             state <= next_state;
         end if;
@@ -41,26 +41,37 @@ begin
     process (state, Kack, Kpress)
     begin
         case state is
-            when '0' =>
+            when '00' =>
                 Kscan <= '1';
                 Kval <= '0';
                 if Kpress = '1' then
-                    next_state <= '1';
+                    next_state <= '01';
                 else
-                    next_state <= '0';
+                    next_state <= '00';
                 end if;
             
-            when '1' =>
+            when '01' =>
                 Kscan <= '0';
                 Kval <= '1';
-                if (Kpress = '0' and Kack = '1') then
-                    next_state <= '0';
+                if Kack = '1' then
+                    next_state <= '10';
                 else
-                    next_state <= '1';
+                    next_state <= '01';
                 end if;
 
+            when '10' =>
+                Kscan <= '0'
+                Kval <= '0';
+                if Kack = '1' then
+                    next_state <= '10';
+                elsif Kack = '0' and Kpress = '1' then
+                    next_state <= '10';
+                else
+                    next_state <= '00';
+                end if;
+            
             when others =>
-                next_state <= '0';
+                next_state <= '00';
         end case;
     end process;
 end behavioral;
