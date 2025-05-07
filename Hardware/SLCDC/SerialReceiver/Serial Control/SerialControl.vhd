@@ -58,8 +58,10 @@ begin
                     next_state <= "011";
                 elsif (pFlag = '1' and RX_error = '1') then
                     next_state <= "000";
-                else
+                elsif pFlag = '0' then
                     next_state <= "010";
+                else
+                    next_state <= "011";
                 end if;
                 
             when "011" =>

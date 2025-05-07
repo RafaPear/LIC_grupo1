@@ -5,11 +5,12 @@ use ieee.numeric_std.all;
 entity SerialReceiver_tb is
 end SerialReceiver_tb;
 
-architecture test of tb_SerialReceiver is
+architecture test of SerialReceiver_tb is
     component SerialReceiver is
         port(
             SDX: in  std_logic;
             SCLK: in  std_logic;
+            clk_control: in  std_logic;
             SS: in  std_logic;
             accept: in  std_logic;
             RESET: in  std_logic;
@@ -20,6 +21,7 @@ architecture test of tb_SerialReceiver is
 
     signal s_SDX     : std_logic := '0';
     signal s_SCLK    : std_logic := '0';
+    signal s_clk_control : std_logic := '0';
     signal s_SS      : std_logic := '0';
     signal s_accept  : std_logic := '0';
     signal s_RESET   : std_logic := '0';
@@ -33,6 +35,7 @@ begin
         port map(
             SDX => s_SDX,
             SCLK => s_SCLK,
+            clk_control => s_clk_control,
             SS => s_SS,
             accept => s_accept,
             RESET => s_RESET,
@@ -43,77 +46,82 @@ begin
     p_CLK_gen: process
     begin
         while true loop
-            s_SCLK <= '0';
+            s_clk_control <= '0';
             wait for MCLK_PERIOD/2;
-            s_SCLK <= '1';
+            s_clk_control <= '1';
             wait for MCLK_PERIOD/2;
         end loop;
     end process;
-
+    
     stim_proc: process
+        variable SDX_in  : std_logic_vector(5 downto 0);
+        variable expected_data : std_logic_vector(4 downto 0);
+        variable expected_DX_val : std_logic;
+        --teste 1
+        variable RS_in_1    : std_logic := '0';
+        variable data_in_1  : std_logic_vector(3 downto 0) := "1010";
+        variable P_in_1     : std_logic := '0';
+        variable error_1   : std_logic := '0';
+        --teste 2
+        variable RS_in_2    : std_logic := '1';
+        variable data_in_2  : std_logic_vector(3 downto 0) := "0010";
+        variable P_in_2     : std_logic := '1';
+        variable error_2   : std_logic := '1';
+
     begin
+        --teste 1
+        SDX_in := P_in_1 & data_in_1 & RS_in_1;
+        expected_data := Rs_in_1 & data_in_1;
+        expected_DX_val := not error_1;
+
+        s_SCLK <= '0';
+        s_SS <= '1';
         s_RESET <= '1';
-        s_SS    <= '0';
-        s_accept <= '0';
-        wait for 5*MCLK_PERIOD;
+        wait for 2*MCLK_PERIOD;
 
         s_RESET <= '0';
         wait for 2*MCLK_PERIOD;
-
-        s_SS <= '1';
+        s_accept <= '1';
         wait for 2*MCLK_PERIOD;
-
-
-        s_SDX <= '1';
-        wait for MCLK_PERIOD;
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-        s_SDX <= '1';
-        wait for MCLK_PERIOD;
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-        s_SDX <= '1';
+        s_accept <= '0';
+        wait for 2*MCLK_PERIOD;
+        s_SS <= '0';
         wait for MCLK_PERIOD;
 
-
-        -- Bit de paridade P (exemplo)
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-
-
-        wait for MCLK_PERIOD*2;
+        for i in 0 to 5 loop
+            s_SDX <= SDX_in(i);
+            wait for MCLK_PERIOD;
+            s_SCLK <= '1';
+            wait for 2*MCLK_PERIOD;
+            s_SCLK <= '0';
+            wait for MCLK_PERIOD;
+        end loop;
+        
+        assert s_D = expected_data report "Incorrect data output" severity failure;
+        assert s_DX_val = expected_DX_val report "Incorrect DX_val" severity failure;
+        wait for 2*MCLK_PERIOD;
+        
+        --teste 2
+        SDX_in := P_in_2 & data_in_2 & RS_in_2;
+        expected_data := Rs_in_2 & data_in_2;
+        expected_DX_val := not error_2;
 
         s_accept <= '1';
-        wait for MCLK_PERIOD;
+        wait for 2*MCLK_PERIOD;
         s_accept <= '0';
-        wait for MCLK_PERIOD*2;
+        wait for 2*MCLK_PERIOD;
+        
+        for i in 0 to 5 loop
+            s_SDX <= SDX_in(i);
+            wait for MCLK_PERIOD;
+            s_SCLK <= '1';
+            wait for 2*MCLK_PERIOD;
+            s_SCLK <= '0';
+            wait for MCLK_PERIOD;
+        end loop;
 
-        s_SS <= '0';
-        s_SDX <= '1';
-        wait for MCLK_PERIOD*5;
-
-        s_SS <= '1';
-        wait for MCLK_PERIOD*2;
-
-
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-        s_SDX <= '1';
-        wait for MCLK_PERIOD;
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-        s_SDX <= '1';
-        wait for MCLK_PERIOD;
-        s_SDX <= '0';
-        wait for MCLK_PERIOD;
-
-        -- Bit de paridade (P) errado (por exemplo '1' se deveria ser '0')
-        s_SDX <= '1';
-        wait for MCLK_PERIOD;
-
-        -- Espera resultado
-        wait for MCLK_PERIOD*4;
-
+        assert s_D = expected_data report "Incorrect data output" severity failure;
+        assert s_DX_val = expected_DX_val report "Incorrect DX_val" severity failure;
         wait;
     end process;
 

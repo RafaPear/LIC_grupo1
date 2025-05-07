@@ -34,8 +34,9 @@ end component;
 
 signal temp_S: std_logic_vector(2 downto 0);
 signal temp_Q: std_logic_vector(2 downto 0);
-
+signal clr_temp: std_logic;
 begin
+    clr_temp <= reset or clr;
 
     ADDER2_inst: ADDER2 port map(
         A => "000",
@@ -47,9 +48,9 @@ begin
 
     REG2_inst: REG2 port map(
         D => temp_S,
-        RESET => RESET,
+        RESET => clr_temp,
         SET => '0',
-        EN => clr,
+        EN => '1',
         CLK => CLK,
         Q => temp_Q
     );

@@ -5,6 +5,7 @@ entity SerialReceiver is
     port(
         SDX: in std_logic;
         SCLK: in std_logic;
+        clk_control: in std_logic;
         SS: in std_logic;
         accept: in std_logic;
         RESET: in std_logic;
@@ -94,7 +95,7 @@ begin
     );
 
     SerialControl1: SerialControl port map(
-        clk => SCLK,
+        clk => clk_control,
         en_Rx => SS,
         pFlag => temp_pFlag,
         dFlag => temp_dFlag,
