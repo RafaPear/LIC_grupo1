@@ -55,10 +55,21 @@ begin
                 end if;
 
             when "001" =>
+                DAC    <= '0';
+                incPut <= '0';
+                incGet <= '1';
+                W_reg  <= '0';
+                wr     <= '0';
+                selPG  <= '0';
                 next_state <= "010";
 
             when "010" =>
-                W_reg <= '1';
+                DAC    <= '0';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '1';
+                wr     <= '0';
+                selPG  <= '0';
                 if CTS = '1' then
                     next_state <= "011";
                 else
@@ -66,20 +77,39 @@ begin
                 end if;
 
             when "011" =>
-                DAC <= '1';
-                incGet <= '1';
+                DAC    <= '1';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '0';
+                selPG  <= '0';
                 next_state <= "000";
 
             when "100" =>
-                selPG <= '1';
+                DAC    <= '0';
+                incPut <= '1';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '0';
+                selPG  <= '1';
                 next_state <= "101";
 
             when "101" =>
-                wr <= '1';
+                DAC    <= '0';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '1';
+                selPG  <= '1';
                 next_state <= "110";
 
             when "110" =>
-                DAC <= '1';
+                DAC    <= '1';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '0';
+                selPG  <= '1';
                 if DAV = '0' then
                     next_state <= "111";
                 else
@@ -87,7 +117,12 @@ begin
                 end if;
 
             when "111" =>
-                incPut <= '1';
+                DAC    <= '0';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '0';
+                selPG  <= '1';
                 next_state <= "000";
 
             when others =>
