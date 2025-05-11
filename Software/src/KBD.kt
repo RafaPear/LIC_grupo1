@@ -34,8 +34,6 @@ object KBD {
 				valPins += getInputPins(i)
 			}
 		}
-		println("KBD: kPins = $kPins")
-		println("KBD: valPins = $valPins")
 	}
 
 	// Retorna de imediato a tecla premida ou NONE se nao ha tecla premida.
