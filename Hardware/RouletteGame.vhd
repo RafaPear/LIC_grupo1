@@ -34,6 +34,18 @@ architecture arch_RouletteGame of RouletteGame is
         );
     end component;
 
+    component SLCDC is
+        port(
+            clk: in std_logic;
+            RESET: in std_logic;
+            LCDsel: in std_logic;
+            SCLK: in std_logic;
+            SDX: in std_logic;
+            E: out std_logic;
+            Dout: out std_logic_vector(4 downto 0)
+        );
+    end component;
+
     signal temp_Kval: std_logic;
     signal temp_K: std_logic_vector(3 downto 0);
     signal temp_inPort: std_logic_vector(7 downto 0);

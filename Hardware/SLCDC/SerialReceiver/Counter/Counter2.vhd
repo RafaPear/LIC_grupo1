@@ -1,16 +1,16 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity Counter is
+entity Counter2 is
     port(
         RESET: in std_logic;
         clr: in std_logic;
         CLK: in std_logic;
         Q: out std_logic_vector(2 downto 0)
     );
-end Counter;
+end Counter2;
 
-architecture arc_counter of Counter is
+architecture arc_counter2 of Counter2 is
 component ADDER2 is
     port (
 		A: in std_logic_vector (2 downto 0);
@@ -56,4 +56,4 @@ begin
     );
 
     Q <= temp_Q;
-end arc_counter;
+end arc_counter2;
