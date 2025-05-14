@@ -24,5 +24,5 @@ begin
         end if;
     end process;
 
-    error <= Q;
+    error <= not Q;
 end Behavioral;
