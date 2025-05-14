@@ -15,7 +15,7 @@ object TUI {
 
     fun capture() {
         while (true) {
-            var key = KBD.getKey()
+            val key = KBD.getKey()
 
             if (key == '*' && canWrite) {
                 LCD.clear()
@@ -32,7 +32,7 @@ object TUI {
     fun writeSplited(text: String) {
         if (text.length > LCD.COLS * 2) error("String verry Big")
         var count = 0
-        var words = text.split(Regex("(?<=\\s)|(?=\\s)"))
+        val words = text.split(Regex("(?<=\\s)|(?=\\s)"))
         for (word in words) {
             if (count + word.length > LCD.COLS) {
                 LCD.cursor(1, 0)

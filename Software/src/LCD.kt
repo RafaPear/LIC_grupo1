@@ -9,10 +9,10 @@ object LCD {
     // Dimensão do display.
     const val LINES = 2
     const val COLS = 16
-    private const val NIBBLE = 3
+    private const val NIBBLE = 4
 
     // Define se a interface é Série ou Paralela.
-    private const val SERIAL_INTERFACE = false
+    private const val SERIAL_INTERFACE = true
 
     var E_MASK = if (SERIAL_INTERFACE) 1 else 0b0010_0000
     var RS_MASK = if (SERIAL_INTERFACE) 1 else 0b0001_0000
@@ -36,21 +36,7 @@ object LCD {
 
     // Escreve um nibble de comando/dados no LCD em série.
     private fun writeNibbleSerial(rs: Boolean, data: Int) {
-        // Envia E On
-        HAL.setBits(E_MASK)
-        Time.sleep(1)
-
-        // Envia rs
-        HAL.writeBits(RS_MASK, rs.toInt())
-        Time.sleep(1)
-        // Envia data
-        var i = 0b0000_0001
-        while(i <= 0b0000_1000) {
-            HAL.writeBits(i, data)
-            i = i.shl(1)
-        }
-//        Envia E Off
-//        HAL.clrBits(E_MASK)
+        SerialEmitter.send(SerialEmitter.Destination.LCD, data.shl(1)+rs.toInt(), NIBBLE+1)
     }
 
     // Escreve um nibble de comando/dados no LCD.
@@ -63,7 +49,7 @@ object LCD {
 
     // Escreve um byte de comando/dados no LCD.
     private fun writeByte(rs: Boolean, data: Int) {
-        writeNibble(rs, data.rotateRight(4))
+        writeNibble(rs, data.shr(NIBBLE))
         writeNibble(rs, data and 0b0000_1111)
     }
 
@@ -79,9 +65,10 @@ object LCD {
 
     // Envia a sequência de iniciação para comunicação a 4 bits.
     fun init() {
-        HAL.init()
-        val time_list = longArrayOf(15, 5, 1)
-        val init_Code = intArrayOf(
+        SerialEmitter.init()
+
+        val timeList = longArrayOf(15, 5, 1)
+        val initCode = intArrayOf(
             0b0000_0011,
             0b0000_0010,
             0b0000_0010,
@@ -98,15 +85,15 @@ object LCD {
             0b0000_1100 /// Cursor On / Blinking On
         )
 
-        for (time in time_list) {
+        for (time in timeList) {
             Time.sleep(time)
-            writeNibble(false, init_Code[0])
+            writeNibble(false, initCode[0])
         }
 
-        writeNibble(false, init_Code[1])
+        writeNibble(false, initCode[1])
 
-        for (i in 2 until init_Code.size) {
-            writeByte(false, init_Code[i])
+        for (i in 2 until initCode.size) {
+            writeByte(false, initCode[i])
         }
     }
 
@@ -147,7 +134,7 @@ object LCD {
     }
 
     fun autoCursor(wrap: Boolean) {
-        if (wrap && cursorPos.second >= LCD.COLS-1 && cursorPos.first == 0) cursor(1, 0)
+        if (wrap && cursorPos.second >= COLS -1 && cursorPos.first == 0) cursor(1, 0)
         else cursorPos = cursorPos.copy(second = cursorPos.second + 1)
     }
 }

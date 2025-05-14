@@ -14,7 +14,7 @@ entity SLCDC is
 end SLCDC;
 
 architecture arch_SLCDC of SLCDC is
-    component SerialReciever is
+    component SerialReceiver is
         port(
             SDX: in std_logic;
             SCLK: in std_logic;
@@ -43,7 +43,7 @@ architecture arch_SLCDC of SLCDC is
 
     begin
     -- Instantiate the SerialReceiver
-    SerialReceiver_inst: SerialReciever
+    SerialReceiver_inst: SerialReceiver
         port map(
             SDX => SDX,
             SCLK => SCLK,
