@@ -41,7 +41,6 @@ architecture arch_SLCDC of SLCDC is
     signal DXval_s, done_s: std_logic;
     signal D_s: std_logic_vector(4 downto 0);
 
-
     begin
     -- Instantiate the SerialReceiver
     SerialReceiver_inst: SerialReciever
