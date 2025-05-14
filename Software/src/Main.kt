@@ -4,7 +4,7 @@
 //}
 fun main(){
     TUI.init()
-    TUI.writeWalkText("Hello World!")
+    TUI.writeWalkText("O ian e gay")
 }
 /*
 var read = false

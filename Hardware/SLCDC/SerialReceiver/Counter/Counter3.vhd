@@ -1,17 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity Counter2 is
+entity Counter3 is
     port(
         RESET: in std_logic;
         clr: in std_logic;
         CLK: in std_logic;
         Q: out std_logic_vector(2 downto 0)
     );
-end Counter2;
+end Counter3;
 
-architecture arc_counter2 of Counter2 is
-component ADDER2 is
+architecture arc_counter3 of Counter3 is
+component ADDER3 is
     port (
 		A: in std_logic_vector (2 downto 0);
 		B: in std_logic_vector (2 downto 0);
@@ -21,7 +21,7 @@ component ADDER2 is
 	);
 end component;
 
-component REG2 is
+component REG3 is
     port(	
 		D: in std_logic_vector(2 downto 0);
 		RESET: in std_logic;
@@ -38,7 +38,7 @@ signal clr_temp: std_logic;
 begin
     clr_temp <= reset or clr;
 
-    ADDER2_inst: ADDER2 port map(
+    ADDER3_inst: ADDER3 port map(
         A => "000",
         B => temp_Q,
         CIN => '1',
@@ -46,7 +46,7 @@ begin
         COUT => open
     );
 
-    REG2_inst: REG2 port map(
+    REG3_inst: REG3 port map(
         D => temp_S,
         RESET => clr_temp,
         SET => '0',
@@ -56,4 +56,4 @@ begin
     );
 
     Q <= temp_Q;
-end arc_counter2;
+end arc_counter3;

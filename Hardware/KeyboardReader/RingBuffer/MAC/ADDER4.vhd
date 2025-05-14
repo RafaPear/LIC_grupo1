@@ -1,15 +1,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity ADDER2 is
+entity ADDER4 is
 	port (
 		A: in std_logic_vector (3 downto 0);
 		CIN: in std_logic;
 		S: out std_logic_vector (3 downto 0)
 	);
-	end ADDER2;
+	end ADDER4;
 	
-architecture arch_adder of ADDER2 is
+architecture arch_adder of ADDER4 is
 component fulladder
 	port ( 
 		A: in std_logic;

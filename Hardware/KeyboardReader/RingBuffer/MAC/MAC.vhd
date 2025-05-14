@@ -17,7 +17,7 @@ end MAC;
 
 architecture arc_MAC of MAC is
 
-component ADDER2 is
+component ADDER4 is
     port(
         A: in std_logic_vector (3 downto 0);
         CIN: in std_logic;
@@ -25,7 +25,7 @@ component ADDER2 is
     );
 end component;
 
-component Reg2 is
+component Reg4 is
     port(
 		CLK: in std_logic;
 		RESET: in std_logic;
@@ -58,13 +58,13 @@ signal equ : std_logic;
 
 begin
 
-UADDER: ADDER2 port map(
+UADDER4: ADDER4 port map(
     A => mux_out,
     CIN => '1',
-    S => adder_out 
+    S => adder_out
 );
 
-PUT_REG: Reg2 port map(
+PUT_REG4: Reg4 port map(
         CLK => clk,
 		RESET => reset,
 		SET => '0',
@@ -73,7 +73,7 @@ PUT_REG: Reg2 port map(
 		Q => putReg_out
 );
 
-GET_REG: Reg2 port map(
+GET_REG4: Reg4 port map(
         CLK => clk,
 		RESET => reset,
 		SET => '0',
