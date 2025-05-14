@@ -5,12 +5,11 @@ entity RouletteGame is
     port(
         CLK: in std_logic;
         RESET: in std_logic;
-        Kack: in std_logic;
-        LIN: in std_logic_vector(3 downto 0);
-        COL: out std_logic_vector(3 downto 0);
-        LCD_DATA: out std_logic_vector(7 downto 4);
-        LCD_RS: out std_logic;
-        LCD_EN: out std_logic
+        LCDsel: in std_logic;
+        SCLK: in std_logic;
+        SDX: in std_logic;
+        E: out std_logic;
+        D: out std_logic_vector(4 downto 0)
     );
 end RouletteGame;
 
@@ -22,44 +21,41 @@ architecture arch_RouletteGame of RouletteGame is
         );
     end component;
 
-    component KeyDecode is
+    component SLCDC is
         port(
-            CLK: in std_logic;
-            RESET: in std_logic;
-            Kack: in std_logic;
-            LIN: in std_logic_vector(3 downto 0);
-            Kval: out std_logic;
-            COL: out std_logic_vector(3 downto 0);
-            K: out std_logic_vector(3 downto 0)
+        CLK: in std_logic;
+        RESET: in std_logic;
+		LCDsel: in std_logic;
+        SCLK: in std_logic;
+        SDX: in std_logic;
+        E: out std_logic;
+        D: out std_logic_vector (4 downto 0)
         );
     end component;
+	 
+signal temp_LCDsel, temp_SCLK, temp_SDX: std_logic;
+signal temp_inPort: std_logic_vector(7 downto 0);
+signal temp_outPort: std_logic_vector(7 downto 0);
+ 
+ begin
 
-    signal temp_Kval: std_logic;
-    signal temp_K: std_logic_vector(3 downto 0);
-    signal temp_inPort: std_logic_vector(7 downto 0);
-    signal temp_outPort: std_logic_vector(7 downto 0);
-
-begin
-
-    KeyDecode_inst: KeyDecode port map(
-        CLK => CLK,
-        RESET => RESET,
-        Kack => Kack,
-        LIN => LIN,
-        Kval => temp_Kval,
-        COL => COL,
-        K => temp_K
-    );
-
+	USLCDC: SLCDC port map(
+		CLK => CLK,
+		RESET => RESET,
+		LCDsel => temp_LCDsel,
+		SCLK => temp_SCLK,
+		SDX => temp_SDX,
+		E => E,
+		D => D
+	);
     UsbPort_inst: UsbPort port map(
         inputPort => temp_inPort,
         outputPort => temp_outPort
     );
 
-    temp_inPort(3 downto 0) <= temp_K;
-    temp_inPort(4) <= temp_Kval;
 
-    LCD_DATA <= temp_outPort(3 downto 0);
-    LCD_RS <= temp_outPort(4);
-    LCD_EN <= temp_outPort(5);
+    temp_LCDsel <= temp_outPort(0);
+    temp_SCLK <= temp_outPort(1);
+    temp_SDX <= temp_outPort(2);
+	 
 end arch_RouletteGame;
