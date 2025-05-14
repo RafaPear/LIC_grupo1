@@ -41,7 +41,8 @@ kbd.K[0-3] -> rb.D[0-3]
 
 # Ring Buffer
 rb.DAC -> kbd.ack
-rb.Q[0-3] -> ob.D[0-3]
+rb.Q[0-1] -> ob.D[2-3]
+rb.Q[2-3] -> ob.D[0-1]
 rb.Wreg -> ob.Load
 
 # Output Buffer

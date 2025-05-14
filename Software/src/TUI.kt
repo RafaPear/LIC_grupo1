@@ -18,17 +18,22 @@ object TUI {
             val key = KBD.getKey()
 
             if (key == '*' && canWrite) {
+                HAL.setBits(0b1000_0000)
                 LCD.clear()
                 canWrite = false
+                Time.sleep(1)
+                HAL.clrBits(0b1000_0000)
             } else if (canWrite && key != KBD.NONE) {
+                HAL.setBits(0b1000_0000)
                 LCD.write(key)
                 key == KBD.NONE
                 canWrite = false
+                Time.sleep(1)
+                HAL.clrBits(0b1000_0000)
             } else if (key == KBD.NONE)
                 canWrite = true
         }
     }
-
     fun writeSplited(text: String) {
         if (text.length > LCD.COLS * 2) error("String verry Big")
         var count = 0
