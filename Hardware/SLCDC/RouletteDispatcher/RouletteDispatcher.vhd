@@ -18,7 +18,7 @@ entity RouletteDispatcher is
 end RouletteDispatcher;
 
 architecture behavioral of RouletteDispatcher is
-    type state_type is (Start, Decode, Set_Digit, Update_Display, Set_On_Off, Finish);
+    type state_type is (Idle, Decode, Execute, Finish);
     signal state: state_type;
     
     signal cmd_type: std_logic_vector(2 downto 0);
@@ -28,7 +28,7 @@ begin
     process(clk, reset)
     begin
         if reset = '1' then
-            state <= Start;
+            state <= Idle;
             done <= '0';
             digit_select <= (others => '0'); -- "000"
             digit_value <= (others => '0'); -- "00000"
@@ -40,48 +40,37 @@ begin
             update_disp <= '0';
             done <= '0';
             case state is
-                when Start =>
+                when Idle =>
                     done <= '0';
                     if D_val = '1' then
                         cmd_type <= data_in(7 downto 5);
                         cmd_data <= data_in(4 downto 0);
                         state <= Decode;
                     end if;
-                    
+
                 when Decode =>
+                    state <= Execute;
+                    
+                when Execute =>
                     case cmd_type is
                         when "000"|"001"|"010"|"011"|"100"|"101" =>
-                            state <= Set_Digit;
+                            digit_select <= cmd_type(2 downto 0);
+                            digit_value <= cmd_data;
                             
                         when "110" =>
-                            state <= Update_Display;
+                            update_disp <= '1';
                             
                         when "111" =>
-                            state <= Set_On_Off;
-                            
+                            display_on <= cmd_data(0);
+
                         when others =>
-                            state <= Finish;
+                            null;
                     end case;
-                    
-                when Set_Digit =>
-                    digit_select <= cmd_type(2 downto 0);
-                    digit_value <= cmd_data;
                     state <= Finish;
-                    
-                when Update_Display =>
-                    update_disp <= '1';
-                    state <= Finish;
-                    
-                when Set_On_Off =>
-                    display_on <= not cmd_data(0);
-                    state <= Finish;
-                    
+
                 when Finish =>
                     done <= '1';
-                    state <= Start;
-                    
-                when others =>
-                    state <= Start;
+                    state <= Idle;
             end case;
         end if;
     end process;
