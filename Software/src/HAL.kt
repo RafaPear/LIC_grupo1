@@ -4,6 +4,8 @@ object HAL {
     // Guarda o valor do array de LEDs
     var light = 0b0000_0000
 
+    var configPath = "rouletteGame.simul"
+
     // NOTE: Inicia o objeto
     fun init(){
         writeBits(0b1111_1111,light)

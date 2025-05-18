@@ -49,7 +49,7 @@ component ParityCheck is
     );
 end component;
 
-component counter is
+component counter3 is
     port(
         RESET: in std_logic;
         clr: in std_logic;
@@ -75,7 +75,7 @@ begin
         Q => D
     );
 
-    counter1: counter port map(
+    counter1: counter3 port map(
         RESET => RESET,
         clr => temp_init,
         CLK => SCLK,
@@ -86,7 +86,7 @@ begin
     -- 6 110
 
     temp_dFlag <= temp_Q_counter(2) and not temp_Q_counter(1) and temp_Q_counter(0);
-    temp_pFlag <= temp_Q_counter(2) and temp_Q_counter(1) and temp_Q_counter(0);
+    temp_pFlag <= temp_Q_counter(2) and temp_Q_counter(1) and not temp_Q_counter(0);
 
     ParityCheck1: ParityCheck port map(
         clk => SCLK,

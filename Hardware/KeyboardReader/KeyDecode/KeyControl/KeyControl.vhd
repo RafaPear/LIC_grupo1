@@ -22,7 +22,7 @@ begin
     process (clk, rst, next_state)
     begin
         if rst = '1' then
-            state <= '00';
+            state <= "00";
         elsif rising_edge(clk) then
             state <= next_state;
         end if;
@@ -41,37 +41,37 @@ begin
     process (state, Kack, Kpress)
     begin
         case state is
-            when '00' =>
+            when "00" =>
                 Kscan <= '1';
                 Kval <= '0';
                 if Kpress = '1' then
-                    next_state <= '01';
+                    next_state <= "01";
                 else
-                    next_state <= '00';
+                    next_state <= "00";
                 end if;
             
-            when '01' =>
+            when "01" =>
                 Kscan <= '0';
                 Kval <= '1';
                 if Kack = '1' then
-                    next_state <= '10';
+                    next_state <= "10";
                 else
-                    next_state <= '01';
+                    next_state <= "01";
                 end if;
 
-            when '10' =>
-                Kscan <= '0'
+            when "10" =>
+                Kscan <= '0';
                 Kval <= '0';
                 if Kack = '1' then
-                    next_state <= '10';
+                    next_state <= "10";
                 elsif Kack = '0' and Kpress = '1' then
-                    next_state <= '10';
+                    next_state <= "10";
                 else
-                    next_state <= '00';
+                    next_state <= "00";
                 end if;
             
             when others =>
-                next_state <= '00';
+                next_state <= "00";
         end case;
     end process;
 end behavioral;

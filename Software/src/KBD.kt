@@ -1,5 +1,7 @@
 import isel.leic.utils.Time
 import java.io.File
+import java.util.logging.Level
+import java.util.logging.Logger
 
 // Ler teclas. Funcoes retornam '0'..'9','A'..'D','#','*' ou NONE.
 object KBD {
@@ -12,28 +14,28 @@ object KBD {
 	)
 	var valPins = 0b0001_0000
 	var kPins = 0b0000_1111
-	var configPath = "hardware.simul"
 
 	// Inicia a classe
 	fun init() {
 		HAL.init()
-		valPins = 0
-		kPins = 0
-		val file = File(configPath)
+		val file: File
+		try {
+			val file = File(HAL.configPath)
+			valPins = 0
+			kPins = 0
 
-		// Get the kbd pins and usb port pins from file
-		// the pins are stores in int binary format as for the example:
-		// UsbPort.I[2-3] means 0b0000_1100
-		//
-		// Format for kPins: kbd.K[0-1] -> UsbPort.I[2-3]
-		// Format for valPins: kbd.val -> UsbPort.I4
-		file.forEachLine { i ->
-			if (i.contains("kbd.K")) {
-				kPins += getInputPins(i)
-			} else if (i.contains("kbd.val")) {
-				valPins += getInputPins(i)
+			file.forEachLine { i ->
+				if (i.contains("ob.Q[0-3]")) {
+					kPins += getInputPins(i)
+				} else if (i.contains("ob.Dval")) {
+					valPins += getInputPins(i)
+				}
 			}
+		} catch(e:Exception){
+			Logger.getLogger("KBD").log(Level.WARNING, "No config file found, using default values")
 		}
+
+
 	}
 
 	// Retorna de imediato a tecla premida ou NONE se nao ha tecla premida.

@@ -1,13 +1,10 @@
-import isel.leic.utils.Time
-
 //fun main() {
 //    TUI.init()
 //    TUI.capture()
 //}
 fun main(){
     TUI.init()
-    TUI.capture()
-//    LCD.write('A')
+    TUI.writeWalkText("O ian e gay")
 }
 /*
 var read = false

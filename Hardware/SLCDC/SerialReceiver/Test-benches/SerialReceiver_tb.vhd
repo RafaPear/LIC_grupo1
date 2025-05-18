@@ -61,12 +61,12 @@ begin
         variable RS_in_1    : std_logic := '0';
         variable data_in_1  : std_logic_vector(3 downto 0) := "1010";
         variable P_in_1     : std_logic := '0';
-        variable error_1   : std_logic := '0';
+        variable error_1   : std_logic := '1';
         --teste 2
         variable RS_in_2    : std_logic := '1';
         variable data_in_2  : std_logic_vector(3 downto 0) := "0010";
         variable P_in_2     : std_logic := '1';
-        variable error_2   : std_logic := '1';
+        variable error_2   : std_logic := '0';
 
     begin
         --teste 1

@@ -8,7 +8,6 @@ fun pow(base: Int, exponent: Int): Int{
     return temp
 }
 
-
 fun Int.toBitPlace(): Int{
     return pow(2, this)
 }
@@ -26,4 +25,8 @@ fun Boolean.toBit(mask:Int){
     if (mask.countOneBits() == 1){
         if (this) HAL.setBits(mask) else HAL.clrBits(mask)
     } else error("Parameter 'mask' has a bit count different than 1.")
+}
+
+fun Boolean.toBin(idx: Int): Int {
+    return (this.toInt())shl(idx)
 }
