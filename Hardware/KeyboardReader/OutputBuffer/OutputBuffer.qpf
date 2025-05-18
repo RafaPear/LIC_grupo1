@@ -19,13 +19,13 @@
 #
 # Quartus Prime
 # Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
-# Date created = 19:11:40  May 18, 2025
+# Date created = 18:21:30  May 18, 2025
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "19.1"
-DATE = "19:11:40  May 18, 2025"
+DATE = "18:21:30  May 18, 2025"
 
 # Revisions
 
-PROJECT_REVISION = "KeyboardReader"
+PROJECT_REVISION = "OutputBuffer"

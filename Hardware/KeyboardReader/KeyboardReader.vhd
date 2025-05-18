@@ -1,12 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
--- --------------------------------------------
---                 !!!WIP!!!
---             (WORK IN PROGRESS)
--- --------------------------------------------
-
-
 entity KeyboardReader is
     port(
         CLK: in std_logic;
@@ -52,9 +46,9 @@ architecture arch_KeyboardReader of KeyboardReader is
             D: in std_logic_vector(3 downto 0);
             Load: in std_logic;
             ACK: in std_logic;
+            Q: out std_logic_vector(3 downto 0);
             OBfree: out std_logic;
-            Dval: out std_logic;
-            Q: out std_logic_vector(3 downto 0)
+            Dval: out std_logic
         );
     end component;
     
