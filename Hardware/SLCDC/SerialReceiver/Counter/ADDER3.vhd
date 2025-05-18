@@ -41,7 +41,7 @@ begin
 		Cout => C2
 	);
 	
-		FA2: fulladder port map (
+	FA2: fulladder port map (
 		A => A(2), 
 		B => B(2), 
 		Cin => C2, 
