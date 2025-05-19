@@ -49,14 +49,8 @@ architecture arch_KeyDecode of KeyDecode is
 
 begin
 
-    clkDiv_inst: clkDIV generic map (div => 5000000)
-    port map (
-        clk_in => CLK,
-        clk_out => CLK_div
-    );
-
     KeyScan_inst: KeyScan port map(
-        CLK => CLK_div,
+        CLK => CLK,
         RESET => RESET,
         Kscan => temp_Kscan,
         LIN => LIN,
@@ -66,7 +60,7 @@ begin
     );
 
     KeyControl_inst: KeyControl port map(
-        clk => CLK_div,
+        clk => CLK,
         rst => RESET,
         Kack => Kack,
         Kpress => temp_Kpress,

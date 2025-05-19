@@ -50,7 +50,7 @@ begin
                     next_state <= "001";
                 else 
                     if DAV = '1' and full = '0' then
-                        next_state <= "011";
+                        next_state <= "100";
                     else 
                         next_state <= "000";
                     end if;
@@ -60,28 +60,28 @@ begin
                 DAC    <= '0';
                 incPut <= '0';
                 incGet <= '0';
-                W_reg  <= '1';
+                W_reg  <= '0';
                 wr     <= '0';
                 selPG  <= '0';
                 next_state <= "010";
             when "010" =>
                 DAC    <= '0';
                 incPut <= '0';
-                incGet <= '1';
+                incGet <= '0';
                 W_reg  <= '1';
                 wr     <= '0';
                 selPG  <= '0';
-                next_state <= "000";
+                next_state <= "011";
             when "011" =>
                 DAC    <= '0';
                 incPut <= '0';
-                incGet <= '0';
+                incGet <= '1';
                 W_reg  <= '0';
-                wr     <= '1';
-                selPG  <= '1';
-                next_state <= "100";
+                wr     <= '0';
+                selPG  <= '0';
+                next_state <= "000";
             when "100" =>
-                DAC    <= '1';
+                DAC    <= '0';
                 incPut <= '0';
                 incGet <= '0';
                 W_reg  <= '0';
@@ -91,6 +91,14 @@ begin
 
             when "101" =>
                 DAC    <= '0';
+                incPut <= '0';
+                incGet <= '0';
+                W_reg  <= '0';
+                wr     <= '1';
+                selPG  <= '1';
+                next_state <= "110";
+            when "110" =>
+                DAC    <= '1';
                 incPut <= '1';
                 incGet <= '0';
                 W_reg  <= '0';
