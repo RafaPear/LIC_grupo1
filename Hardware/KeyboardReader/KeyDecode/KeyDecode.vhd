@@ -37,14 +37,6 @@ architecture arch_KeyDecode of KeyDecode is
         );
     end component;
 
-    component clkDIV is
-        generic(div: natural := 500000);
-        port (
-            clk_in: in std_logic;
-            clk_out: out std_logic
-        );
-    end component;
-
     signal temp_Kpress, temp_Kscan, CLK_div: std_logic;
 
 begin
