@@ -15,7 +15,7 @@ end Reg4;
 architecture arc_reg4 of Reg4 is
 
 component FFD is
-    port(	
+    port(
 	    CLK: in std_logic;
 	    RESET: in std_logic;
 	    SET: in std_logic;
@@ -26,7 +26,7 @@ component FFD is
 end component;
 
 begin 
-    UFFD0: FFD port map(
+    UFFD9: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -35,7 +35,7 @@ begin
         Q => Q(0)
     );    
     
-    UFFD1: FFD port map(
+    UFFD10: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -44,7 +44,7 @@ begin
         Q => Q(1)
     );
 
-	UFFD2: FFD port map(
+	UFFD11: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -53,7 +53,7 @@ begin
         Q => Q(2)
     );
 
-    UFFD3: FFD port map(
+	UFFD12: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -61,6 +61,5 @@ begin
         EN => EN,
         Q => Q(3)
     );
-
 
 end arc_reg4;

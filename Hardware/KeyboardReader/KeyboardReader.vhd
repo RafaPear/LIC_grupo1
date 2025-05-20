@@ -6,8 +6,8 @@ entity KeyboardReader is
         CLK: in std_logic;
         RESET: in std_logic;
         LIN: in std_logic_vector(3 downto 0);
-        COL: out std_logic_vector(3 downto 0);
         ACK: in std_logic;
+        COL: out std_logic_vector(3 downto 0);
         D: out std_logic_vector(3 downto 0);
         Dval: out std_logic
     );
