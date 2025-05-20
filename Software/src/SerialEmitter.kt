@@ -8,6 +8,7 @@ object SerialEmitter {
     enum class Destination {
         LCD, ROULETTE
     }
+    var LCD_delay = 1L
 
     var SS_LCD_ID = 0
     var SDX_LCD_ID = 3
@@ -39,10 +40,40 @@ object SerialEmitter {
     }
 
     private fun sendLCD(data: Int, size: Int) {
+        HAL.clrBits(pow(2, 0))
+        HAL.setBits(pow(2, 1))
 
-        val time = 1L
-        HAL.clrBits(1)
-        // Time.sleep(time)
+        parseAndSend(data, size, LCD_delay)
+
+        HAL.setBits(pow(2, 0))
+        HAL.clrBits(pow(2, 1))
+
+    }
+
+    private fun sendRoulette(data: Int, size: Int) {
+        HAL.setBits(pow(2, 0))
+        HAL.clrBits(pow(2, 1))
+
+        parseAndSend(data, size)
+
+        HAL.clrBits(pow(2, 0))
+        HAL.setBits(pow(2, 1))
+    }
+
+    // Envia uma trama para o Serial Receiver
+    // identificado no destino em ‘addr’,
+    // os bits de dados em ‘data’
+    // e em ‘size’ o número de bits a enviar.
+    fun send(addr: Destination, data: Int, size: Int) {
+        if (addr == Destination.LCD) {
+            sendLCD(data, size)
+        } else if (addr == Destination.ROULETTE) {
+            sendRoulette(data, size)
+        }
+    }
+
+    fun parseAndSend(data: Int, size: Int, time: Long = 0) {
+        Time.sleep(time)
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
@@ -62,32 +93,15 @@ object SerialEmitter {
                 }
             }
 
-            //Time.sleep(time)
+            Time.sleep(time)
 
             HAL.setBits(pow(2, 4))
 
-            //Time.sleep(time)
+            Time.sleep(time)
 
             HAL.clrBits(pow(2, 4))
 
-            //Time.sleep(time)
-        }
-
-        HAL.setBits(1)
-
-        //Time.sleep(time)
-
-    }
-
-    // Envia uma trama para o Serial Receiver
-    // identificado no destino em ‘addr’,
-    // os bits de dados em ‘data’
-    // e em ‘size’ o número de bits a enviar.
-    fun send(addr: Destination, data: Int, size: Int) {
-        if (addr == Destination.LCD) {
-            sendLCD(data, size)
-        } else if (addr == Destination.ROULETTE) {
-            HAL.clrBits(pow(2, 0))
+            Time.sleep(time)
         }
     }
 }
