@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity LCDDispacher is
-    generic(clk_div: natural := 500000);
+    generic(clk_div: natural := 13);
     port(
         Dval: in std_logic;
         Din: in std_logic_vector(4 downto 0);
@@ -69,7 +69,7 @@ begin
                 next_state <= "11";
             
             when "11" =>
-                Dout <= "00000";
+                Dout <= Din;
                 wrl <= '0';
                 done <= '1';
                 next_state <= "00";
