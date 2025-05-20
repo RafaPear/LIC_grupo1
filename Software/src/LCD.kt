@@ -1,24 +1,53 @@
 import isel.leic.utils.Time
 import kotlin.text.iterator
 
-// Escreve no LCD usando a interface a 4 bits.
+/**
+ * Objeto responsável pela escrita no LCD através do [HAL], usando a interface a 4 bits
+ */
 object LCD {
-    //para ter uma melhor noção por onde anda o cursor
+    /**
+     * Posição do cursor, no formato [Pair] (linha, coluna)
+     */
     var cursorPos: Pair<Int, Int> = Pair(0, 0) // (linha, coluna)
 
-    // Dimensão do display.
+    /**
+     * Número de linhas da tela LCD
+     */
     const val LINES = 2
+
+    /**
+     * Número de colunas da tela LCD
+     */
     const val COLS = 16
+
+    /**
+     * tamanho de um Nibble
+     */
     private const val NIBBLE = 4
 
-    // Define se a interface é Série ou Paralela.
+    /**
+     * Define se a interface é Série ou Paralela.
+     */
     private const val SERIAL_INTERFACE = true
 
+    /**
+     * Define a posição, no [isel.leic.UsbPort], do bit que E
+     */
     var E_MASK = if (SERIAL_INTERFACE) 1 else 0b0010_0000
+    /**
+     * Define a posição, no [isel.leic.UsbPort], do bit RS
+     */
     var RS_MASK = if (SERIAL_INTERFACE) 1 else 0b0001_0000
+    /**
+     * Define a posição, no [isel.leic.UsbPort], de um nibble
+     */
     var NIBBLE_MASK = if (SERIAL_INTERFACE) 1 else 0b0000_1111
 
-    // Escreve um nibble de comando/dados no LCD em paralelo.
+    /**
+     * Escreve um nibble de comando/dados no LCD em paralelo.
+     * @param rs bit RS
+     * @param data
+     */
     private fun writeNibbleParallel(rs: Boolean, data: Int) {
         // Envia rs
         rs.toBit(RS_MASK)
@@ -34,12 +63,20 @@ object LCD {
 
     }
 
-    // Escreve um nibble de comando/dados no LCD em série.
+    /**
+     * Escreve um nibble de comando/dados no LCD em série.
+     * @param rs bit RS
+     * @param data
+     */
     private fun writeNibbleSerial(rs: Boolean, data: Int) {
         SerialEmitter.send(SerialEmitter.Destination.LCD, data.shl(1)+rs.toInt(), NIBBLE+1)
     }
 
-    // Escreve um nibble de comando/dados no LCD.
+    /**
+     * Escreve um nibble de comando/dados no LCD.
+     * @param rs bit RS
+     * @param data
+     */
     private fun writeNibble(rs: Boolean, data: Int) {
         if (SERIAL_INTERFACE)
             writeNibbleSerial(rs, data)
@@ -47,27 +84,42 @@ object LCD {
             writeNibbleParallel(rs, data)
     }
 
-    // Escreve um byte de comando/dados no LCD.
+    /**
+     * Escreve um byte de comando/dados no LCD.
+     * @param rs bit RS
+     * @param data
+     */
     private fun writeByte(rs: Boolean, data: Int) {
         writeNibble(rs, data.shr(NIBBLE))
         writeNibble(rs, data and 0b0000_1111)
     }
 
-    // Escreve um comando no LCD.
+    /**
+     * Escreve um comando no LCD.
+     * @param data
+     */
     private fun writeCMD(data: Int) {
         writeByte(false, data)
     }
 
-    // Escreve um dado no LCD.
+    /**
+     * Escreve um dado no LCD.
+     */
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
 
-    // Envia a sequência de iniciação para comunicação a 4 bits.
+    /**
+     * Envia a sequência de iniciação da tela LCD, para comunicação a 4 bits.
+     */
     fun init() {
         SerialEmitter.init()
 
         val timeList = longArrayOf(15, 5, 1)
+
+        /**
+         * Sequencia de comandos para inicializar a tela LCD
+         */
         val initCode = intArrayOf(
             0b0000_0011,
             0b0000_0010,
@@ -97,22 +149,31 @@ object LCD {
         }
     }
 
-    // Escreve um caractere na posição corrente.
+    /**
+     * Escreve um [Char] no LCD
+     * @param c
+     * @param wrap quando 'false' não utiliza o salto automático de linha
+     */
     fun write(c: Char, wrap: Boolean = true) {
         writeDATA(c.code)
         autoCursor(wrap)
     }
-
-    // Escreve uma string na posição corrente.
+    /**
+     * Escreve um [String] no LCD
+     * @param text
+     * @param wrap quando 'false' não utiliza o salto automático de linha
+     */
     fun write(text: String, wrap: Boolean = true) {
         for (c in text) {
             write(c, wrap)
         }
     }
 
-
-    // Envia comando para posicionar o cursor.
-    // (line: 0..LINES-1, column: 0..COLS-1)
+    /**
+     * Altera a posição do cursor
+     * @param line
+     * @param column
+     */
     fun cursor(line: Int, column: Int) {
         if (line in 0 until LINES && column in 0 until COLS) {
             val address = when (line) {
@@ -127,12 +188,19 @@ object LCD {
         }
     }
 
-    // Envia comando para limpar o ecrã e posicionar o cursor em (0,0).
+    /**
+     * Limpa o ecrã e posiciona o cursor em (0,0)
+     */
     fun clear() { /* Implementação */
         writeCMD(1)
         cursorPos = Pair(0, 0)
     }
 
+    /**
+     * Atualiza a posição do cursor automáticamente, incrementando 1, se [wrap] for 'true'
+     * muda de linha automáticamente quando ultrapassa as colunas
+     * @param wrap
+     */
     fun autoCursor(wrap: Boolean) {
         if (wrap && cursorPos.second >= COLS -1 && cursorPos.first == 0) cursor(1, 0)
         else cursorPos = cursorPos.copy(second = cursorPos.second + 1)
