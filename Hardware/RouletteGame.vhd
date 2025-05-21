@@ -69,6 +69,29 @@ architecture arch_RouletteGame of RouletteGame is
             HEX5	: out std_logic_vector(7 downto 0)
             );
     end component;
+
+    component KeyDecode is
+        port(
+            CLK: in std_logic;
+            RESET: in std_logic;
+            Kack: in std_logic;
+            LIN: in std_logic_vector(3 downto 0);
+            Kval: out std_logic;
+            COL: out std_logic_vector(3 downto 0);
+            K: out std_logic_vector(3 downto 0)
+        );
+    end component;
+
+    component Reg8 is
+        port(
+            CLK: in std_logic;
+            RESET: in std_logic;
+            SET: in std_logic;
+            D: in std_logic_vector(7 downto 0);
+            EN: in std_logic;
+            Q: out std_logic_vector(7 downto 0)
+        );
+    end component;
     
     signal D_SRC: std_logic_vector(7 downto 0);
     signal R_SET_temp: std_logic;
@@ -77,42 +100,31 @@ architecture arch_RouletteGame of RouletteGame is
     signal temp_inPort: std_logic_vector(7 downto 0);
     signal temp_outPort: std_logic_vector(7 downto 0);
 
+    -- Out Reg
+    signal temp_outReg: std_logic_vector(7 downto 0);
+    signal temp_inReg: std_logic_vector(7 downto 0);
+
     -- Signals for KeyboardReader
     signal temp_K_D: std_logic_vector(3 downto 0);
-    signal temp_K_ACK: std_logic := '0'; -- Atribuído valor default
+    signal temp_K_ACK: std_logic; -- Atribuído valor default
     signal temp_K_Dval: std_logic;
 
     -- Signals for SLCDC
-    signal temp_L_LCDsel: std_logic := '0';
-    signal temp_L_SCLK: std_logic := '0';
-    signal temp_L_SDX: std_logic := '0';
+    signal temp_L_LCDsel: std_logic;
+    signal temp_L_SCLK: std_logic;
+    signal temp_L_SDX: std_logic;
 
     -- Signals for SRC
-    signal temp_R_Rsel: std_logic := '0';
-    signal temp_R_SCLK: std_logic := '0';
-    signal temp_R_SDX: std_logic := '0';
+    signal temp_R_Rsel: std_logic;
+    signal temp_R_SCLK: std_logic;
+    signal temp_R_SDX: std_logic;
 
 begin
-
-    -- USBPort outport logic (ligação de teclado)
-    temp_outPort(3 downto 0) <= temp_K_D;
-    temp_outPort(4) <= temp_K_Dval;
-    temp_outPort(7 downto 5) <= (others => '0'); -- Preencher restantes bits
-
-    -- USBPort inport logic (evitar conflitos com OR)
-    temp_inPort(0) <= temp_L_LCDsel;
-    temp_inPort(1) <= temp_R_Rsel;
-    temp_inPort(2) <= '0'; -- Reservado
-    temp_inPort(3) <= temp_L_SDX or temp_R_SDX; -- Combinação lógica
-    temp_inPort(4) <= temp_L_SCLK or temp_R_SCLK; -- Combinação lógica
-    temp_inPort(5) <= '0';
-    temp_inPort(6) <= '0';
-    temp_inPort(7) <= temp_K_ACK;
 
     -- Instanciar UsbPort
     UsbPort_inst: UsbPort port map(
         inputPort => temp_inPort,
-        outputPort => temp_outPort
+        outputPort => temp_inReg
     );
 
     -- Instanciar SLCDC
@@ -159,5 +171,29 @@ begin
         D => temp_K_D,
         Dval => temp_K_Dval
     );
+
+    Reg8_inst: Reg8 port map(
+        CLK => CLK,
+        RESET => RESET,
+        SET => '0',
+        D => temp_inReg,
+        EN => '1',
+        Q => temp_outReg
+    );
+
+    temp_outPort <= temp_outReg;
+    
+    -- USBPort outport logic (ligação de teclado)
+    temp_inPort(3 downto 0) <= temp_K_D(3 downto 0);
+    temp_inPort(4) <= temp_K_Dval;
+
+    -- USBPort inport logic (evitar conflitos com OR)
+    temp_L_LCDsel <= temp_outPort(0);
+    temp_R_Rsel <= temp_outPort(1);
+    temp_L_SDX <= temp_outPort(3); -- Combinação lógica
+    temp_R_SDX <= temp_outPort(3); -- Combinação lógica
+    temp_L_SCLK <= temp_outPort(4); -- Combinação lógica
+    temp_R_SCLK <= temp_outPort(4); -- Combinação lógica
+    temp_K_ACK <= temp_outPort(7);
 
 end arch_RouletteGame;

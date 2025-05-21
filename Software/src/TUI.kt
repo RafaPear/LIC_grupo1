@@ -24,6 +24,8 @@ object TUI {
                 Time.sleep(1)
                 HAL.clrBits(0b1000_0000)
             } else if (canWrite && key != KBD.NONE) {
+                println("key: $key")
+                println("Inport: ${HAL.readBits(0b0000_1111)}")
                 HAL.setBits(0b1000_0000)
                 LCD.write(key)
                 key == KBD.NONE
@@ -62,6 +64,9 @@ object TUI {
         for (c in newText) {
             LCD.write(c)
         }
+    }
+    fun clear(){
+        LCD.clear()
     }
 
     fun writeCenter(str: String) {

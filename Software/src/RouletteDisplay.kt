@@ -43,7 +43,7 @@ object RouletteDisplay {
             for (j in 0 until TOTAL_DISPLAYS) {
                 SerialEmitter.send(
                     SerialEmitter.Destination.ROULETTE,
-                    i.shl(CMD_SIZE) + POS[j],
+                    i.shl(CMD_SIZE) or POS[j],
                     TOTAL_SIZE
                 )
             }

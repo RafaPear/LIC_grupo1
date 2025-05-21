@@ -22,7 +22,7 @@ component ADDER2 is
 end component;
 
 component REG2 is
-    port(	
+    port(
 		D: in std_logic_vector(1 downto 0);
 		RESET: in std_logic;
         SET: in std_logic;

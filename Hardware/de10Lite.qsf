@@ -20,9 +20,9 @@ set_location_assignment PIN_P11 -to CLK
 # SW
 #============================================================
 
-#set_location_assignment PIN_C10     -to    InBit
+set_location_assignment PIN_C10     -to    RESET
 #set_location_assignment PIN_C11     -to    lcdSel
-#set_location_assignment PIN_D12     -to    RESET
+#set_location_assignment PIN_D12     -to    InBit
 #set_location_assignment PIN_C12    -to     ackti
 #set_location_assignment PIN_A12    -to    SW[4]
 #set_location_assignment PIN_B12    -to    SW[5]
@@ -37,7 +37,7 @@ set_location_assignment PIN_P11 -to CLK
 #set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[0]
 #set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[1]
 #set_location_assignment PIN_B8 -to KEY[0]
-set_location_assignment PIN_A7 -to send
+#set_location_assignment PIN_A7 -to send
 
 #============================================================
 # LED
@@ -68,14 +68,14 @@ set_location_assignment PIN_AA8     -to	   k_COL[3]
 set_location_assignment PIN_W8     -to L_Dout[4]
 set_location_assignment PIN_V5     -to L_E
 
-#set_location_assignment PIN_AA15   -to L_Dout[0]
-#set_location_assignment PIN_W13    -to L_Dout[1]
-#set_location_assignment PIN_AB13   -to L_Dout[2]
-#set_location_assignment PIN_Y11    -to L_Dout[3]
-set_location_assignment PIN_W11    -to L_Dout[0]
-set_location_assignment PIN_AA10   -to L_Dout[1]
-set_location_assignment PIN_Y8     -to L_Dout[2]
-set_location_assignment PIN_Y7     -to L_Dout[3]
+set_location_assignment PIN_AA15   -to L_Dout[0]
+set_location_assignment PIN_W13    -to L_Dout[1]
+set_location_assignment PIN_AB13   -to L_Dout[2]
+set_location_assignment PIN_Y11    -to L_Dout[3]
+#set_location_assignment PIN_W11    -to L_Dout[0]
+#set_location_assignment PIN_AA10   -to L_Dout[1]
+#set_location_assignment PIN_Y8     -to L_Dout[2]
+#set_location_assignment PIN_Y7     -to L_Dout[3]
 
 #============================================================
 # HEX0

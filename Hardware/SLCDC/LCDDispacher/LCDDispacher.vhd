@@ -23,14 +23,14 @@ architecture Behavioral of LCDDispacher is
         );
     end component;
 
-    signal state: std_logic_vector(1 downto 0) := "00";
+    signal state: std_logic_vector(1 downto 0);
     signal next_state: std_logic_vector(1 downto 0);
 
     -- Instaciate the clock divider
     signal nCLK: std_logic;
 
 begin 
-    clkDIV_inst: clkDIV
+    clkDIV_inst2: clkDIV
         port map(
             clk_in => clk,
             clk_out => nCLK

@@ -8,7 +8,6 @@ object SerialEmitter {
     enum class Destination {
         LCD, ROULETTE
     }
-    var LCD_delay = 1L
 
     var SS_LCD_ID = 0
     var SDX_LCD_ID = 3
@@ -17,7 +16,6 @@ object SerialEmitter {
     // Inicia a classe
     fun init() {
         HAL.init()
-        HAL.setBits(1)
 
         try {
             val file = File(HAL.configPath)
@@ -40,23 +38,21 @@ object SerialEmitter {
     }
 
     private fun sendLCD(data: Int, size: Int) {
+        HAL.writeBits(0b1111_1111, 0b0000_0011)
         HAL.clrBits(pow(2, 0))
-        HAL.setBits(pow(2, 1))
 
-        parseAndSend(data, size, LCD_delay)
+        parseAndSend(data, size, 1)
 
         HAL.setBits(pow(2, 0))
-        HAL.clrBits(pow(2, 1))
 
     }
 
     private fun sendRoulette(data: Int, size: Int) {
-        HAL.setBits(pow(2, 0))
+        HAL.writeBits(0b1111_1111, 0b0000_0011)
         HAL.clrBits(pow(2, 1))
 
         parseAndSend(data, size)
 
-        HAL.clrBits(pow(2, 0))
         HAL.setBits(pow(2, 1))
     }
 
@@ -73,11 +69,11 @@ object SerialEmitter {
     }
 
     fun parseAndSend(data: Int, size: Int, time: Long = 0) {
-        Time.sleep(time)
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
         for (i in 0..size){
+            Time.sleep(time)
             if (i == size) {
                 if (p.isBit(0))
                     HAL.setBits(pow(2, 3))
@@ -92,16 +88,12 @@ object SerialEmitter {
                     HAL.clrBits(pow(2, 3))
                 }
             }
-
             Time.sleep(time)
 
             HAL.setBits(pow(2, 4))
-
             Time.sleep(time)
 
             HAL.clrBits(pow(2, 4))
-
-            Time.sleep(time)
         }
     }
 }

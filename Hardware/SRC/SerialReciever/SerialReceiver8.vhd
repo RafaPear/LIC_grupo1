@@ -95,7 +95,7 @@ begin
         error => temp_err
     );
 
-    SerialControl1: SerialControl port map(
+    SerialControl2: SerialControl port map(
         clk => clk_control,
         en_Rx => SS,
         pFlag => temp_pFlag,
