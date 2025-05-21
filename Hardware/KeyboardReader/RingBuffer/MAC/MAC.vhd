@@ -20,6 +20,7 @@ architecture arc_MAC of MAC is
 component ADDER4 is
     port(
         A: in std_logic_vector (3 downto 0);
+        B: in std_logic_vector (3 downto 0);
         CIN: in std_logic;
         S: out std_logic_vector (3 downto 0)
     );
@@ -60,6 +61,7 @@ begin
 
 UADDER4: ADDER4 port map(
     A => mux_out,
+    B => "0000",
     CIN => '1',
     S => adder_out
 );

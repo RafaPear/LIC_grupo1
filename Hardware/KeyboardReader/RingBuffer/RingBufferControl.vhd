@@ -99,12 +99,17 @@ begin
                 next_state <= "110";
             when "110" =>
                 DAC    <= '1';
-                incPut <= '1';
+                incPut <= '0';
                 incGet <= '0';
                 W_reg  <= '0';
                 wr     <= '0';
                 selPG  <= '1';
-                next_state <= "000";
+                if DAV = '1' then
+                    next_state <= "110";
+                else 
+                    next_state <= "000";
+                    incPut <= '1';
+                end if;
             when others =>
                 next_state <= "000";
         end case;
