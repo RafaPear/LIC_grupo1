@@ -84,6 +84,10 @@ set_location_assignment PIN_D13 -to outputPort[4]
 set_location_assignment PIN_C13 -to outputPort[5]
 set_location_assignment PIN_E14 -to outputPort[6]
 set_location_assignment PIN_D14 -to outputPort[7]
+set_global_assignment -name VHDL_FILE RouletteDisplay/rouletteDisplay.vhd
+set_global_assignment -name VHDL_FILE RouletteDisplay/reg_5bit.vhd
+set_global_assignment -name VHDL_FILE RouletteDisplay/dec2hex.vhd
+set_global_assignment -name VHDL_FILE RouletteDisplay/dec_3_8.vhd
 set_global_assignment -name VHDL_FILE SRC/SerialReciever/SerialReceiver8.vhd
 set_global_assignment -name VHDL_FILE Utils/Reg4.vhd
 set_global_assignment -name VHDL_FILE Utils/ADDER4.vhd

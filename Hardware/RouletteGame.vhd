@@ -9,8 +9,7 @@ entity RouletteGame is
         K_COL: out std_logic_vector(3 downto 0); -- KeyboardReader
         L_E: out std_logic; -- SLCDC
         L_Dout: out std_logic_vector(4 downto 0); -- SLCDC
-        R_set: out std_logic; -- SRC
-        R_Dout: out std_logic_vector(7 downto 0) -- SRC
+        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5	: out std_logic_vector(7 downto 0)
     );
 end RouletteGame;
 
@@ -57,6 +56,22 @@ architecture arch_RouletteGame of RouletteGame is
             Dval: out std_logic
         );
     end component;
+
+    component rouletteDisplay is
+    port(	set	: in std_logic;
+            cmd	: in std_logic_vector(2 downto 0);
+            data	: in std_logic_vector(4 downto 0);
+            HEX0	: out std_logic_vector(7 downto 0);
+            HEX1	: out std_logic_vector(7 downto 0);
+            HEX2	: out std_logic_vector(7 downto 0);
+            HEX3	: out std_logic_vector(7 downto 0);
+            HEX4	: out std_logic_vector(7 downto 0);
+            HEX5	: out std_logic_vector(7 downto 0)
+            );
+    end component;
+    
+    signal D_SRC: std_logic_vector(7 downto 0);
+    signal R_SET_temp: std_logic;
 
     -- Signals for USBPort
     signal temp_inPort: std_logic_vector(7 downto 0);
@@ -118,8 +133,20 @@ begin
         Rsel => temp_R_Rsel,
         SCLK => temp_R_SCLK,
         SDX => temp_R_SDX,
-        set => R_set,
-        Dout => R_Dout
+        set => R_SET_temp,
+        Dout => D_SRC
+    );
+
+    RouleteDisplay_inst: rouletteDisplay port map(
+        set => R_SET_temp,
+        cmd => D_SRC(2 downto 0),
+        data => D_SRC(7 downto 3),
+        HEX0 => HEX0,
+        HEX1 => HEX1,
+        HEX2 => HEX2,
+        HEX3 => HEX3,
+        HEX4 => HEX4,
+        HEX5 => HEX5
     );
 
     -- Instanciar KeyboardReader
