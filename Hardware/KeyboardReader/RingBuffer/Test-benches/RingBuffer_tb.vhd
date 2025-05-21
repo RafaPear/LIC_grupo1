@@ -65,11 +65,13 @@ begin
         for i in 0 to 15 loop
             D_tb <= std_logic_vector(to_unsigned(i, 4)); -- Correção: atribuição compatível
             DAV_tb <= '1';
-            wait for 2 * MCLK_PERIOD;
-            DAV_tb <= '0';
+            wait for 3 * MCLK_PERIOD;
             assert DAC_tb = '1' report "Wreg should be high" severity failure;
             wait for 2 * MCLK_PERIOD;
             assert Wreg_tb = '0' report "Wreg should be low" severity failure;
+            DAV_tb <= '0';
+            wait for 2 * MCLK_PERIOD;
+            assert DAC_tb = '0' report "DAC should be low" severity failure;
         end loop;
 
         assert DAC_tb = '0' report "DAC should be low" severity failure;
@@ -79,9 +81,9 @@ begin
         D_tb <= "1111";
         wait for 2 * MCLK_PERIOD;
         DAV_tb <= '1';
-        wait for 2 * MCLK_PERIOD;
-        DAV_tb <= '0';
+        wait for 3 * MCLK_PERIOD;
         assert DAC_tb = '0' report "Wreg should be low" severity failure;
+        DAV_tb <= '0';
         
         --Esvaziar a RAM
         
@@ -90,9 +92,10 @@ begin
             wait for 2 * MCLK_PERIOD;
             CTS_tb <= '1';
             wait for 2 * MCLK_PERIOD;
-            CTS_tb <= '0';
             assert Wreg_tb = '1' report "Wreg should be high" severity failure;
             assert Q_tb = x report "Q should be equal to " & integer'image(i) severity failure;
+            wait for 2 * MCLK_PERIOD;
+            CTS_tb <= '0';
             wait for 2 * MCLK_PERIOD;
             assert Wreg_tb = '0' report "Wreg should be low" severity failure;
         end loop;
@@ -109,17 +112,18 @@ begin
         assert DAC_tb = '0' report "DAC should be low" severity failure;
         wait for 2 * MCLK_PERIOD;
 
-        -- inserir 3 falores, todos = "1111"
+        -- inserir 3 valores, todos = "1111"
         x := "1111";
         for i in 0 to 2 loop
             D_tb <= x;
             DAV_tb <= '1';
-            wait for 2 * MCLK_PERIOD;
-            DAV_tb <= '0';
+            wait for 3 * MCLK_PERIOD;
             assert DAC_tb = '1' report "Wreg should be high" severity failure;
             wait for 2 * MCLK_PERIOD;
-            assert DAC_tb = '0' report "Wreg should be low" severity failure;
             assert Wreg_tb = '0' report "Wreg should be low" severity failure;
+            DAV_tb <= '0';
+            wait for 2 * MCLK_PERIOD;
+            assert DAC_tb = '0' report "DAC should be low" severity failure;
         end loop;
         -- retirar esses mesmo 3 valores verificar se estao corretos
         for i in 0 to 2 loop
@@ -145,12 +149,13 @@ begin
             x := "0001";
             D_tb <= x;
             DAV_tb <= '1';
-            wait for 2 * MCLK_PERIOD;
-            DAV_tb <= '0';
+            wait for 3 * MCLK_PERIOD;
             assert DAC_tb = '1' report "Wreg should be high" severity failure;
             wait for 2 * MCLK_PERIOD;
-            assert DAC_tb = '0' report "Wreg should be low" severity failure;
             assert Wreg_tb = '0' report "Wreg should be low" severity failure;
+            DAV_tb <= '0';
+            wait for 2 * MCLK_PERIOD;
+            assert DAC_tb = '0' report "DAC should be low" severity failure;
             wait for 2 * MCLK_PERIOD;
             CTS_tb <= '1';
             wait for 2 * MCLK_PERIOD;
