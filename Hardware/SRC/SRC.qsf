@@ -43,17 +43,6 @@ set_global_assignment -name TOP_LEVEL_ENTITY SRC
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 19.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:43:14  MAY 20, 2025"
 set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
-set_global_assignment -name VHDL_FILE ../Utils/FULLADDER.vhd
-set_global_assignment -name VHDL_FILE ../Utils/FFD.vhd
-set_global_assignment -name VHDL_FILE SerialReciever/ShiftRegister/ShiftRegister.vhd
-set_global_assignment -name VHDL_FILE "SerialReciever/Serial Control/SerialControl.vhd"
-set_global_assignment -name VHDL_FILE "SerialReciever/Parity Check/ParityCheck.vhd"
-set_global_assignment -name VHDL_FILE SerialReciever/Counter/Reg4.vhd
-set_global_assignment -name VHDL_FILE SerialReciever/Counter/Counter4.vhd
-set_global_assignment -name VHDL_FILE SerialReciever/Counter/ADDER4.vhd
-set_global_assignment -name VHDL_FILE SerialReciever/SerialReceiver.vhd
-set_global_assignment -name VHDL_FILE RouletteDispacher/RouletteDispacher.vhd
-set_global_assignment -name VHDL_FILE SRC.vhd
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "MAX 10 DE10 - Lite"
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
@@ -66,4 +55,19 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VHDL_FILE SerialReciever/ShiftRegister/ShiftRegister8.vhd
+set_global_assignment -name VHDL_FILE ../Utils/Reg4.vhd
+set_global_assignment -name VHDL_FILE ../Utils/ADDER4.vhd
+set_global_assignment -name VHDL_FILE SerialReciever/SerialReceiver8.vhd
+set_global_assignment -name VHDL_FILE ../Utils/FULLADDER.vhd
+set_global_assignment -name VHDL_FILE ../Utils/FFD.vhd
+set_global_assignment -name VHDL_FILE "SerialReciever/Serial Control/SerialControl.vhd"
+set_global_assignment -name VHDL_FILE "SerialReciever/Parity Check/ParityCheck.vhd"
+set_global_assignment -name VHDL_FILE SerialReciever/Counter/Counter4.vhd
+set_global_assignment -name VHDL_FILE RouletteDispacher/RouletteDispacher.vhd
+set_global_assignment -name VHDL_FILE SRC.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

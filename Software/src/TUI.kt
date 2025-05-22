@@ -159,7 +159,7 @@ object TUI {
     }
 
     /**
-     * Quria uma animação de screen de load
+     * Quria uma animação de screen de load. Para quando a condição for verdadeira
      * @param time
      * @param condition
      */
@@ -183,7 +183,7 @@ object TUI {
     }
 
     /**
-     * Queria uma animação de um texto qeu se deslocada para a esquerda
+     * Cria uma animação de um texto que se desloca da direita para a esquerda.
      * @param line1
      * @param time velocidade a qual o texto irá andar
      * @param breakKey tecla a qual irá quebra o loop

@@ -2,7 +2,7 @@ import isel.leic.utils.Time
 import kotlin.text.iterator
 
 /**
- * Objeto responsável pela escrita no LCD através do [HAL], usando a interface a 4 bits
+ * Objeto responsável pela escrita no LCD através do [HAL] e do [SerialEmitter], usando a interface a 4 bits
  */
 object LCD {
     /**
@@ -50,7 +50,8 @@ object LCD {
      */
     private fun writeNibbleParallel(rs: Boolean, data: Int) {
         // Envia rs
-        rs.toBit(RS_MASK)
+        if(rs.toInt() == 1) HAL.setBits(RS_MASK)
+        else HAL.clrBits(RS_MASK)
 
         // Envia E On
         HAL.setBits(E_MASK)

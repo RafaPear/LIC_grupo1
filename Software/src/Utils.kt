@@ -1,6 +1,12 @@
 import java.io.File
 import kotlin.text.toInt
 
+/**
+ * Função que lê um ficheiro e devolve uma lista de strings
+ *
+ * @param path caminho do ficheiro
+ * @return [List] lista de strings
+ * */
 fun readFile(path: String): List<String>{
     return File(path).readLines()
 }

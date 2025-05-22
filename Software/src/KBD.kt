@@ -102,7 +102,7 @@ object KBD {
 	/**
 	 * Retorna o código da tecla premida, caso ocorra antes do [timeout],
 	 * ou -1 caso contrario.
-	 * @param timeout em milissegundo
+	 * @param timeout em milissegundos
 	 * @return [Int]
 	 */
 	fun waitKeyVal(timeout: Long): Int {
