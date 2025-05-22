@@ -1,5 +1,4 @@
 import isel.leic.utils.Time
-import jdk.internal.org.jline.keymap.KeyMap.key
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -52,7 +51,7 @@ object KBD {
 					valPins += getInputPins(i)
 				}
 			}
-		} catch(e:Exception){
+		} catch(_:Exception){
 			Logger.getLogger("KBD").log(Level.WARNING, "No config file found, using default values")
 		}
 
@@ -64,10 +63,13 @@ object KBD {
 	 * @return [Char]
 	 */
 	fun getKey(): Char {
-		return if (HAL.isBit(valPins))
-			CHAR_LIST[HAL.readBits(kPins)]
-
-		else NONE
+		if (HAL.isBit(valPins)) {
+			val key = CHAR_LIST[HAL.readBits(kPins)]
+			HAL.setBits(0b1000_0000)
+			Time.sleep(1)
+			HAL.clrBits(0b1000_0000)
+			return key
+		}else return NONE
 	}
 
 	/**

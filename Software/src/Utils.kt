@@ -9,7 +9,7 @@ fun parsePins(pins: String): Int{
     var result = 0
     try {
         result += pow(2, pins.toInt())
-    } catch (e: NumberFormatException) {
+    } catch (_: NumberFormatException) {
         val badPins = pins.split("-")
         for (i in badPins[0].toInt()..badPins[1].toInt()) {
             result += pow(2, i)

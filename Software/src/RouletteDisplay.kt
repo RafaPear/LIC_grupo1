@@ -1,17 +1,43 @@
 import isel.leic.utils.Time
 import java.util.logging.Level
 import java.util.logging.Logger
-import javax.swing.plaf.basic.BasicOptionPaneUI
 
-// Controla o mostrador de pontuação.
+/**
+ * Responsável pelos displays de 7 segmentos
+ */
 object RouletteDisplay {
+    /**
+     * Total de display na placa
+     */
+    private const val TOTAL_DISPLAYS = 6
 
-    const val TOTAL_DISPLAYS = 6
-    const val MAX_VALUE = 15
-    const val CMD_SIZE = 3
+    /**
+     * Representação máxima do hexadecimal 15 ou F
+     */
+    private const val MAX_VALUE = 15
+
+    /**
+     * Número de bits para o comando
+     */
+    private const val CMD_SIZE = 3
+
+    /**
+     * Total de bits a serem enviados
+     */
     const val TOTAL_SIZE = 8
-    const val CMD_UPDATE = 0b0000_0110
 
+    /**
+     * Comando para atualizar os displays
+     */
+    private const val CMD_UPDATE = 0b0000_0110
+
+    /**
+     * Posição atual do cursor
+     */
+    var cursor = 0
+    /**
+     * Indice de cada display
+     */
     val POS = listOf(
         0b0000_0000,
         0b0000_0001,
@@ -21,6 +47,9 @@ object RouletteDisplay {
         0b0000_0101
     )
 
+    /**
+     * Sequencia de código para efetuar um ciclo da animação de girar
+     */
     val ANIM = listOf(
         0x14,
         0x15,
@@ -30,14 +59,17 @@ object RouletteDisplay {
         0x13,
     )
 
-    var cursor = 0
-
-    // Inicia a classe, estabelecendo os valores iniciais.
+    /**
+     * Inicia a classe, estabelecendo os valores iniciais.
+     */
     fun init() {
         SerialEmitter.init()
+        off(false)
     }
 
-    // Realiza a animação do sorteio
+    /**
+     * Realiza a animação do sorteio
+     */
     fun animation() {
         for (i in ANIM) {
             for (j in 0 until TOTAL_DISPLAYS) {
@@ -52,7 +84,10 @@ object RouletteDisplay {
         }
     }
 
-    // Envia comando para atualizar o valor do mostrador da roleta
+    /**
+     * Escreve no display em que se situa o [cursor] o valor de [value]
+     * @param value
+     */
     fun setValue(value: Int) {
         if (value > MAX_VALUE || value < 0) {
             Logger.getLogger("RouletteDisplay").log(Level.WARNING, "Value too high. Max: $MAX_VALUE, Value: $value")
@@ -67,7 +102,10 @@ object RouletteDisplay {
         )
     }
 
-    // Envia comando para desativar/ativar a visualização do mostrador da roleta
+    /**
+     * Envia comando para desativar/ativar a visualização do mostrador da roleta
+     * @param value false os displays estão ligados
+     */
     fun off(value: Boolean) {
         if (value) {
             SerialEmitter.send(
@@ -84,6 +122,9 @@ object RouletteDisplay {
         }
     }
 
+    /**
+     * Realiza a atualização dos displays
+     */
     fun update() {
         SerialEmitter.send(
             SerialEmitter.Destination.ROULETTE,
@@ -91,4 +132,27 @@ object RouletteDisplay {
             TOTAL_SIZE
         )
     }
+
+    /**
+     * Deixa todos os displays com o valor 0
+     */
+    fun clrAll() {
+        for (i in POS) {
+            cursor = i
+            setValue(0)
+        }
+        update()
+    }
+
+    /**
+     * Escreve no display correspondente ao [indice] o valor de [value]
+     * @param value
+     * @param indice
+     */
+    fun set(value: Int, indice: Int = 0) {
+        cursor = indice
+        setValue(value)
+        update()
+    }
+
 }
