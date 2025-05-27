@@ -13,11 +13,9 @@ entity FFD is
 end FFD;
 
 architecture arc_FFD of FFD is
-    signal Q_int: std_logic := '0';
-
 begin
 
-Q_int <= '0' when RESET = '1' else '1' when SET = '1' else D when rising_edge(clk) and EN = '1';
-Q <= Q_int;
+Q <= '0' when RESET = '1' else '1' when SET = '1' else D when rising_edge(clk) and EN = '1';
+
 
 end arc_FFD;

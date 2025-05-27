@@ -37,7 +37,7 @@ architecture arch_KeyDecode of KeyDecode is
         );
     end component;
 
-    signal temp_Kpress, temp_Kscan, CLK_div: std_logic;
+    signal temp_Kpress, temp_Kscan	: std_logic;
 
 begin
 

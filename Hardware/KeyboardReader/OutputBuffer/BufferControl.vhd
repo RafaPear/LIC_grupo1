@@ -53,6 +53,9 @@ begin
                     next_state <= "10";
                 end if;
             when others =>
+				    OBfree <= '1';
+                Wreg <= '0';
+                Dval <= '0';
                 next_state <= "00";
         end case;
     end process;
