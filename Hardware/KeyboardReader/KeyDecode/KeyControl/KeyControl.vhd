@@ -28,16 +28,6 @@ begin
         end if;
     end process;
 
-    -- process (clk, temp_Kscan)
-    -- begin
-    --     -- if rising_edge(clk) then
-    --     --     Kscan <= temp_Kscan;
-    --     -- end if;
-    --     Kscan <= temp_Kscan and clk;
-    -- end process;
-
-    -- Kscan <= temp_Kscan and clk;
-
     process (state, Kack, Kpress)
     begin
         case state is
@@ -71,6 +61,8 @@ begin
                 end if;
             
             when others =>
+					 Kscan <= '1';
+                Kval <= '0';
                 next_state <= "00";
         end case;
     end process;

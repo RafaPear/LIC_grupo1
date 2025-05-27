@@ -20,10 +20,10 @@ set_location_assignment PIN_P11 -to CLK
 # SW
 #============================================================
 
-set_location_assignment PIN_C10     -to    Kack
-set_location_assignment PIN_C11     -to    RESET
-#set_location_assignment PIN_D12    -to    SW[2]
-#set_location_assignment PIN_C12    -to    SW[3]
+set_location_assignment PIN_C10     -to    RESET
+#set_location_assignment PIN_C11     -to    lcdSel
+#set_location_assignment PIN_D12     -to    InBit
+#set_location_assignment PIN_C12    -to     ackti
 #set_location_assignment PIN_A12    -to    SW[4]
 #set_location_assignment PIN_B12    -to    SW[5]
 #set_location_assignment PIN_A13    -to    SW[6]
@@ -32,23 +32,31 @@ set_location_assignment PIN_C11     -to    RESET
 #set_location_assignment PIN_F15    -to    SW[9]
 
 #============================================================
+# KEY
+#============================================================
+#set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[0]
+#set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[1]
+#set_location_assignment PIN_B8 -to KEY[0]
+#set_location_assignment PIN_A7 -to send
+
+#============================================================
 # LED
 #============================================================
 
-set_location_assignment PIN_A8      -to    K[0]
-set_location_assignment PIN_A9      -to    K[1]
-set_location_assignment PIN_A10     -to    K[2]
-set_location_assignment PIN_B10     -to    K[3]
+#set_location_assignment PIN_A8      -to    K[0]
+#set_location_assignment PIN_A9      -to    K[1]
+#set_location_assignment PIN_A10     -to    K[2]
+#set_location_assignment PIN_B10     -to    K[3]
 
 #============================================================
 # Keyboard (Expansion Board)
 #============================================================
 
-set_location_assignment PIN_W5      -to    LIN[0]
-set_location_assignment PIN_AA14    -to	   LIN[1]
-set_location_assignment PIN_W12     -to    LIN[2]
-set_location_assignment PIN_AB12    -to	   LIN[3]
-set_location_assignment PIN_AB11    -to	   COL[0]
-set_location_assignment PIN_AB10    -to	   COL[1]
-set_location_assignment PIN_AA9     -to	   COL[2]
-set_location_assignment PIN_AA8     -to	   COL[3]
+set_location_assignment PIN_W5      -to    k_LIN[0]
+set_location_assignment PIN_AA14    -to	   k_LIN[1]
+set_location_assignment PIN_W12     -to    k_LIN[2]
+set_location_assignment PIN_AB12    -to	   k_LIN[3]
+set_location_assignment PIN_AB11    -to	   k_COL[0]
+set_location_assignment PIN_AB10    -to	   k_COL[1]
+set_location_assignment PIN_AA9     -to	   k_COL[2]
+set_location_assignment PIN_AA8     -to	   k_COL[3]
