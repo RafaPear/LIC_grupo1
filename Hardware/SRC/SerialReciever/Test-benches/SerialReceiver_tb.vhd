@@ -31,7 +31,7 @@ architecture test of SerialReceiver_tb is
     constant MCLK_PERIOD : time := 20 ns;
 
 begin
-    UUT: SerialReceiver
+    UUT: SerialReceiver8
         port map(
             SDX => s_SDX,
             SCLK => s_SCLK,
