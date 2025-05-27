@@ -6,7 +6,7 @@ entity SerialReceiver_tb is
 end SerialReceiver_tb;
 
 architecture test of SerialReceiver_tb is
-    component SerialReceiver is
+    component SerialReceiver8 is
         port(
             SDX: in  std_logic;
             SCLK: in  std_logic;
@@ -31,7 +31,7 @@ architecture test of SerialReceiver_tb is
     constant MCLK_PERIOD : time := 20 ns;
 
 begin
-    UUT: SerialReceiver
+    UUT: SerialReceiver8
         port map(
             SDX => s_SDX,
             SCLK => s_SCLK,
