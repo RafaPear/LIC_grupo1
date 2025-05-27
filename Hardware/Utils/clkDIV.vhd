@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
   
 entity CLKDIV is
-generic(div: natural := 5000000);
+generic(div: natural := 13);
 port ( 
 	clk_in: in std_logic;
 	clk_out: out std_logic);
