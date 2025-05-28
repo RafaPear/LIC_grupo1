@@ -77,7 +77,7 @@ begin
         variable RS_in_2    : std_logic := '1';
         variable data_in_2  : std_logic_vector(3 downto 0) := "0010";
         variable P_in_2     : std_logic := '1';
-        variable error_2   : std_logic := '1';
+        variable error_2   : std_logic := '0';
 
     begin
         --teste 1 ; a trama tem que sair valida
@@ -103,6 +103,7 @@ begin
             SCLK_tb <= '0';
             wait for MCLK_PERIOD;
         end loop;
+        LCDsel_tb <= '1';
 
         wait until E_tb = '1';
         assert Dout_tb = expected_data report "Incorrect data output" severity failure;
@@ -120,9 +121,11 @@ begin
         SDX_in := P_in_2 & data_in_2 & RS_in_2;
         expected_data := Rs_in_2 & data_in_2;
         expected_E_tb := not error_2;
-
-        wait for 2*MCLK_PERIOD;
         
+        wait for 2*MCLK_PERIOD;
+        LCDsel_tb <= '0';
+        wait for MCLK_PERIOD;
+
         for i in 0 to 5 loop
             SDX_tb <= SDX_in(i);
             wait for MCLK_PERIOD;
