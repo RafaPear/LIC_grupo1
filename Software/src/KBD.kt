@@ -66,8 +66,8 @@ object KBD {
 		if (HAL.isBit(valPins)) {
 			val key = CHAR_LIST[HAL.readBits(kPins)]
 			HAL.setBits(0b1000_0000)
-			Time.sleep(1)
 			HAL.clrBits(0b1000_0000)
+			Time.sleep(1)
 			return key
 		}else return NONE
 	}

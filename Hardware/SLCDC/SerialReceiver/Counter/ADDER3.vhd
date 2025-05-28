@@ -25,7 +25,7 @@ end component;
 signal C1,C2: std_logic;
 
 begin 
-	FA0: fulladder port map (
+	FA2: fulladder port map (
 		A => A(0), 
 		B => B(0), 
 		Cin => CIN, 
@@ -33,7 +33,7 @@ begin
 		Cout => C1
 	);
 
-	FA1: fulladder port map (
+	FA3: fulladder port map (
 		A => A(1), 
 		B => B(1), 
 		Cin => C1, 
@@ -41,7 +41,7 @@ begin
 		Cout => C2
 	);
 	
-	FA2: fulladder port map (
+	FA4: fulladder port map (
 		A => A(2), 
 		B => B(2), 
 		Cin => C2, 

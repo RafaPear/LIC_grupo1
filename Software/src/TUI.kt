@@ -40,11 +40,11 @@ object TUI {
     fun captureAndPrint() {
         while (true) {
             val key = KBD.getKey()
-
             if (key == '*' && canWrite) {
                 LCD.clear()
                 canWrite = false
             } else if (canWrite && key != KBD.NONE) {
+                println("Key: $key")
                 LCD.write(key)
                 key == KBD.NONE
                 canWrite = false

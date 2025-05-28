@@ -1,9 +1,14 @@
+import com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time
+import isel.leic.utils.Time
+
 //fun main() {
 //    TUI.init()
 //    TUI.capture()
 //}
 fun main(){
     APP.init()
+    /*TUI.init()
+    TUI.write("AAAAAAAAAAAA")*/
 }
 /*
 var read = false

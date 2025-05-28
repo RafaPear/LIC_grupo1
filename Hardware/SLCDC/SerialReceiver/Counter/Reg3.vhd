@@ -26,7 +26,7 @@ component FFD is
 end component;
 
 begin 
-    UFFD9: FFD port map(
+    UFFD6: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -35,7 +35,7 @@ begin
         Q => Q(0)
     );    
     
-    UFFD10: FFD port map(
+    UFFD7: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,
@@ -44,7 +44,7 @@ begin
         Q => Q(1)
     );
 
-	    UFFD11: FFD port map(
+	UFFD8: FFD port map(
         CLK => CLK,
         RESET => RESET,
         SET => SET,

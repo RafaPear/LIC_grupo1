@@ -78,6 +78,7 @@ object RouletteDisplay {
                     i.shl(CMD_SIZE) or POS[j],
                     TOTAL_SIZE
                 )
+                Time.sleep(500)
             }
             update()
             Time.sleep(100)

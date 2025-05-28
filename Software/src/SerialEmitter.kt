@@ -1,3 +1,4 @@
+import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -63,7 +64,7 @@ object SerialEmitter {
     private fun sendLCD(data: Int, size: Int) {
         HAL.writeBits(0b1111_1111, 0b0000_0011)
         HAL.clrBits(pow(2, 0))
-
+        println("Sending to LCD: $data")
         parseAndSend(data, size, 1)
 
         HAL.setBits(pow(2, 0))
@@ -106,7 +107,7 @@ object SerialEmitter {
      */
     private fun parseAndSend(data: Int, size: Int, time: Long = 1) {
 
-        //Time.sleep(time)
+        Time.sleep(time)
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
         for (i in 0..size){
@@ -124,10 +125,10 @@ object SerialEmitter {
                     HAL.clrBits(pow(2, 3))
                 }
             }
-            //Time.sleep(time)
+            Time.sleep(time)
 
             HAL.setBits(pow(2, 4))
-            //Time.sleep(time)
+            Time.sleep(time)
 
             HAL.clrBits(pow(2, 4))
         }

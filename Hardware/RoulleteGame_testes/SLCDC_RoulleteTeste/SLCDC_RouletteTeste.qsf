@@ -54,6 +54,17 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_location_assignment PIN_P11 -to CLK
+set_location_assignment PIN_C10 -to RESET
+set_location_assignment PIN_W8 -to L_Dout[4]
+set_location_assignment PIN_V5 -to L_E
+set_location_assignment PIN_AA15 -to L_Dout[0]
+set_location_assignment PIN_W13 -to L_Dout[1]
+set_location_assignment PIN_AB13 -to L_Dout[2]
+set_location_assignment PIN_Y11 -to L_Dout[3]
+set_global_assignment -name VHDL_FILE ../../Utils/Reg8.vhd
+set_global_assignment -name VHDL_FILE ../../Utils/SerialControl.vhd
+set_global_assignment -name VHDL_FILE ../../Utils/ParityCheck.vhd
 set_global_assignment -name VHDL_FILE ../../Utils/clkDIV.vhd
 set_global_assignment -name VHDL_FILE ../../UsbPort.vhd
 set_global_assignment -name VHDL_FILE ../../Utils/FULLADDER.vhd
@@ -68,12 +79,4 @@ set_global_assignment -name VHDL_FILE ../../SLCDC/SerialReceiver/Counter/Counter
 set_global_assignment -name VHDL_FILE ../../SLCDC/SerialReceiver/Counter/ADDER3.vhd
 set_global_assignment -name VHDL_FILE ../../SLCDC/LCDDispacher/LCDDispacher.vhd
 set_global_assignment -name VHDL_FILE SLCDC_RoulleteTeste.vhd
-set_location_assignment PIN_P11 -to CLK
-set_location_assignment PIN_C10 -to RESET
-set_location_assignment PIN_W8 -to L_Dout[4]
-set_location_assignment PIN_V5 -to L_E
-set_location_assignment PIN_AA15 -to L_Dout[0]
-set_location_assignment PIN_W13 -to L_Dout[1]
-set_location_assignment PIN_AB13 -to L_Dout[2]
-set_location_assignment PIN_Y11 -to L_Dout[3]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

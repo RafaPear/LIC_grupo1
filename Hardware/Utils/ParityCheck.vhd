@@ -11,18 +11,30 @@ entity ParityCheck is
 end ParityCheck;
 
 architecture Behavioral of ParityCheck is
+component FFD is
+    port(
+	    CLK: in std_logic;
+	    RESET: in std_logic;
+	    SET: in std_logic;
+	    D: in std_logic;
+	    EN: in std_logic;
+	    Q: out std_logic
+    );
+end component;
+
     signal Q: std_logic := '0';
+    signal tempD: std_logic;
 begin
-    process(clk)
-    begin
-        if rising_edge(clk) then
-            if init = '1' then
-                Q <= '0';
-            else
-                Q <= Q xor data_in;
-            end if;
-        end if;
-    end process;
+    UFFD: FFD
+        port map(
+            CLK => clk,
+            RESET => init,
+            SET => '0',
+            D => tempD,
+            EN => '1',
+            Q => Q
+        );
+    tempD <= data_in xor Q; -- XOR the input data with the current state
 
     error <= not Q;
 end Behavioral;

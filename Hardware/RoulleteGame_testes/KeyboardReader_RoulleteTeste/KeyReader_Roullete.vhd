@@ -6,7 +6,9 @@ entity KeyReader_Roulette is
         CLK: in std_logic;
         RESET: in std_logic;
         K_LIN: in std_logic_vector(3 downto 0); -- KeyboardReader
-        K_COL: out std_logic_vector(3 downto 0) -- KeyboardReader
+        K_COL: out std_logic_vector(3 downto 0); -- KeyboardReader
+        K_D: out std_logic_vector(3 downto 0); -- KeyboardReader
+        K_Dval: out std_logic -- KeyboardReader
     );
 end KeyReader_Roulette;
 
@@ -57,4 +59,6 @@ begin
     temp_inputPort(3 downto 0) <= temp_D;
     temp_inputPort(4) <= temp_Dval;
     temp_ACK <= temp_outputPort(7);
+    K_D <= temp_D;
+    K_Dval <= temp_Dval;
 end arch_KeyReader_Roulette;
