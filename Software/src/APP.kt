@@ -63,6 +63,7 @@ object APP {
     fun init() {
         TUI.init()
         RouletteDisplay.init()
+        RouletteDisplay.clrAll()
         lobby(300L)
         game()
     }
@@ -87,7 +88,7 @@ object APP {
         var r = LCD.COLS - 1
 
         while (true) {
-            if (KBD.getKey() == breakKey) return
+            if (TUI.capture() == breakKey) return
             TUI.writeCenter(line1)
             TUI.nextLine()
             if (r == window.length) {
@@ -121,7 +122,7 @@ object APP {
 
             RouletteDisplay.set(totalBets)
 
-            Time.sleep(1000L)
+            Time.sleep(1)
 
             line2 = "Bets:"
 
@@ -136,7 +137,8 @@ object APP {
             line2 = timeRoulette.toString() + "s"
 
             refresh(
-                { writeCenterLine(line1, 0) }, { writeCenterLine(line2, 1) }
+                { writeCenterLine(line1, 0) },
+                { writeCenterLine(line2, 1) }
             )
 
             bonusBets()
@@ -161,14 +163,14 @@ object APP {
      */
     fun bets() {
         while(true){
-            val temp = TUI.capture()
-            if (temp == sendBets) return
+            val key = TUI.capture()
+            if (key == sendBets) return
 
-            if (totalBets > 0 && temp in validBets) {
+            if (totalBets > 0 && key in validBets) {
                 totalBets--
                 RouletteDisplay.set(totalBets)
-                bets += temp
-                TUI.write("$temp,")
+                bets += key
+                TUI.write("$key,")
             }
         }
     }
@@ -221,7 +223,7 @@ object APP {
      * @param write1 uma função de extensão do TUI
      * @param write2 uma função de extensão do TUIa
      */
-    fun refresh(write1: TUI.()-> Unit,write2: TUI.()-> Unit) {
+    fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
         TUI.clear()
         TUI.write1()
         TUI.nextLine()

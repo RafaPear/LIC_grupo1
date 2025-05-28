@@ -64,7 +64,7 @@ object SerialEmitter {
     private fun sendLCD(data: Int, size: Int) {
         HAL.writeBits(0b1111_1111, 0b0000_0011)
         HAL.clrBits(pow(2, 0))
-        println("Sending to LCD: $data")
+        // println("Sending to LCD: $data")
         parseAndSend(data, size, 1)
 
         HAL.setBits(pow(2, 0))
@@ -105,7 +105,7 @@ object SerialEmitter {
      * @param size
      * @param time
      */
-    private fun parseAndSend(data: Int, size: Int, time: Long = 1) {
+    private fun parseAndSend(data: Int, size: Int, time: Long = 0) {
 
         Time.sleep(time)
         val p = if (data.countOneBits() % 2 == 0) 1 else 0

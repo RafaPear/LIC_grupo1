@@ -57,7 +57,18 @@ object TUI {
      * captura a tecla e retorna esta mesma
      * @return [Char]
      */
-    fun capture(): Char = KBD.getKey()
+    fun capture(): Char {
+        val key = KBD.getKey()
+        return if (canWrite && key != KBD.NONE) {
+            println("Key: $key")
+            canWrite = false
+            key
+        } else if (key == KBD.NONE) {
+            canWrite = true
+            key
+        }
+        else KBD.NONE
+    }
 
     /**
      * Quebra a [String] e escreve-a nas duas linhas da tela LCD
