@@ -61,10 +61,10 @@ object APP {
      * Inicia a aplicação
      */
     fun init() {
-        TUI.init()
         RouletteDisplay.init()
         RouletteDisplay.clrAll()
-        lobby(300L)
+        TUI.init()
+        lobby(1)
         game()
     }
 
@@ -74,34 +74,16 @@ object APP {
      * @param breakKey tecla que quebra o loop
      */
     fun lobby(time: Long = 200, breakKey: Char = startGame) {
-        var window = ""
-
-        for (i in 0 until LCD.COLS - 1) {
-            window += " "
-        }
-        window += line2
-
-        for (i in 0 until LCD.COLS - 1) {
-            window += " "
-        }
-        var l = 0
-        var r = LCD.COLS - 1
+        TUI.clear()
+        Time.sleep(1)
+        TUI.writeCenter(line1)
+        Time.sleep(1)
+        TUI.nextLine()
 
         while (true) {
             if (TUI.capture() == breakKey) return
-            TUI.writeCenter(line1)
-            TUI.nextLine()
-            if (r == window.length) {
-                r = LCD.COLS - 1
-                l = 0
-            }
-            for (i in l..r) {
-                TUI.write(window[i], false)
-            }
-            l++
-            r++
-            Time.sleep(time)
-            TUI.clear()
+            //Time.sleep(time)
+            //TUI.clear()
         }
     }
 
