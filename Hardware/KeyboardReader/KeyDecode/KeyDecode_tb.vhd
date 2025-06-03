@@ -57,36 +57,24 @@ architecture behavioral of KeyDecode_tb is
         RESET_tb <= '0';
         LIN_tb <= "1110";
         wait for MCLK_PERIOD * 2;
-        KACK_tb <= '0';
-        wait for MCLK_PERIOD * 2;
-        KACK_tb <= '1';
 
         LIN_tb <= "1111";
         wait for MCLK_PERIOD * 5;
 
         LIN_tb <= "1101";
         wait for MCLK_PERIOD * 3;
-        KACK_tb <= '0';
-        wait for MCLK_PERIOD * 2;
-        KACK_tb <= '1';
 
         LIN_tb <= "1111";
         wait for MCLK_PERIOD * 7;
 
         LIN_tb <= "1011";
         wait for MCLK_PERIOD * 2;
-        KACK_tb <= '0';
-        wait for MCLK_PERIOD * 2;
-        KACK_tb <= '1';
 
         LIN_tb <= "1111";
         wait for MCLK_PERIOD;
 
         LIN_tb <= "0111";
         wait for MCLK_PERIOD * 5;
-        KACK_tb <= '0';
-        wait for MCLK_PERIOD * 2;
-        KACK_tb <= '1';
 
         LIN_tb <= "1111";
         wait for MCLK_PERIOD * 6;

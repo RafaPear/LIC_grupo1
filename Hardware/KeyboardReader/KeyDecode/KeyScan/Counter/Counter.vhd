@@ -6,46 +6,46 @@ entity Counter is
         RESET: in std_logic;
         CE: in std_logic;
         CLK: in std_logic;
-        Q: out std_logic_vector(3 downto 0)
+        Q: out std_logic_vector(1 downto 0)
     );
 end Counter;
 
 architecture arc_counter of Counter is
-component ADDER4 is
+component ADDER2 is
     port (
-		A: in std_logic_vector (3 downto 0);
-		B: in std_logic_vector (3 downto 0);
+		A: in std_logic_vector (1 downto 0);
+		B: in std_logic_vector (1 downto 0);
 		CIN: in std_logic;
-		S: out std_logic_vector (3 downto 0);
+		S: out std_logic_vector (1 downto 0);
 		COUT: out std_logic
 	);
 end component;
 
-component REG4 is
+component REG2 is
     port(
-		D: in std_logic_vector(3 downto 0);
+		D: in std_logic_vector(1 downto 0);
 		RESET: in std_logic;
         SET: in std_logic;
 		EN: in std_logic;
 		CLK: in std_logic;
-		Q: out std_logic_vector(3 downto 0)
+		Q: out std_logic_vector(1 downto 0)
 	);
 end component;
 
-signal temp_S: std_logic_vector(3 downto 0);
-signal temp_Q: std_logic_vector(3 downto 0);
+signal temp_S: std_logic_vector(1 downto 0);
+signal temp_Q: std_logic_vector(1 downto 0);
 
 begin
 
-    ADDER4_inst: ADDER4 port map(
-        A => "0000",
+    ADDER2_inst: ADDER2 port map(
+        A => "00",
         B => temp_Q,
         CIN => '1',
         S => temp_S,
         COUT => open
     );
 
-    REG4_inst: REG4 port map(
+    REG2_inst: REG2 port map(
         D => temp_S,
         RESET => RESET,
         SET => '0',
