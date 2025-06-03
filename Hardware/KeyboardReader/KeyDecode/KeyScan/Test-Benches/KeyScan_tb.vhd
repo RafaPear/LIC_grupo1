@@ -28,8 +28,6 @@ architecture behavioral of KScan_tb is
     signal COL_tb: std_logic_vector(3 downto 0);
     signal K_tb: std_logic_vector(3 downto 0);
     signal Kpress_tb: std_logic;
-    signal S_tb: std_logic_vector(1 downto 0);
-    signal D_tb: std_logic_vector(3 downto 0);
 
 
 begin
