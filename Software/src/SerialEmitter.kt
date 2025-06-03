@@ -65,7 +65,7 @@ object SerialEmitter {
         HAL.writeBits(0b1111_1111, 0b0000_0011)
         HAL.clrBits(pow(2, 0))
         // println("Sending to LCD: $data")
-        parseAndSend(data, size, 5)
+        parseAndSend(data, size, 1)
 
         HAL.setBits(pow(2, 0))
 

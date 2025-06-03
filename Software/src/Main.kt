@@ -8,7 +8,7 @@ import isel.leic.utils.Time
 fun main(){
     APP.init()
     /*TUI.init()
-    TUI.captureAndPrint()*/
+    TUI.write("AAAAAAAAAAAA")*/
 }
 /*
 var read = false
