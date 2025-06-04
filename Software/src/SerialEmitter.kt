@@ -1,3 +1,4 @@
+import com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time
 import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
@@ -33,12 +34,6 @@ object SerialEmitter {
      * Define o índice do sinal SCLK
      */
     var SCLK_ID = 4
-
-    /**
-     * Define o tempo em ms que o SerialEmitter espera
-     * entra cada trama enviada
-     * */
-    const val LCD_SLEEP = 1L
 
 
     /**
@@ -83,7 +78,7 @@ object SerialEmitter {
         rst()
         HAL.clrBits(SS_LCD_ID)
         // println("Sending to LCD: $data")
-        parseAndSend(data, size, LCD_SLEEP)
+        parseAndSend(data, size)
 
         HAL.setBits(SS_LCD_ID)
 
@@ -123,7 +118,7 @@ object SerialEmitter {
      * @param size
      * @param time
      */
-    private fun parseAndSend(data: Int, size: Int, time: Long = 0) {
+    private fun parseAndSend(data: Int, size: Int) {
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
@@ -147,7 +142,6 @@ object SerialEmitter {
 
             HAL.clrBits(SCLK_ID)
         }
-        Time.sleep(time)
     }
 
     fun rst(){

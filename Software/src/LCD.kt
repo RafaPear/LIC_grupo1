@@ -93,6 +93,7 @@ object LCD {
     private fun writeByte(rs: Boolean, data: Int) {
         writeNibble(rs, data.shr(NIBBLE))
         writeNibble(rs, data and 0b0000_1111)
+        Time.sleep(1)
     }
 
     /**

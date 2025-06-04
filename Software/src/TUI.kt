@@ -201,6 +201,7 @@ object TUI {
      */
     fun writeWalkText(line1: String, time: Long = 200, breakKey: Char) {
         var window = ""
+        line1.padEnd(LCD.COLS, ' ')
 
         for (i in 0 until LCD.COLS - 1) {
             window += " "
