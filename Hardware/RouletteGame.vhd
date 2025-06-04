@@ -9,6 +9,9 @@ entity RouletteGame is
         L_Dout: out std_logic_vector(4 downto 0); -- SLCDC
         K_LIN: in std_logic_vector(3 downto 0); -- KeyboardReader
         K_COL: out std_logic_vector(3 downto 0); -- KeyboardReader
+        CoinId: in std_logic; -- CoinAcceptor
+        CoinInsert: in std_logic; -- CoinAcceptor
+        CoinAccept: out std_logic; -- CoinAcceptor
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5	: out std_logic_vector(7 downto 0)
     );
 end RouletteGame;
@@ -83,6 +86,18 @@ architecture arch_RouletteGame of RouletteGame is
         );
     end component;
 
+    component CoinAcceptor is
+        port(
+            id: in std_logic;
+            insert: in std_logic;
+            accept: in std_logic;
+            reset: in std_logic;
+            clk: in std_logic;
+            coinId: out std_logic;
+            coin: out std_logic
+        );
+    end component; 
+
     signal temp_inputPort, temp_outputPort: std_logic_vector(7 downto 0);
     signal temp_LCDsel, temp_SCLK, temp_SDX: std_logic;
     signal temp_D: std_logic_vector(3 downto 0);
@@ -90,6 +105,9 @@ architecture arch_RouletteGame of RouletteGame is
     signal temp_RDsel, temp_RSCLK, temp_RSDX, temp_set: std_logic;
     signal temp_RDout: std_logic_vector(7 downto 0);
     signal temp_inReg: std_logic_vector(7 downto 0);
+    signal temp_coinAccept: std_logic;
+    signal temp_coinId, temp_coin: std_logic;
+
 
 begin
     -- Instantiate UsbPort
@@ -156,6 +174,24 @@ begin
             D => temp_D,
             Dval => temp_Dval
         );
+    
+    -- Instantiate CoinAcceptor
+    CoinAcceptor_inst: CoinAcceptor
+        port map(
+            id => CoinId,
+            insert => CoinInsert,
+            accept => temp_coinAccept,
+            reset => RESET,
+            clk => CLK,
+            coinId => temp_coinId, -- Assuming coinId is mapped to inputPort(0)
+            coin => temp_coin -- Assuming coin is mapped to inputPort(1)
+        );
+
+    -- CoinAcceptor
+    temp_inputPort(5) <= temp_coinId; -- Coin ID
+    temp_inputPort(6) <= temp_coin; -- Coin Insert
+    temp_coinAccept <= temp_outputPort(6);
+    CoinAccept <= temp_coinAccept; -- Output Coin Accept signal
 
     -- KeyboardReader
     temp_inputPort(3 downto 0) <= temp_D;

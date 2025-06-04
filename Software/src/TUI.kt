@@ -230,6 +230,17 @@ object TUI {
         }
     }
 
+    fun confirmMenu(question: String = "Continue?", yes: String = "Yes", no: String = "No", yesKey: Char = 'A', noKey: Char = 'B'): Boolean {
+        writeCenterLine(question, 0)
+        writeCenterLine("$yes  $no", 1)
+
+        while (true) {
+            val key = capture()
+            if (key == yesKey) return true
+            else if (key == noKey) return false
+        }
+    }
+
     /**
      * limpa a tela LCD
      */
