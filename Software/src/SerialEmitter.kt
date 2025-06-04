@@ -3,7 +3,6 @@ import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
 
-
 /**
  * Envia tramas para os diferentes módulos Serial Receiver.
  */
@@ -16,19 +15,31 @@ object SerialEmitter {
     }
 
     /**
-     * Define o índice do sinal SS
+     * Define o índice do sinal SS do LCD
      */
     var SS_LCD_ID = 0
 
     /**
+     * Define o índice do sinal SS do Roulette Display
+     */
+    var SS_RD_ID = 1
+
+    /**
      * Define o índice do sinal SDX
      */
-    var SDX_LCD_ID = 3
+    var SDX_ID = 3
 
     /**
      * Define o índice do sinal SCLK
      */
-    var SCLK_LCD_ID = 4
+    var SCLK_ID = 4
+
+    /**
+     * Define o tempo em ms que o SerialEmitter espera
+     * entra cada trama enviada
+     * */
+    const val LCD_SLEEP = 1L
+
 
     /**
      * Inicia a class
@@ -39,16 +50,19 @@ object SerialEmitter {
         try {
             val file = File(HAL.configPath)
             SS_LCD_ID = 0
-            SDX_LCD_ID = 0
-            SCLK_LCD_ID = 0
+            SS_RD_ID = 0
+            SDX_ID = 0
+            SCLK_ID = 0
 
             file.forEachLine { i ->
                 if (i.contains("srl./SS")) {
                     SS_LCD_ID += getOutputPins(i)
+                } else if (i.contains("srr./SS")){
+                    SS_RD_ID += getOutputPins(i)
                 } else if (i.contains("srl.SDX")) {
-                    SDX_LCD_ID += getOutputPins(i)
+                    SDX_ID += getOutputPins(i)
                 } else if (i.contains("srl.SCLK")) {
-                    SCLK_LCD_ID += getOutputPins(i)
+                    SCLK_ID += getOutputPins(i)
                 }
             }
         } catch(_:Exception){
@@ -62,12 +76,12 @@ object SerialEmitter {
      * @param size
      */
     private fun sendLCD(data: Int, size: Int) {
-        HAL.writeBits(0b1111_1111, 0b0000_0011)
-        HAL.clrBits(pow(2, 0))
+        rst()
+        HAL.clrBits(pow(2, SS_LCD_ID))
         // println("Sending to LCD: $data")
-        parseAndSend(data, size, 5)
+        parseAndSend(data, size, LCD_SLEEP)
 
-        HAL.setBits(pow(2, 0))
+        HAL.setBits(pow(2, SS_LCD_ID))
 
     }
 
@@ -77,12 +91,12 @@ object SerialEmitter {
      * @param size
      */
     private fun sendRoulette(data: Int, size: Int) {
-        HAL.writeBits(0b1111_1111, 0b0000_0011)
-        HAL.clrBits(pow(2, 1))
+        rst()
+        HAL.clrBits(pow(2, SS_RD_ID))
 
         parseAndSend(data, size)
 
-        HAL.setBits(pow(2, 1))
+        HAL.setBits(pow(2, SS_RD_ID))
     }
 
     /**
@@ -107,30 +121,33 @@ object SerialEmitter {
      */
     private fun parseAndSend(data: Int, size: Int, time: Long = 0) {
 
-        Time.sleep(time)
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
         for (i in 0..size){
             if (i == size) {
                 if (p.isBit(0))
-                    HAL.setBits(pow(2, 3))
+                    HAL.setBits(pow(2, SDX_ID))
                 else
-                    HAL.clrBits(pow(2, 3))
+                    HAL.clrBits(pow(2, SDX_ID))
             }
             else {
                 if (data.isBit(i)) {
-                    HAL.setBits(pow(2, 3))
+                    HAL.setBits(pow(2, SDX_ID))
                 }
                 else {
-                    HAL.clrBits(pow(2, 3))
+                    HAL.clrBits(pow(2, SDX_ID))
                 }
             }
-            Time.sleep(time)
 
-            HAL.setBits(pow(2, 4))
-            Time.sleep(time)
+            HAL.setBits(pow(2, SCLK_ID))
 
-            HAL.clrBits(pow(2, 4))
+            HAL.clrBits(pow(2, SCLK_ID))
         }
+        Time.sleep(time)
+    }
+
+    fun rst(){
+        val addr = pow(2, SS_LCD_ID) + pow(2, SS_RD_ID)
+        HAL.writeBits(0b1111_1111, addr)
     }
 }
