@@ -56,10 +56,10 @@ set_location_assignment PIN_W5      -to    k_LIN[0]
 set_location_assignment PIN_AA14    -to	   k_LIN[1]
 set_location_assignment PIN_W12     -to    k_LIN[2]
 set_location_assignment PIN_AB12    -to	   k_LIN[3]
-set_location_assignment PIN_AB11    -to	   k_COL[3]
-set_location_assignment PIN_AB10    -to	   k_COL[0]
-set_location_assignment PIN_AA9     -to	   k_COL[1]
-set_location_assignment PIN_AA8     -to	   k_COL[2]
+set_location_assignment PIN_AB11    -to	   k_COL[0]
+set_location_assignment PIN_AB10    -to	   k_COL[1]
+set_location_assignment PIN_AA9     -to	   k_COL[2]
+set_location_assignment PIN_AA8     -to	   k_COL[3]
 
 #============================================================
 # LCD (Expansion Board)

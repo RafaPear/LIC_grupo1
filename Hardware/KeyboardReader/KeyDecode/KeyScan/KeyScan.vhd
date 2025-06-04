@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity KeyScan is
+    generic(clk_div: natural := 625000);
     port(
         CLK: in std_logic;
         RESET: in std_logic;
@@ -50,14 +51,28 @@ architecture arch_KeyScan of KeyScan is
         );
     end component;
 
+    component clkDIV is
+        generic(div: natural := clk_div);
+        port(
+            clk_in: in std_logic;
+            clk_out: out std_logic
+        );
+    end component;
+
     signal temp_COL, not_LIN: std_logic_vector(3 downto 0);
     signal temp_Q, temp_Y: std_logic_vector(1 downto 0);
-    signal not_Kscan, not_clk: std_logic;
+    signal nCLK, not_Kscan, not_clk: std_logic;
     
 begin
+    clkDIV_inst2: clkDIV
+        port map(
+            clk_in => clk,
+            clk_out => nCLK
+        );
+
     not_LIN <= not LIN;
     not_Kscan <= not Kscan;
-    not_clk <= not CLK;
+    not_clk <= not nCLK;
 
     Counter_inst: Counter port map(
         RESET => RESET,
