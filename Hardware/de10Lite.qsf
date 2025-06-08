@@ -27,7 +27,7 @@ set_location_assignment PIN_C10     -to    RESET
 #set_location_assignment PIN_A12    -to    SW[4]
 #set_location_assignment PIN_B12    -to    SW[5]
 #set_location_assignment PIN_A13    -to    SW[6]
-#set_location_assignment PIN_A14    -to    SW[7]
+set_location_assignment PIN_A14    -to    key
 set_location_assignment PIN_B14    -to    CoinInsert
 set_location_assignment PIN_F15     -to    CoinId
 

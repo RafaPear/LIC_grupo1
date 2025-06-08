@@ -12,6 +12,7 @@ entity RouletteGame is
         CoinId: in std_logic; -- CoinAcceptor
         CoinInsert: in std_logic; -- CoinAcceptor
         CoinAccept: out std_logic; -- CoinAcceptor
+        key: in std_logic; -- M
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5	: out std_logic_vector(7 downto 0)
     );
 end RouletteGame;
@@ -98,6 +99,15 @@ architecture arch_RouletteGame of RouletteGame is
         );
     end component; 
 
+    component M is 
+        port(
+            reset : in std_logic;
+            key : in std_logic;
+            clk : in std_logic;
+            M : out std_logic
+        );
+    end component;
+
     signal temp_inputPort, temp_outputPort: std_logic_vector(7 downto 0);
     signal temp_LCDsel, temp_SCLK, temp_SDX: std_logic;
     signal temp_D: std_logic_vector(3 downto 0);
@@ -107,7 +117,7 @@ architecture arch_RouletteGame of RouletteGame is
     signal temp_inReg: std_logic_vector(7 downto 0);
     signal temp_coinAccept: std_logic;
     signal temp_coinId, temp_coin: std_logic;
-
+    signal temp_M: std_logic;
 
 begin
     -- Instantiate UsbPort
@@ -186,6 +196,18 @@ begin
             coinId => temp_coinId, -- Assuming coinId is mapped to inputPort(0)
             coin => temp_coin -- Assuming coin is mapped to inputPort(1)
         );
+
+    -- Instantiate M
+    M_inst: M
+        port map(
+            reset => RESET,
+            key => key,
+            clk => CLK,
+            M => temp_M
+        );
+
+    -- M
+    temp_inputPort(7) <= temp_M; -- M signal
 
     -- CoinAcceptor
     temp_inputPort(5) <= temp_coinId; -- Coin ID
