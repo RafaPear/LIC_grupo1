@@ -1,202 +1,251 @@
+
+import TUI.capture
+import TUI.clear
+import TUI.clearWrite
+import TUI.writeCenterLine
 import isel.leic.utils.Time
-import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
-/**
- * Aplicação principal do Jogo
- */
 object APP {
-    /**
-     * Guarda a tecla sorteada
-     */
-    private var keyWinner = '1'
+    private const val ARROW_LEFT  = " <"
+    private const val ARROW_RIGHT = "> "
+    private const val KEY_LEFT    = "(1)"
+    private const val KEY_RIGHT   = "(2)"
 
-    /**
-     * O tempo em segundos do processo de girar a roleta
-     */
-    private const val timeRoulette = 5
+    var BETS = listOf<Char>()
+    var CREDS: Int = 0
+    var GAMES: Int = 0
 
-    /**
-     * Tecla responsavel por concluir as apostas
-     */
-    private const val sendBets = '#'
+    var COST = 1 // Custo de cada aposta
 
-    /**
-     * Inicia o jogo
-     */
-    private const val startGame = '*'
+    val CONFIRM_KEY = '*'
 
-    /**
-     * Total de apostas disponíveis
-     */
-    private var totalBets = maxBets
-    /**
-     * Número de apostas máximas
-     */
-    private const val maxBets = 6
-    /**
-     *Número de apostas bonus
-     */
-    private const val bonusBets = 3
-    /**
-     * Apostas feitas
-     */
-    private var bets = ""
+    var isLoggedIn = false
+    var doStats = true
+    var countCreds = true
 
-    /**
-     * Corresponde à primeira linha da tela LCD
-     */
-    private var line1 = "Roulette Game"
-
-    /**
-     * Corresponde à segunda linha da tela do LCD
-     */
-    private var line2 = "Start the Game"
-
-    /**
-     * Apostas validas
-     */
-    var validBets = charArrayOf('0','1','2','3','4','5','6','7','8','9','A','B','C','D')
-
-    /**
-     * Inicia a aplicação
-     */
     fun init() {
-        RouletteDisplay.init()
-        RouletteDisplay.clrAll()
         TUI.init()
-        lobby(1)
+        CoinAcceptor.init()
+        M.init()
+    }
+
+    fun run(){
+        lobby()
         game()
     }
 
-    /**
-     * Responsável por construir a tela inicial do jogo
-     * @param time o tempo que irá demorar o [TUI.writeWalkText]
-     * @param breakKey tecla que quebra o loop
-     */
-    fun lobby(time: Long = 200, breakKey: Char = startGame) {
-        TUI.clear()
-        Time.sleep(1)
-        TUI.writeCenter(line1)
-        Time.sleep(1)
-        TUI.nextLine()
+    fun lobby() {
+        writeLobby()
+        while (true){
+            if (M.inM){
+                m()
+                writeLobby()
+            }
 
-        while (true) {
-            if (TUI.capture() == breakKey) return
-            //Time.sleep(time)
-            //TUI.clear()
-        }
-    }
+            if (countCreds) continue
+            else if (updateCreds()) writeLobby()
 
-    /**
-     * Loop principal do jogo
-     */
-    fun game(){
-        while(true) {
-            bets = ""
-            line1 = "Roulette Game"
-            totalBets = maxBets
-            line2 = "$maxBets bets!"
-
-            refresh(
-                { writeCenterLine(line1, 0) },
-                { writeCenterLine(line2, 1) }
-            )
-
-            RouletteDisplay.set(totalBets)
-
-            Time.sleep(1)
-
-            line2 = "Bets:"
-
-            refresh(
-                { writeCenterLine(line1, 0) }, { write(line2) }
-            )
-
-            bets()
-
-            totalBets = 3
-            line1 = "$bonusBets bonus bets!"
-            line2 = timeRoulette.toString() + "s"
-
-            refresh(
-                { writeCenterLine(line1, 0) },
-                { writeCenterLine(line2, 1) }
-            )
-
-            bonusBets()
-
-            line1 = "You guessed: " + result().toString()
-            line2 = "Winner Key: $keyWinner"
-
-            refresh(
-                { writeCenterLine(line1, 0)},
-                { writeCenterLine(line2, 1)}
-            )
-            RouletteDisplay.clrAll()
-
-            while (true) {
-                if (TUI.capture() == startGame) break
+            val key = capture()
+            when (key) {
+                CONFIRM_KEY -> { if (canStartGame()) break; writeLobby() }
+                TUI.NONE -> continue
+                else -> {
+                    if (canUpdateBets()) {
+                        BETS += key; CREDS--
+                    }; writeLobby()
+                }
             }
         }
     }
 
-    /**
-     * Responsável por efetuas as apostas principais
-     */
-    fun bets() {
-        while(true){
-            val key = TUI.capture()
-            if (key == sendBets) return
-
-            if (totalBets > 0 && key in validBets) {
-                totalBets--
-                RouletteDisplay.set(totalBets)
-                bets += key
-                TUI.write("$key,")
+    fun m(){
+        if (!isLoggedIn) {
+            if (promptPassword() == M.password) {
+                isLoggedIn = true
+                clearWrite("LOGGED IN")
+                Time.sleep(1000)
+            }
+            else{
+                clearWrite("WRONG PASSWORD")
+                Time.sleep(1000)
+                if (M.inM)
+                    m()
+                else
+                    isLoggedIn = false
+            }
+        }// TODO FIX THIS
+        while (isLoggedIn){
+            Time.sleep(500)
+            clear()
+            val keyA = TUI.waitForCapture(1000)
+            val keyB = TUI.waitForCapture(1000)
+            var key = if (keyA == TUI.NONE) "" else keyA.toString()
+            key += if (keyB == TUI.NONE) "" else keyB.toString()
+            when(key){
+                CONFIRM_KEY.toString() -> { countCreds = false ; run() ; countCreds = true}
+                "A" -> coinsMenu.show()
+                "A*" -> {
+                    CoinDeposit.resetTotal(0) ; CoinDeposit.resetTotal(1) ; clearWrite("Deposit Reset")
+                }
+                "C" -> TODO("Iniciar a lista de números sorteados – Premindo a tecla ‘C’ e em seguida a tecla ’∗’, o sistema inicia um novo ciclo de estatística de números sorteados.")
+                "D" -> exitProcess(0)
+                else -> {}
             }
         }
+        isLoggedIn = false
     }
 
-    /**
-     * Efetua as apostas bonus, estas que acontecem durante o processo de rodar a roleta
-     */
-    fun bonusBets() {
-        var count = timeRoulette
+    fun game(bets: List<Char> = BETS) {
+        TODO()
+    }
 
-        thread {
-            for (i in 1..timeRoulette) {
-                Time.sleep(1000L)
-                count--
+    private fun showTotal(total: Int) {
+        clear()
+        writeCenterLine("Total:")
+        writeCenterLine(total.toString(), 1)
+        Time.sleep(1000)
+    }
+
+    private val coinsMenu = Menu(
+        "Coins",
+        listOf(
+            Page("Total") { showTotal(CoinDeposit.getTotal(0) + CoinDeposit.getTotal(1)) },
+            Page("Coin1") { showTotal(CoinDeposit.getTotal(0)) },
+            Page("Coin2") { showTotal(CoinDeposit.getTotal(1)) },
+        ),
+        loop = { M.inM }
+    )
+
+    private fun promptPassword():String{
+        var password = ""
+        var fake = ""
+        refresh(
+            { writeCenter("Password:") },
+            { writeCenter(password) }
+        )
+        while (password.length < 4){
+            val digit = capture()
+            if (digit != TUI.NONE) {
+                password += digit
+                fake += '*'
+                refresh(
+                    { writeCenterLine("Password:", 0) },
+                    { writeCenterLine(fake, 1) }
+                )
             }
         }
-        while (count > 0) {
-            val temp = TUI.capture()
-            if (temp in validBets && totalBets > 0) {
-                totalBets--
-                bets += temp
+        return password
+    }
+
+    private fun canStartGame(): Boolean{
+        if (countCreds) return true
+        if (CREDS<COST){
+            clearWrite("You need at least 1 Credit")
+            Time.sleep(2000)
+            return false
+        }
+        if (BETS.isEmpty()){
+            clearWrite("You need at least 1 Bet")
+            Time.sleep(2000)
+            return false
+        }
+        return true
+    }
+
+    private fun canUpdateBets(): Boolean {
+        if (countCreds) return true
+        if(CREDS <= 0){
+            clearWrite("Not enough Credits")
+            Time.sleep(2000)
+            return false
+        }
+        if (BETS.size >= 7) {
+            clearWrite("Bet Limit reached")
+            Time.sleep(2000)
+            return false
+        }
+        return true
+    }
+
+    private fun updateCreds(): Boolean {
+        val coin = CoinAcceptor.getCoin()
+        if (coin != -1) {
+            CoinDeposit.updateTotal(coin, 1)
+            CREDS += when (coin) {
+                0 -> 2
+                1 -> 4
+                else -> error("Invalid coin type")
             }
-            RouletteDisplay.animation()
+            return true
+        }
+        return false
+    }
 
-            line1 = "$bonusBets bonus bets!"
-            line2 = count.toString() + "s"
-
+    private fun writeLobby() {
+        val bets = BETS.joinToString(",").trim()
+        val creds = " $$CREDS"
+        val full = bets + creds
+        refresh(
+            { writeCenterLine("Roulette Game!") },
+            { writeRight(full) }
+        )
+        /*if (full.length <= TUI.COLS){
             refresh(
-                {writeCenterLine(line1,0)},
-                {writeCenterLine(line2,1)}
+                { write("Roulette Game!") },
+                { writeRight(full) }
             )
-
         }
+        else {
+            val newA = bets.subSequence(0, TUI.COLS - creds.length).toString().trim() + creds
+            val newB = bets.subSequence(TUI.COLS - creds.length, bets.length).toString().trim() + creds
+            refresh(
+                { write("Roulette Game!") },
+                { writeRight(newA) }
+            )
+            Time.sleep(500)
+            refresh(
+                { write("Roulette Game!") },
+                { writeRight(newB) }
+            )
+            Time.sleep(500)
+        }*/
     }
 
-    /**
-     * Define aleatoriamente a tecla vencedora, e calcula a pontuação
-     * @return [Int] retorna a pontuação
-     */
-    fun result(): Int{
-        var sum = 0
-        keyWinner = validBets.random()
-        for (i in bets) if (i == keyWinner) sum++
-        return sum
+    data class Page(val label: String, val action: () -> Unit = {})
+
+    class Menu(
+        private val title: String,
+        private val pages: List<Page>,
+        private val loop: () -> Boolean = { true },        // para sair de menus filhos
+    ) {
+
+        fun show() {
+            var idx = 0
+
+            fun paint() {
+                val isFirst = idx == 0
+                val isLast  = idx == pages.lastIndex
+
+                val top  = navLine(title, KEY_LEFT,  KEY_RIGHT,  isFirst, isLast)
+                val down = navLine(pages[idx].label, ARROW_LEFT, ARROW_RIGHT, isFirst, isLast)
+
+                clear()
+                writeCenterLine(top, 0)
+                writeCenterLine(down, 1)
+            }
+
+            paint()
+            while (loop()) {
+                when (val k = capture()) {
+                    '1' -> if (idx > 0) { idx--; paint() }
+                    '2' -> if (idx < pages.lastIndex) { idx++; paint() }
+                    'A' -> { pages[idx].action(); paint() }
+                    'B' -> break
+                    else -> continue
+                }
+            }
+        }
     }
 
     /**
@@ -205,11 +254,10 @@ object APP {
      * @param write1 uma função de extensão do TUI
      * @param write2 uma função de extensão do TUIa
      */
-    fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
-        TUI.clear()
+    private fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
+        clear()
         TUI.write1()
         TUI.nextLine()
         TUI.write2()
     }
-
 }

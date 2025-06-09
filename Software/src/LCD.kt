@@ -1,5 +1,4 @@
 import isel.leic.utils.Time
-import kotlin.text.iterator
 
 /**
  * Objeto responsável pela escrita no LCD através do [HAL] e do [SerialEmitter], usando a interface a 4 bits
@@ -158,6 +157,11 @@ object LCD {
      */
     fun write(c: Char, wrap: Boolean = true) {
         writeDATA(c.code)
+        autoCursor(wrap)
+    }
+
+    fun write(c: Int, wrap: Boolean = true) {
+        writeDATA(c)
         autoCursor(wrap)
     }
     /**

@@ -1,11 +1,19 @@
+
+import TUI.writeCenterLine
+import TUI.writeRightLine
 import isel.leic.utils.Time
 
 object TUI {
     private var canWrite: Boolean = true
 
+    const val NONE = KBD.NONE
+    const val COLS = LCD.COLS
+    const val LINES = LCD.LINES
+
     fun init() {
         LCD.init()
         KBD.init()
+        Time.sleep(100)
     }
 
     /**
@@ -22,6 +30,10 @@ object TUI {
      */
     fun write(ch: Char,wrap: Boolean = true){
         LCD.write(ch,wrap)
+    }
+
+    fun write(ch: Int, wrap: Boolean = true) {
+        LCD.write(ch, wrap)
     }
 
     /**
@@ -43,12 +55,12 @@ object TUI {
             if (key == '*' && canWrite) {
                 LCD.clear()
                 canWrite = false
-            } else if (canWrite && key != KBD.NONE) {
+            } else if (canWrite && key != NONE) {
                 println("Key: $key")
                 LCD.write(key)
-                key == KBD.NONE
+                key == NONE
                 canWrite = false
-            } else if (key == KBD.NONE)
+            } else if (key == NONE)
                 canWrite = true
         }
     }
@@ -59,15 +71,24 @@ object TUI {
      */
     fun capture(): Char {
         val key = KBD.getKey()
-        return if (canWrite && key != KBD.NONE) {
+        return if (canWrite && key != NONE) {
             println("Key: $key")
             canWrite = false
             key
-        } else if (key == KBD.NONE) {
+        } else if (key == NONE) {
             canWrite = true
             key
         }
-        else KBD.NONE
+        else NONE
+    }
+
+    /**
+     * captura a tecla e retorna esta mesma
+     * @return [Char]
+     */
+    fun waitForCapture(timeout: Long): Char {
+        val key = KBD.waitKey(timeout)
+        return key
     }
 
     /**
@@ -231,14 +252,28 @@ object TUI {
     }
 
     fun confirmMenu(question: String = "Continue?", yes: String = "Yes", no: String = "No", yesKey: Char = 'A', noKey: Char = 'B'): Boolean {
+        clear()
         writeCenterLine(question, 0)
-        writeCenterLine("$yes  $no", 1)
+        writeCenterLine("$yes($yesKey)  $no($noKey)", 1)
 
         while (true) {
             val key = capture()
             if (key == yesKey) return true
             else if (key == noKey) return false
         }
+    }
+
+    fun switchScreen(list: Array<String>, sleep: Long, wrt: (l: String) -> Unit) {
+        for (line in list) {
+            wrt(line)
+            Time.sleep(sleep)
+            clear()
+        }
+    }
+
+    fun clearWrite(line: String, wrap: Boolean = true) {
+        clear()
+        writeSplited(line)
     }
 
     /**
@@ -252,5 +287,5 @@ object TUI {
      * valida a tecla
      * @param key
      */
-    fun isValid(key: Char): Boolean = key != KBD.NONE
+    fun isValid(key: Char): Boolean = key != NONE
 }

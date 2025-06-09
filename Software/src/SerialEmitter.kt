@@ -1,5 +1,5 @@
+
 import com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time
-import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -62,40 +62,11 @@ object SerialEmitter {
             }
         } catch(_:Exception){
             Logger.getLogger("SerialEmitter").log(Level.WARNING, "No config file found, using default values")
-            SS_LCD_ID = pow(2,SS_LCD_ID)
-            SS_RD_ID = pow(2,SS_RD_ID)
-            SDX_ID = pow(2,SDX_ID)
-            SCLK_ID = pow(2,SCLK_ID)
+            SS_LCD_ID = pow(2,0)
+            SS_RD_ID = pow(2,1)
+            SDX_ID = pow(2,3)
+            SCLK_ID = pow(2,4)
         }
-    }
-
-    /**
-     * Faz o set up necessário para o envio de uma trama em série para a tela LCD
-     * @param data
-     * @param size
-     */
-    private fun sendLCD(data: Int, size: Int) {
-        rst()
-        HAL.clrBits(SS_LCD_ID)
-        // println("Sending to LCD: $data")
-        parseAndSend(data, size)
-
-        HAL.setBits(SS_LCD_ID)
-
-    }
-
-    /**
-     * Faz o set up necessário para o envio de uma trama em série para o Roulette
-     * @param data
-     * @param size
-     */
-    private fun sendRoulette(data: Int, size: Int) {
-        rst()
-        HAL.clrBits(SS_RD_ID)
-
-        parseAndSend(data, size)
-
-        HAL.setBits(SS_RD_ID)
     }
 
     /**
@@ -106,9 +77,9 @@ object SerialEmitter {
      */
     fun send(addr: Destination, data: Int, size: Int) {
         if (addr == Destination.LCD) {
-            sendLCD(data, size)
+            parseAndSend(data, size, SS_LCD_ID)
         } else if (addr == Destination.ROULETTE) {
-            sendRoulette(data, size)
+            parseAndSend(data, size, SS_RD_ID)
         }
     }
 
@@ -118,7 +89,9 @@ object SerialEmitter {
      * @param size
      * @param time
      */
-    private fun parseAndSend(data: Int, size: Int) {
+    private fun parseAndSend(data: Int, size: Int, addr: Int) {
+        rst()
+        HAL.clrBits(addr)
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
@@ -142,6 +115,7 @@ object SerialEmitter {
 
             HAL.clrBits(SCLK_ID)
         }
+        HAL.setBits(addr)
     }
 
     fun rst(){

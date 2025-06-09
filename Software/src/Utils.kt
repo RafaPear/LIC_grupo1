@@ -1,5 +1,6 @@
+
 import java.io.File
-import kotlin.text.toInt
+
 
 /**
  * Função que lê um ficheiro e devolve uma lista de strings
@@ -38,4 +39,32 @@ fun getOutputPins(line: String): Int {
         .removePrefix("UsbPort.O")
         .removeSurrounding("[", "]")
     return parsePins(badPins)
+}
+
+/** Devolve a string com número par de caracteres, juntando um espaço se necessário. */
+private fun String.even(): String =
+    if (length.isEven()) this else "$this "
+
+private fun Int.isEven() = this and 1 == 0
+
+/** Constrói a linha de navegação (setas ou teclas) já centrada. */
+fun navLine(
+    text: String,
+    prefix: String,           // " <" ou "(1)"
+    suffix: String,           // "> " ou "(2)"
+    isFirst: Boolean,
+    isLast: Boolean,
+    width: Int = LCD.COLS
+): String {
+    val txt = text.even()
+    val gap = (width - txt.length) / 2
+
+    val left  = prefix.padEnd(gap, ' ')
+    val right = suffix.padStart(gap, ' ')
+
+    return when {
+        isFirst -> (txt + right).padStart(width, ' ')
+        isLast  -> (left + txt).padEnd(width, ' ')
+        else    -> left + txt + right
+    }
 }

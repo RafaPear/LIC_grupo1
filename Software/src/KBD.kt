@@ -1,3 +1,6 @@
+
+import KBD.kPins
+import KBD.valPins
 import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
@@ -33,12 +36,13 @@ object KBD {
 	 */
 	var kPins = 0b0000_1111
 
+	var ack = 0b1000_0000
+
 	/**
 	 * Inicia o objeto, definindo as variáveis [valPins] e [kPins], consoante [HAL.configPath]
 	 */
 	fun init() {
 		HAL.init()
-		val file: File
 		try {
 			val file = File(HAL.configPath)
 			valPins = 0
@@ -53,9 +57,8 @@ object KBD {
 			}
 		} catch(_:Exception){
 			Logger.getLogger("KBD").log(Level.WARNING, "No config file found, using default values")
+
 		}
-
-
 	}
 
 	/**
@@ -65,8 +68,8 @@ object KBD {
 	fun getKey(): Char {
 		if (HAL.isBit(valPins)) {
 			val key = CHAR_LIST[HAL.readBits(kPins)]
-			HAL.setBits(0b1000_0000)
-			HAL.clrBits(0b1000_0000)
+			HAL.setBits(ack)
+			HAL.clrBits(ack)
 			Time.sleep(10)
 			return key
 		}else return NONE
@@ -89,11 +92,21 @@ object KBD {
 	 * @return [Char]
 	 */
 	fun waitKey(timeout: Long): Char {
-		val startTime = Time.getTimeInMillis()
-		while (startTime + timeout > Time.getTimeInMillis()) {
-			val key = getKey()
-			if (key != NONE) {
-				return key
+		if (timeout == -1L) {
+			while (true) {
+				val key = getKey()
+				if (key != NONE) {
+					return key
+				}
+			}
+		}
+		else {
+			val startTime = Time.getTimeInMillis()
+			while (startTime + timeout > Time.getTimeInMillis()) {
+				val key = getKey()
+				if (key != NONE) {
+					return key
+				}
 			}
 		}
 		return NONE

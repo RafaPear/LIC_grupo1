@@ -1,7 +1,3 @@
-import SerialEmitter.SCLK_ID
-import SerialEmitter.SDX_ID
-import SerialEmitter.SS_LCD_ID
-import SerialEmitter.SS_RD_ID
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -10,7 +6,7 @@ object M {
 
     var idx_M = 7
 
-    val password = "123"
+    val password = "1234"
     var inM = false
         get() = HAL.isBit(0b1000_0000)
 
