@@ -2,7 +2,6 @@
 import TUI.capture
 import TUI.clear
 import TUI.clearWrite
-import TUI.writeCenterLine
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
@@ -59,23 +58,13 @@ object APP {
         }
     }
 
+    fun game(bets: List<Char> = BETS) {
+        TODO()
+    }
+
     fun m(){
-        if (!isLoggedIn) {
-            if (promptPassword() == M.password) {
-                isLoggedIn = true
-                clearWrite("LOGGED IN")
-                Time.sleep(1000)
-            }
-            else{
-                clearWrite("WRONG PASSWORD")
-                Time.sleep(1000)
-                if (M.inM)
-                    m()
-                else
-                    isLoggedIn = false
-            }
-        }// TODO FIX THIS
-        while (true){
+        doLogIn()
+        while (isLoggedIn){
             val keyA = TUI.waitForCapture(-1)
             clearWrite(keyA.toString())
             val keyB = TUI.waitForCapture(1000)
@@ -87,7 +76,7 @@ object APP {
             when(key){
                 CONFIRM_KEY.toString() -> { sudoMode = true ; run() ; sudoMode = false}
                 "A" -> {
-                    coinsMenu.show() ; clear()
+                    TODO() ; clear()
                 }
                 "A*" -> {
                    BETS = emptyList() ; CREDS = 0 ; CoinDeposit.resetTotal(0) ; CoinDeposit.resetTotal(1) ; clearWrite("Reset Completed")
@@ -99,26 +88,21 @@ object APP {
         isLoggedIn = false
     }
 
-    fun game(bets: List<Char> = BETS) {
-        TODO()
+    private fun doLogIn(){
+        if (!isLoggedIn) {
+            if (promptPassword() == M.password) {
+                isLoggedIn = true
+                clearWrite("LOGGED IN")
+                Time.sleep(1000)
+            }
+            else{
+                clearWrite("WRONG PASSWORD")
+                Time.sleep(1000)
+                if (!M.inM)
+                    isLoggedIn = false
+            }
+        }
     }
-
-    private fun showTotal(total: Int) {
-        clear()
-        writeCenterLine("Total:")
-        writeCenterLine(total.toString(), 1)
-        Time.sleep(1000)
-    }
-
-    private val coinsMenu = Menu(
-        "Coins",
-        listOf(
-            Page("Total") { showTotal(CoinDeposit.getTotal(0) + CoinDeposit.getTotal(1)) },
-            Page("Coin1") { showTotal(CoinDeposit.getTotal(0)) },
-            Page("Coin2") { showTotal(CoinDeposit.getTotal(1)) },
-        ),
-        loop = { M.inM }
-    )
 
     private fun promptPassword():String{
         var password = ""
@@ -159,7 +143,7 @@ object APP {
     }
 
     private fun canUpdateBets(): Boolean {
-        if (BETS.size >= 7) {
+        if (BETS.size >= 6) {
             clearWrite("Bet Limit reached")
             Time.sleep(2000)
             return false
@@ -200,59 +184,24 @@ object APP {
         /*if (full.length <= TUI.COLS){
             refresh(
                 { write("Roulette Game!") },
-                { writeRight(full) }
+                { writeRightLine(full, 1) }
             )
+            Time.sleep(100)
         }
         else {
             val newA = bets.subSequence(0, TUI.COLS - creds.length).toString().trim() + creds
             val newB = bets.subSequence(TUI.COLS - creds.length, bets.length).toString().trim() + creds
             refresh(
                 { write("Roulette Game!") },
-                { writeRight(newA) }
+                { writeRightLine(newA, 1) }
             )
             Time.sleep(500)
             refresh(
                 { write("Roulette Game!") },
-                { writeRight(newB) }
+                { writeRightLine(newB, 1) }
             )
             Time.sleep(500)
         }*/
-    }
-
-    data class Page(val label: String, val action: () -> Unit = {})
-
-    class Menu(
-        private val title: String,
-        private val pages: List<Page>,
-        private val loop: () -> Boolean = { true },        // para sair de menus filhos
-    ) {
-
-        fun show() {
-            var idx = 0
-
-            fun paint() {
-                val isFirst = idx == 0
-                val isLast  = idx == pages.lastIndex
-
-                val top  = navLine(title, KEY_LEFT,  KEY_RIGHT,  isFirst, isLast)
-                val down = navLine(pages[idx].label, ARROW_LEFT, ARROW_RIGHT, isFirst, isLast)
-
-                clear()
-                writeCenterLine(top, 0)
-                writeCenterLine(down, 1)
-            }
-
-            paint()
-            while (loop()) {
-                when (val k = capture()) {
-                    '1' -> if (idx > 0) { idx--; paint() }
-                    '2' -> if (idx < pages.lastIndex) { idx++; paint() }
-                    'A' -> { pages[idx].action(); paint() }
-                    'B' -> break
-                    else -> continue
-                }
-            }
-        }
     }
 
     /**
