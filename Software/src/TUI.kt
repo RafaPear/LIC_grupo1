@@ -12,6 +12,8 @@ object TUI {
     fun init() {
         LCD.init()
         KBD.init()
+        RouletteDisplay.init()
+        RouletteDisplay.clrAll()
         Time.sleep(100)
     }
 
@@ -27,7 +29,11 @@ object TUI {
      * @param ch
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
-    fun write(ch: Char,wrap: Boolean = true){
+    fun write(ch: Char,wrap: Boolean = true, line: Int = LCD.cursorPos.first,
+                column: Int = LCD.cursorPos.second
+    ){
+        if (line !in 0..1 || column > LCD.COLS) error("invalid line or column")
+        LCD.cursor(line,column)
         LCD.write(ch,wrap)
     }
 
@@ -36,10 +42,14 @@ object TUI {
      * @param line1
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
-    fun write(line1: String, wrap: Boolean = true) =
+    fun write(line1: String, wrap: Boolean = true, line: Int = LCD.cursorPos.first,
+                column: Int = LCD.cursorPos.second) =
         if (line1.length > LCD.COLS * 2)
             error("String very Big")
-        else LCD.write(line1, wrap)
+        else {
+            LCD.cursor(line,column)
+            LCD.write(line1, wrap)
+        }
 
     /**
      * È um whilhe true que captura as teclas e as impremie na tela LCD
@@ -305,7 +315,8 @@ object TUI {
         nextLine()
         write2()
     }
-    fun refreshPixel(ch: Char,line: Int,column: Int){
+    fun refreshPixel(ch: Char, line: Int = LCD.cursorPos.first, column: Int = LCD.cursorPos.second
+    ){
         if (line !in 0..< LCD.LINES || column !in 0..< LCD.COLS) error("invalid line or column")
         val temp_cursor = LCD.cursorPos
         LCD.cursor(line,column)
@@ -313,8 +324,18 @@ object TUI {
         LCD.cursor(temp_cursor.first,temp_cursor.second)
     }
 
-    fun clearChar() {
+    fun clearChar(cursorAnimation: Boolean = false) {
+        if (cursorAnimation) refreshPixel(' ')
         refreshPixel(' ',LCD.cursorPos.first, LCD.cursorPos.second-1)
         LCD.cursor(LCD.cursorPos.first,LCD.cursorPos.second-1)
+    }
+
+    fun cursorAnimation(cursor: Char): Char {
+        if (cursor == ' ') {
+            refreshPixel('_'); return '_'
+        }
+        else {
+            refreshPixel(' '); return ' '
+        }
     }
 }

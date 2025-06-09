@@ -58,7 +58,8 @@ object RouletteDisplay {
         0x12,
         0x13,
     )
-
+    const val TIME_FRAME_ANIME = 80
+    val timeANIM = TIME_FRAME_ANIME * ANIM.size
     /**
      * Inicia a classe, estabelecendo os valores iniciais.
      */
@@ -69,6 +70,7 @@ object RouletteDisplay {
 
     /**
      * Realiza a animação do sorteio
+     * Tem uma doração de [timeANIM], padrão é 480 ms
      */
     fun animation() {
         for (i in ANIM) {
@@ -80,6 +82,7 @@ object RouletteDisplay {
                 )
                 Time.sleep(10)
             }
+            Time.sleep(TIME_FRAME_ANIME.toLong())
             update()
         }
     }
@@ -139,7 +142,7 @@ object RouletteDisplay {
     fun clrAll() {
         for (i in POS) {
             cursor = i
-            setValue(0)
+            setValue(0x1F)
         }
         update()
     }
