@@ -22,7 +22,7 @@ object APP {
 
     var isLoggedIn = false
     var doStats = true
-    var countCreds = true
+    var sudoMode = false
 
     fun init() {
         TUI.init()
@@ -38,20 +38,20 @@ object APP {
     fun lobby() {
         writeLobby()
         while (true){
-            if (M.inM){
+            if (M.inM && !sudoMode){
                 m()
                 writeLobby()
             }
 
-            if (countCreds) continue
-            else if (updateCreds()) writeLobby()
+            if (updateCreds()) writeLobby()
 
             val key = capture()
             when (key) {
                 CONFIRM_KEY -> { if (canStartGame()) break; writeLobby() }
                 TUI.NONE -> continue
                 else -> {
-                    if (canUpdateBets()) {
+                    if (sudoMode && canUpdateBets()) BETS += key
+                    else if (canUpdateBets()) {
                         BETS += key; CREDS--
                     }; writeLobby()
                 }
@@ -75,20 +75,23 @@ object APP {
                     isLoggedIn = false
             }
         }// TODO FIX THIS
-        while (isLoggedIn){
-            Time.sleep(500)
-            clear()
-            val keyA = TUI.waitForCapture(1000)
+        while (true){
+            val keyA = TUI.waitForCapture(-1)
+            clearWrite(keyA.toString())
             val keyB = TUI.waitForCapture(1000)
-            var key = if (keyA == TUI.NONE) "" else keyA.toString()
+            TUI.write(keyB)
+            var key = keyA.toString()
             key += if (keyB == TUI.NONE) "" else keyB.toString()
+            Time.sleep(500)
+            if (!M.inM) break
             when(key){
-                CONFIRM_KEY.toString() -> { countCreds = false ; run() ; countCreds = true}
-                "A" -> coinsMenu.show()
-                "A*" -> {
-                    CoinDeposit.resetTotal(0) ; CoinDeposit.resetTotal(1) ; clearWrite("Deposit Reset")
+                CONFIRM_KEY.toString() -> { sudoMode = true ; run() ; sudoMode = false}
+                "A" -> {
+                    coinsMenu.show() ; clear()
                 }
-                "C" -> TODO("Iniciar a lista de números sorteados – Premindo a tecla ‘C’ e em seguida a tecla ’∗’, o sistema inicia um novo ciclo de estatística de números sorteados.")
+                "A*" -> {
+                   BETS = emptyList() ; CREDS = 0 ; CoinDeposit.resetTotal(0) ; CoinDeposit.resetTotal(1) ; clearWrite("Reset Completed")
+                }
                 "D" -> exitProcess(0)
                 else -> {}
             }
@@ -139,14 +142,16 @@ object APP {
     }
 
     private fun canStartGame(): Boolean{
-        if (countCreds) return true
-        if (CREDS<COST){
-            clearWrite("You need at least 1 Credit")
+        if (BETS.isEmpty()){
+            clearWrite("You need at least 1 Bet")
             Time.sleep(2000)
             return false
         }
-        if (BETS.isEmpty()){
-            clearWrite("You need at least 1 Bet")
+
+        if(sudoMode) return true
+
+        if (CREDS<COST){
+            clearWrite("You need at least 1 Credit")
             Time.sleep(2000)
             return false
         }
@@ -154,14 +159,16 @@ object APP {
     }
 
     private fun canUpdateBets(): Boolean {
-        if (countCreds) return true
-        if(CREDS <= 0){
-            clearWrite("Not enough Credits")
+        if (BETS.size >= 7) {
+            clearWrite("Bet Limit reached")
             Time.sleep(2000)
             return false
         }
-        if (BETS.size >= 7) {
-            clearWrite("Bet Limit reached")
+
+        if(sudoMode) return true
+
+        if(CREDS <= 0){
+            clearWrite("Not enough Credits")
             Time.sleep(2000)
             return false
         }
@@ -188,7 +195,7 @@ object APP {
         val full = bets + creds
         refresh(
             { writeCenterLine("Roulette Game!") },
-            { writeRight(full) }
+            { writeRightLine(full, 1) }
         )
         /*if (full.length <= TUI.COLS){
             refresh(
