@@ -20,8 +20,8 @@ object TUI {
      * @param ch
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
-    fun write(ch: Char,wrap: Boolean = true){
-        LCD.write(ch,wrap)
+    fun write(ch: Char, wrap: Boolean = true) {
+        LCD.write(ch, wrap)
     }
 
     /**
@@ -29,10 +29,10 @@ object TUI {
      * @param line1
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
-    fun write(line1: String,wrap: Boolean = true) =
+    fun write(line1: String, wrap: Boolean = true) =
         if (line1.length > LCD.COLS * 2)
             error("String very Big")
-        else LCD.write(line1,wrap)
+        else LCD.write(line1, wrap)
 
     /**
      * È um whilhe true que captura as teclas e as impremie na tela LCD
@@ -66,8 +66,7 @@ object TUI {
         } else if (key == KBD.NONE) {
             canWrite = true
             key
-        }
-        else KBD.NONE
+        } else KBD.NONE
     }
 
     /**
@@ -97,8 +96,8 @@ object TUI {
         if (line1.length > LCD.COLS * 2) error("String very Big")
         if (line1.length > LCD.COLS) {
             // se a String for maior que a primeira linha ele quebra e escreve nas duas linhas
-            writeRightLine(line1.substring(0, LCD.COLS))
-            writeRightLine(line1.substring(LCD.COLS, line1.length))
+            writeRightLine(line1.substring(0, LCD.COLS),0)
+            writeRightLine(line1.substring(LCD.COLS, line1.length),1)
         } else writeRightLine(line1)
     }
 
@@ -106,11 +105,14 @@ object TUI {
      * Escreve o [text] o mais deslocado para a direita possível
      * @param text
      */
-    private fun writeRightLine(text: String) {
+    fun writeRightLine(text: String,line: Int = 0) {
+        if (line !in 0..1) error("invalid line")
         val newText = " ".repeat(LCD.COLS - text.length) + text
+        LCD.cursor(line,0)
         for (c in newText) {
             LCD.write(c)
         }
+        LCD.cursor(0,0)
     }
 
     /**
@@ -230,7 +232,13 @@ object TUI {
         }
     }
 
-    fun confirmMenu(question: String = "Continue?", yes: String = "Yes", no: String = "No", yesKey: Char = 'A', noKey: Char = 'B'): Boolean {
+    fun confirmMenu(
+        question: String = "Continue?",
+        yes: String = "Yes",
+        no: String = "No",
+        yesKey: Char = 'A',
+        noKey: Char = 'B'
+    ): Boolean {
         writeCenterLine(question, 0)
         writeCenterLine("$yes  $no", 1)
 
@@ -253,4 +261,29 @@ object TUI {
      * @param key
      */
     fun isValid(key: Char): Boolean = key != KBD.NONE
+
+    /**
+     * Limpa a tela LCD, e em seguinda executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
+     * ambos em linhas diferentes
+     * @param write1 uma função de extensão do TUI
+     * @param write2 uma função de extensão do TUIa
+     */
+    fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
+        clear()
+        write1()
+        nextLine()
+        write2()
+    }
+    fun refreshPixel(ch: Char,line: Int,column: Int){
+        if (line !in 0..< LCD.LINES || column !in 0..< LCD.COLS) error("invalid line or column")
+        val temp_cursor = LCD.cursorPos
+        LCD.cursor(line,column)
+        write(ch)
+        LCD.cursor(temp_cursor.first,temp_cursor.second)
+    }
+
+    fun clearChar() {
+        refreshPixel(' ',LCD.cursorPos.first, LCD.cursorPos.second-1)
+        LCD.cursor(LCD.cursorPos.first,LCD.cursorPos.second-1)
+    }
 }
