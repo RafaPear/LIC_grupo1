@@ -74,13 +74,21 @@ object APP {
                     TODO() ; clear()
                 }
                 "A*" -> {
-                   BETS = emptyList() ; CREDS = 0 ; CoinDeposit.resetTotal(0) ; CoinDeposit.resetTotal(1) ; clearWrite("Reset Completed")
+                   resetAll()
                 }
                 "D" -> exitProcess(0)
                 else -> {}
             }
         }
         isLoggedIn = false
+    }
+
+    private fun resetAll(){
+        BETS = emptyList()
+        CREDS = 0
+        CoinDeposit.resetTotal(0)
+        CoinDeposit.resetTotal(1)
+        clearWrite("Reset Completed")
     }
 
     private fun doLogIn(){
@@ -165,27 +173,6 @@ object APP {
             { writeCenterLine("Roulette Game!") },
             { writeRightLine(full, 1) }
         )
-        /*if (full.length <= TUI.COLS){
-            refresh(
-                { write("Roulette Game!") },
-                { writeRightLine(full, 1) }
-            )
-            Time.sleep(100)
-        }
-        else {
-            val newA = bets.subSequence(0, TUI.COLS - creds.length).toString().trim() + creds
-            val newB = bets.subSequence(TUI.COLS - creds.length, bets.length).toString().trim() + creds
-            refresh(
-                { write("Roulette Game!") },
-                { writeRightLine(newA, 1) }
-            )
-            Time.sleep(500)
-            refresh(
-                { write("Roulette Game!") },
-                { writeRightLine(newB, 1) }
-            )
-            Time.sleep(500)
-        }*/
     }
 
     /**
