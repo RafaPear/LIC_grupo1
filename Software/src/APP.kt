@@ -6,11 +6,6 @@ import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
 object APP {
-    private const val ARROW_LEFT  = " <"
-    private const val ARROW_RIGHT = "> "
-    private const val KEY_LEFT    = "(1)"
-    private const val KEY_RIGHT   = "(2)"
-
     var BETS = listOf<Char>()
     var CREDS: Int = 0
     var GAMES: Int = 0
@@ -51,7 +46,7 @@ object APP {
                 else -> {
                     if (sudoMode && canUpdateBets()) BETS += key
                     else if (canUpdateBets()) {
-                        BETS += key; CREDS--
+                        BETS += key; CREDS -= COST
                     }; writeLobby()
                 }
             }
@@ -107,19 +102,13 @@ object APP {
     private fun promptPassword():String{
         var password = ""
         var fake = ""
-        refresh(
-            { writeCenter("Password:") },
-            { writeCenter(password) }
-        )
+        clearWrite("Pass: $fake")
         while (password.length < 4){
             val digit = capture()
             if (digit != TUI.NONE) {
                 password += digit
                 fake += '*'
-                refresh(
-                    { writeCenterLine("Password:", 0) },
-                    { writeCenterLine(fake, 1) }
-                )
+                clearWrite("Pass: $fake")
             }
         }
         return password
@@ -134,11 +123,6 @@ object APP {
 
         if(sudoMode) return true
 
-        if (CREDS<COST){
-            clearWrite("You need at least 1 Credit")
-            Time.sleep(2000)
-            return false
-        }
         return true
     }
 
