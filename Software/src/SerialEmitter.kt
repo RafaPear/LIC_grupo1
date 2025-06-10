@@ -1,5 +1,4 @@
 
-import com.sun.org.apache.xalan.internal.lib.ExsltDatetime.time
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -119,7 +118,8 @@ object SerialEmitter {
     }
 
     fun rst(){
-        val addr = SS_LCD_ID + SS_RD_ID
-        HAL.writeBits(0b1111_1111, addr)
+        // Ensure clock and data lines are low and both devices are deselected
+        HAL.clrBits(SDX_ID or SCLK_ID)
+        HAL.setBits(SS_LCD_ID or SS_RD_ID)
     }
 }
