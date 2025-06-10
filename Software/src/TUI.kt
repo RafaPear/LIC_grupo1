@@ -133,13 +133,9 @@ object TUI {
      * @param text
      */
     fun writeRightLine(text: String,line: Int = 0) {
-        if (line !in 0..1) error("invalid line")
-        val newText = " ".repeat(LCD.COLS - text.length) + text
-        LCD.cursor(line,0)
-        for (c in newText) {
-            LCD.write(c)
-        }
-        LCD.cursor(0,0)
+        if (line !in 0..1 || text.length >= COLS) error("invalid line or text")
+        var column = COLS - text.length
+        refreshPixels(text,line,column)
     }
 
     /**
@@ -315,6 +311,7 @@ object TUI {
         nextLine()
         write2()
     }
+
     fun refreshPixel(ch: Char, line: Int = LCD.cursorPos.first, column: Int = LCD.cursorPos.second
     ){
         if (line !in 0..< LCD.LINES || column !in 0..< LCD.COLS) error("invalid line or column")
@@ -324,18 +321,32 @@ object TUI {
         LCD.cursor(temp_cursor.first,temp_cursor.second)
     }
 
-    fun clearChar(cursorAnimation: Boolean = false) {
-        if (cursorAnimation) refreshPixel(' ')
+    fun refreshPixels(ch: String, line: Int = LCD.cursorPos.first, column: Int = LCD.cursorPos.second) {
+        if (line !in 0..< LCD.LINES || column !in 0..< LCD.COLS) error("invalid line or column")
+        if (!hasSpace(ch,column)) error("Very Big")
+        val temp_cursor = LCD.cursorPos
+        LCD.cursor(line,column)
+        write(ch)
+        LCD.cursor(temp_cursor.first,temp_cursor.second)
+    }
+
+    fun clearChar() {
         refreshPixel(' ',LCD.cursorPos.first, LCD.cursorPos.second-1)
         LCD.cursor(LCD.cursorPos.first,LCD.cursorPos.second-1)
     }
 
-    fun cursorAnimation(cursor: Char): Char {
-        if (cursor == ' ') {
-            refreshPixel('_'); return '_'
-        }
-        else {
-            refreshPixel(' '); return ' '
+    fun showCursor(on: Boolean) {
+        LCD.showCursor(on)
+    }
+
+    fun hasSpace(ch: String,column: Int = LCD.cursorPos.second): Boolean = ch.length + column <= COLS
+
+    fun clearLine(line: Int) {
+        if (line !in 0..1) error("invalid line")
+        val clean = ' '
+        LCD.cursor(line,0)
+        for (i in 0..< COLS){
+            LCD.write(clean)
         }
     }
 }
