@@ -11,9 +11,26 @@ object Statistics {
         FileAccess.init()
     }
 
-    fun updateEntry(entry: Int, total: Int = SORTED[entry].total, creds: Int = SORTED[entry].creds) {
-        if (entry <= MAX_ID) {
-            SORTED[entry].apply { this.total = total ; this.creds = creds }
+    fun Char.toHexInt(): Int {
+        return when (this) {
+            in '0'..'9' -> this.digitToInt()
+            in 'A'..'F' -> this.code - 'A'.code + 10
+            else -> error("Invalid character for hex conversion")
+        }
+    }
+
+    fun getGames(): Int{
+        return TOTAL_GAMES
+    }
+
+    fun resetGames(){
+        TOTAL_GAMES = 0
+    }
+
+    fun updateEntry(entry: Char, addTotal : Int = 0, addCreds : Int = 0) {
+        val id = entry.toHexInt()
+        if (id <= MAX_ID) {
+            SORTED[id].apply { this.total += addTotal ; this.creds += addCreds }
         }
     }
 

@@ -1,3 +1,4 @@
+
 import TUI.writeCenterLine
 import TUI.writeRightLine
 import isel.leic.utils.Time
@@ -14,6 +15,7 @@ object TUI {
         KBD.init()
         RouletteDisplay.init()
         RouletteDisplay.clrAll()
+        clear()
         Time.sleep(100)
     }
 
@@ -316,18 +318,20 @@ object TUI {
     }
 
     fun showCursor(on: Boolean) {
-        LCD.showCursor(on)
+        //LCD.showCursor(on)
     }
 
     fun hasSpace(ch: String,column: Int = LCD.cursorPos.second): Boolean = ch.length + column <= COLS
 
-    fun clearLine(line: Int) {
+    fun clearLine(line: Int, start: Int = 0, end : Int = COLS) {
         if (line !in 0..1) error("invalid line")
         val clean = ' '
-        LCD.cursor(line,0)
-        for (i in 0..< COLS){
+        val cursor = LCD.cursorPos
+        LCD.cursor(line,start)
+        for (i in 0..< end){
             LCD.write(clean)
         }
+        LCD.cursor(cursor.first,cursor.second)
     }
 
     fun animtest() {

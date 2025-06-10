@@ -1,6 +1,5 @@
 
 import TUI.capture
-import TUI.clear
 import TUI.clearWrite
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
@@ -8,8 +7,9 @@ import kotlin.system.exitProcess
 object APP {
     var BETS = listOf<Char>()
     var CREDS: Int = 0
-    var GAMES: Int = 0
-    var SORTED = listOf<Char>()
+    var SORTED : Char = TUI.NONE
+    var WON: Int = 0
+
     /**
      * Corresponde à primeira linha da tela LCD
      */
@@ -24,6 +24,7 @@ object APP {
     private const val KEY_COIN_M = 'A'
     private const val SORTED_NUM_M = 'C'
     private const val GAME_OFF_M = 'D'
+    private const val BACK_OR_CLEAR = '#'
 
     private val invalidBets = charArrayOf('*','#',TUI.NONE)
     private val validBets = charArrayOf(
@@ -33,21 +34,24 @@ object APP {
 
     private const val BONUSBETS = 3
     private const val TIMEBONUS = 5 // tem que ser < 10
-    var doStats = true
+
     var sudoMode = false
+    var shouldRun = true
 
     fun init() {
         CoinAcceptor.init()
         Statistics.init()
         M.init()
         TUI.init()
-        TUI.clear()
     }
 
     fun run(){
-        lobby()
-        game()
-        updateStats()
+        while (shouldRun) {
+            lobby()
+            game()
+            updateStats()
+        }
+        writeAllStats()
     }
 
     fun lobby() {
@@ -90,12 +94,11 @@ object APP {
             timing++
             //animation dura cerca 500 ms para ter 1 s é 2*sleep + animation time
             if (timing >= 2*sleep) {
-                TUI.writeCenterLine("${timer}s",1)
+                TUI.writeCenterLine("${timer}s ",1)
                 timer--
                 timing = 0
             }
         }
-        GAMES++
         val sorted = '5'//validBets.random()
         var wonCredits = 0
         BETS.forEach { if(it == sorted) wonCredits += COST*2 }
@@ -104,6 +107,9 @@ object APP {
             TUI.writeCenterLine("Sorted: $sorted",0)
             TUI.write("Won: $$wonCredits")
         }
+        SORTED = sorted
+        WON = wonCredits
+        BETS = emptyList()
         RouletteDisplay.clrAll()
         Time.sleep(2000)
     }
@@ -111,7 +117,7 @@ object APP {
     private fun bonusBets(): List<Char>{
         var time_roll = TIMEBONUS
         writeGame(time_roll)
-        var bonus = listOf<Char>()
+        val bonus = mutableListOf<Char>()
         var timing = 0
         val sleep = 1
         TUI.showCursor(true)
@@ -122,11 +128,15 @@ object APP {
             if (updateCreds()) TUI.refreshPixels("$CREDS",1,15)
             val key = TUI.capture()
 
-            if (key !in invalidBets && CREDS != 0) {
+            if (key !in invalidBets && canUpdateBets()) {
                 TUI.write(key, false, 1)
                 TUI.write(',')
-                bonus += key
-                CREDS -= COST
+
+                if (sudoMode && canUpdateBets()) bonus += key
+                else if (canUpdateBets()) {
+                    bonus += key; CREDS -= COST
+                }
+
                 TUI.writeRightLine(" $$CREDS",1)
             }
 
@@ -142,6 +152,7 @@ object APP {
         TUI.showCursor(false)
         return bonus
     }
+
     private fun writeGame(time_roll: Int) {
         line1 = "Bonus bets!"
         TUI.clear()
@@ -155,17 +166,56 @@ object APP {
 
     private fun m() {
         login_M()
-        TUI
+        writeM()
         while (M.inM){
             val key = TUI.capture()
             when(key){
-                CONFIRM_KEY -> game()
-                KEY_COIN_M -> TODO()
+                CONFIRM_KEY -> {sudoMode = true ; lobby() ; game() ; writeM() ; sudoMode = false}
+                KEY_COIN_M -> { coinPage(); writeM() }
                 SORTED_NUM_M -> TODO()
-                GAME_OFF_M -> TODO()
+                GAME_OFF_M -> {writeAllStats() ; resetAll() ; TUI.clear() ; exitProcess(0) }
             }
         }
     }
+
+    private fun statsPage(){
+
+    }
+
+    private fun coinPage() {
+        val lines = listOf(
+            "2 Coins: ${CoinDeposit.getTotal(0)}",
+            "4 Coins: ${CoinDeposit.getTotal(1)}",
+            "Total: ${CoinDeposit.getTotal(0) + CoinDeposit.getTotal(1)}",
+            "Games: ${Statistics.getGames()}",
+            "# to exit",
+            "* to reset"
+        )
+
+        val page = Page(lines)
+
+        page.run{ key, func ->
+            when (key) {
+                CONFIRM_KEY -> {
+                    resetAll()
+                    Time.sleep(1000)
+                    func()
+                    M.inM
+                }
+                BACK_OR_CLEAR -> {
+                    false
+                }
+                else -> M.inM
+            }
+        }
+    }
+
+    private fun writeM(){
+        TUI.clear()
+        TUI.writeCenterLine("Manager Mode", 0)
+        TUI.writeCenterLine("Active", 1)
+    }
+
     private fun login_M() {
         var input = ""
         var inputCripted = ""
@@ -221,11 +271,13 @@ object APP {
         TUI.clear()
         TUI.showCursor(false)
     }
+
     private fun resetAll(){
         BETS = emptyList()
         CREDS = 0
         CoinDeposit.resetTotal(0)
         CoinDeposit.resetTotal(1)
+        Statistics.resetGames()
         clearWrite("Reset Completed")
     }
 
@@ -282,9 +334,13 @@ object APP {
         )
     }
 
+
     fun updateStats(){
-        if (sudoMode || !doStats) return
+        if (sudoMode) return
         Statistics.addTotal(1)
+        Statistics.updateEntry(SORTED, 1, WON)
+        SORTED = TUI.NONE
+        WON = 0
     }
 
     fun writeAllStats(){
@@ -292,18 +348,5 @@ object APP {
         CoinDeposit.writeToFile()
         Statistics.closeFileB()
         CoinDeposit.closeFileA()
-    }
-
-    /**
-     * Limpa a tela LCD, e em seguida executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
-     * ambos em linhas diferentes
-     * @param write1 uma função de extensão do TUI
-     * @param write2 uma função de extensão do TUIa
-     */
-    private fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
-        clear()
-        TUI.write1()
-        TUI.nextLine()
-        TUI.write2()
     }
 }
