@@ -195,7 +195,7 @@ object TUI {
     }
 
     /**
-     * Quria uma animação de screen de load. Para quando a condição for verdadeira
+     * Cria uma animação de loading screen. Para quando a condição for verdadeira
      * @param time
      * @param condition
      */
