@@ -156,31 +156,11 @@ object TUI {
      * @param line1
      * @param line
      */
-    fun writeCenterLine(line1: String, line: Int = 0) {
+    fun writeCenterLine(str: String, line: Int = 0) {
         if (line !in 0..1) error("invalid line")
-
-        val cols = LCD.COLS
-        val listChar = CharArray(cols) // cada elemento do array corresponde a uma coluna do LCD
-
-        //serve para ajustar quando a frase for ímpar e não ficar exatamente no centro
-        val parity = if (line1.length % 2 == 0) 0 else 1
-
-        for (i in line1.indices) {//adiciona a frase a lista
-            listChar[i] = line1[i]
-        }
-
-        var leftSize = 0
-        var rightSize = listChar.lastIndex - line1.lastIndex
-
-        while (true) {//move para a direita a frase até estar centrada
-            if (leftSize == rightSize - parity) break
-            moveStrInArray(listChar)
-            leftSize++
-            rightSize--
-        }
-
-        LCD.cursor(line, leftSize)
-        LCD.write(line1, false)
+        if (str.length > COLS) error("very big")
+        val column = COLS / 2 - str.length/2
+        refreshPixels(str, line,column)
     }
 
     private fun moveStrInArray(line1: CharArray, dir: Int = 1) {
@@ -349,4 +329,31 @@ object TUI {
             LCD.write(clean)
         }
     }
+
+    fun animtest() {
+        val b = intArrayOf(0x13,0x15,0x10)
+        val o = intArrayOf(0x12,0x14,0x16)
+        val n = intArrayOf(0x1D,0x10,0x1B)
+        val u = intArrayOf(0x1B,0x1C,0x1D)
+        val s = intArrayOf(0x12,0x10,0x15)
+
+        var i = 0
+        while (true){
+            i = i % (b.size)
+            val q = (i+1)%(b.size)
+            val w = (i+2)%(b.size)
+            val e = (i+3)%(b.size)
+            val r = (i+4)%(b.size)
+            val t = (i+5)%(b.size)
+            RouletteDisplay.set(0x0b,5)
+            RouletteDisplay.set(0x00,4)
+            RouletteDisplay.set(n[e],3)
+            RouletteDisplay.set(u[r],2)
+            RouletteDisplay.set(0x05,1)
+
+            Time.sleep(10)
+            i++
+        }
+    }
+
 }

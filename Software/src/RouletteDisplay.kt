@@ -14,7 +14,7 @@ object RouletteDisplay {
     /**
      * Representação máxima do hexadecimal 15 ou F
      */
-    private const val MAX_VALUE = 15
+    private const val MAX_VALUE = 0x1F
 
     /**
      * Número de bits para o comando
@@ -80,7 +80,6 @@ object RouletteDisplay {
                     i.shl(CMD_SIZE) or POS[j],
                     TOTAL_SIZE
                 )
-                Time.sleep(10)
             }
             Time.sleep(TIME_FRAME_ANIME.toLong())
             update()

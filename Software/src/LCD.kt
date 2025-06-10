@@ -209,6 +209,12 @@ object LCD {
      */
     fun autoCursor(wrap: Boolean) {
         if (wrap && cursorPos.second >= COLS -1 && cursorPos.first == 0) cursor(1, 0)
-        else cursorPos = cursorPos.copy(second = cursorPos.second + 1)
+        else cursorPos = cursorPos.copy(second =
+            if (cursorPos.second + 1 >= COLS) COLS-1 else cursorPos.second + 1
+        )
+    }
+
+    fun showCursor(on: Boolean) {
+        if(on) writeCMD(0b0000_1111) else writeCMD(0b0000_1100)
     }
 }
