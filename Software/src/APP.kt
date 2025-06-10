@@ -5,10 +5,10 @@ import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
 object APP {
-    var BETS = listOf<Char>()
-    var CREDS: Int = 0
-    var SORTED : Char = TUI.NONE
-    var WON: Int = 0
+    private var BETS = listOf<Char>()
+    private var CREDS: Int = 0
+    private var SORTED : Char = TUI.NONE
+    private var WON: Int = 0
 
     /**
      * Corresponde à primeira linha da tela LCD
@@ -30,13 +30,13 @@ object APP {
     private val validBets = charArrayOf(
         '1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '0', 'D'
     )
-    var COST = 1 // Custo de cada aposta
+    private var COST = 1 // Custo de cada aposta
 
     private const val BONUSBETS = 3
     private const val TIMEBONUS = 5 // tem que ser < 10
 
-    var sudoMode = false
-    var shouldRun = true
+    private var sudoMode = false
+    private var shouldRun = true
 
     fun init() {
         CoinAcceptor.init()
@@ -172,14 +172,28 @@ object APP {
             when(key){
                 CONFIRM_KEY -> {sudoMode = true ; lobby() ; game() ; writeM() ; sudoMode = false}
                 KEY_COIN_M -> { coinPage(); writeM() }
-                SORTED_NUM_M -> TODO()
+                SORTED_NUM_M -> { statsPage() ; writeM() }
                 GAME_OFF_M -> {writeAllStats() ; resetAll() ; TUI.clear() ; exitProcess(0) }
             }
         }
     }
 
     private fun statsPage(){
-
+        val list = Statistics.getSortedList()
+        val page = Page(list)
+        page.run {key, clear ->
+            when (key) {
+                CONFIRM_KEY -> {
+                    Statistics.resetAll()
+                    clear()
+                    M.inM
+                }
+                BACK_OR_CLEAR -> {
+                    false
+                }
+                else -> M.inM
+            }
+        }
     }
 
     private fun coinPage() {
@@ -335,18 +349,72 @@ object APP {
     }
 
 
-    fun updateStats(){
+    private fun updateStats(){
         if (sudoMode) return
         Statistics.addTotal(1)
-        Statistics.updateEntry(SORTED, 1, WON)
+        if (SORTED != TUI.NONE) {
+            Statistics.updateEntry(SORTED, 1, WON)
+        }
         SORTED = TUI.NONE
         WON = 0
     }
 
-    fun writeAllStats(){
+    private fun writeAllStats(){
         Statistics.writeToFile()
         CoinDeposit.writeToFile()
         Statistics.closeFileB()
         CoinDeposit.closeFileA()
+    }
+
+    private class Page(
+        val lines: List<String>,
+        val upKey : Char = 'A',
+        val downKey : Char = 'B',
+        val upSym : String = """/\""",
+        val downSym : String = """\/""",
+    ) {
+
+        val line1MAX = TUI.COLS-(upSym.length+2)
+        val line2MAX = TUI.COLS-(downSym.length+2)
+
+        private fun write(idx: Int, idx2: Int){
+            val line1 = lines[idx].padEnd(line1MAX, ' ')
+            val line2 = lines[idx2].padEnd(line2MAX, ' ')
+            if (line1.length <= line1MAX) TUI.refreshPixels (line1, 0, 0)
+            else error("Very Big, line length should be less than $line1MAX")
+            if (line2.length <= line2MAX) TUI.refreshPixels (line2, 1, 0)
+            else error("Very Big, line length should be less than $line2MAX")
+        }
+
+        fun run(func: (key: Char, reset: () -> Unit)->Boolean) {
+
+            TUI.clear()
+            val size = 2
+            var idx = 0
+            var idx2 = 1
+
+            write(idx, idx2)
+
+            TUI.refreshPixels(upSym+upKey, 0, line1MAX)
+            TUI.refreshPixels(downSym+downKey, 1, line2MAX)
+
+            while (true) {
+                val key = TUI.capture()
+                if (!func(key){ write(idx, idx2) }) break
+                when(key){
+                    upKey -> {
+                        idx2 = idx
+                        idx = capInside(idx-1, 0, lines.size - 1)
+
+                        write(idx, idx2)
+                    }
+                    downKey -> {
+                        idx = idx2
+                        idx2 = capInside(idx+1, 0, lines.size - 1)
+                        write(idx, idx2)
+                    }
+                }
+            }
+        }
     }
 }
