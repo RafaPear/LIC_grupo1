@@ -8,7 +8,7 @@ object M {
 
     val password = "1234"
     var inM = false
-        get() = HAL.isBit(0b1000_0000)
+        get() = HAL.isBit(idx_M)
 
     fun init(){
         HAL.init()
