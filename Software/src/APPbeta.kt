@@ -200,7 +200,7 @@ object APPbeta {
     }
 
     /**
-     * Limpa a tela LCD, e em seguinda executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
+     * Limpa a tela LCD, e em seguida executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
      * ambos em linhas diferentes
      * @param write1 uma função de extensão do TUI
      * @param write2 uma função de extensão do TUIa

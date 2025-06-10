@@ -3,6 +3,7 @@ import TUI.capture
 import TUI.clear
 import TUI.clearWrite
 import isel.leic.utils.Time
+import kotlin.system.exitProcess
 
 object APP {
     var BETS = listOf<Char>()
@@ -37,16 +38,16 @@ object APP {
 
     fun init() {
         CoinAcceptor.init()
+        Statistics.init()
         M.init()
         TUI.init()
         TUI.clear()
     }
 
     fun run(){
-        while (true) {
-            lobby()
-            game()
-        }
+        lobby()
+        game()
+        updateStats()
     }
 
     fun lobby() {
@@ -281,4 +282,28 @@ object APP {
         )
     }
 
+    fun updateStats(){
+        if (sudoMode || !doStats) return
+        Statistics.addTotal(1)
+    }
+
+    fun writeAllStats(){
+        Statistics.writeToFile()
+        CoinDeposit.writeToFile()
+        Statistics.closeFileB()
+        CoinDeposit.closeFileA()
+    }
+
+    /**
+     * Limpa a tela LCD, e em seguida executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
+     * ambos em linhas diferentes
+     * @param write1 uma função de extensão do TUI
+     * @param write2 uma função de extensão do TUIa
+     */
+    private fun refresh(write1: TUI.()-> Unit = {},write2: TUI.()-> Unit = {}) {
+        clear()
+        TUI.write1()
+        TUI.nextLine()
+        TUI.write2()
+    }
 }

@@ -175,7 +175,7 @@ object TUI {
     }
 
     /**
-     * Quria uma animação de screen de load. Para quando a condição for verdadeira
+     * Cria uma animação de loading screen. Para quando a condição for verdadeira
      * @param time
      * @param condition
      */
@@ -280,7 +280,7 @@ object TUI {
     fun isValid(key: Char): Boolean = key != NONE
 
     /**
-     * Limpa a tela LCD, e em seguinda executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
+     * Limpa a tela LCD, e em seguida executa o lambda [write1] para escrever na tela, mesma coisa para o [write2]
      * ambos em linhas diferentes
      * @param write1 uma função de extensão do TUI
      * @param write2 uma função de extensão do TUIa
