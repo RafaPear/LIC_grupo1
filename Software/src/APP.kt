@@ -1,14 +1,19 @@
 
+import Statistics.toHexInt
 import TUI.capture
 import TUI.clearWrite
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
 object APP {
-    var BETS = listOf<Char>()
-    var CREDS: Int = 0
-    var SORTED : Char = TUI.NONE
-    var WON: Int = 0
+    private var BETS = listOf<Char>()
+    private var CREDS: Int = 0
+    private var SORTED : Char = TUI.NONE
+    private var WON: Int = 0
+
+    private var BET_LIMIT = 6 // Limite de apostas por jogo
+
+    private var lastCoin: Int = 0 // Guarda o último valor do coin acceptor
 
     /**
      * Corresponde à primeira linha da tela LCD
@@ -30,19 +35,20 @@ object APP {
     private val validBets = charArrayOf(
         '1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '0', 'D'
     )
-    var COST = 1 // Custo de cada aposta
+    private var COST = 1 // Custo de cada aposta
 
     private const val BONUSBETS = 3
     private const val TIMEBONUS = 5 // tem que ser < 10
 
-    var sudoMode = false
-    var shouldRun = true
+    private var sudoMode = false
+    private var shouldRun = true
 
     fun init() {
         CoinAcceptor.init()
         Statistics.init()
         M.init()
         TUI.init()
+        RouletteDisplay.init()
     }
 
     fun run(){
@@ -56,30 +62,88 @@ object APP {
 
     fun lobby() {
         writeLobby()
+        val delay = 5000L
+
+        var endTime = Time.getTimeInMillis() + delay
+
         while (true){
+            if (Time.getTimeInMillis() >= endTime) {
+                RouletteDisplay.animationC()
+                endTime = Time.getTimeInMillis() + delay
+                writeLobby()
+            }
+
             if (M.inM && !sudoMode){
                 m()
                 writeLobby()
             }
 
-            if (updateCreds()) writeLobby()
+            if (updateCreds()) {
+                writeLobby()
+                RouletteDisplay.animationD(if (lastCoin == 0) 1 else 2)
+                RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
+            }
 
             val key = capture()
             when (key) {
                 CONFIRM_KEY -> { if (canStartGame()) break; writeLobby() }
                 TUI.NONE -> continue
+                BACK_OR_CLEAR -> {
+                    BETS = BETS.dropLast(1)
+                    CREDS += COST
+                    writeLobby()
+                }
                 else -> {
-                    if (sudoMode && canUpdateBets()) BETS += key
+                    if (sudoMode && canUpdateBets()) {
+                        BETS += key
+                    }
                     else if (canUpdateBets()) {
                         BETS += key; CREDS -= COST
                     }; writeLobby()
                 }
             }
         }
+        TUI.clear()
+        doLobbyEndAnimation(BETS)
+    }
+
+    fun doLobbyEndAnimation(list: List<Char>) {
+        when (BETS.size) {
+            1 -> {
+                TUI.writeCenterLine("Really? 1?", 0)
+                Time.sleep(2000)
+            }
+            2 -> {
+                TUI.writeCenterLine("Only That?", 0)
+                RouletteDisplay.animationD(1)
+                Time.sleep(2000)
+            }
+            3 -> {
+                TUI.writeCenterLine("Ok, 3 is fine", 0)
+                RouletteDisplay.animationD(2)
+                Time.sleep(2000)
+            }
+            4 -> {
+                TUI.writeCenterLine("Lets Go!", 0)
+                RouletteDisplay.animationB()
+            }
+            5 -> {
+                TUI.writeCenterLine("OMG OMG!!", 0)
+                RouletteDisplay.animationB()
+            }
+            BET_LIMIT -> {
+                TUI.writeCenterLine("HERE WE GO!", 0)
+                RouletteDisplay.animationC()
+                RouletteDisplay.animationB()
+            }
+            else -> TUI.writeCenterLine("Ok Ok", 0)
+        }
     }
 
     fun game() {
+        RouletteDisplay.clrAll()
         BETS += bonusBets()
+        RouletteDisplay.clrAll()
 
         var timer = (3..10).random()
         TUI.refresh {
@@ -90,7 +154,7 @@ object APP {
         var timing = 0
         val sleep = 1
         while (timer >= 0) {
-            RouletteDisplay.animation()
+            RouletteDisplay.animationA()
             timing++
             //animation dura cerca 500 ms para ter 1 s é 2*sleep + animation time
             if (timing >= 2*sleep) {
@@ -99,7 +163,7 @@ object APP {
                 timing = 0
             }
         }
-        val sorted = '5'//validBets.random()
+        val sorted = validBets.random()
         var wonCredits = 0
         BETS.forEach { if(it == sorted) wonCredits += COST*2 }
         CREDS += wonCredits
@@ -110,47 +174,83 @@ object APP {
         SORTED = sorted
         WON = wonCredits
         BETS = emptyList()
+        for (i in 0 until 4) {
+            RouletteDisplay.animationB()
+        }
         RouletteDisplay.clrAll()
-        Time.sleep(2000)
     }
 
     private fun bonusBets(): List<Char>{
+        BET_LIMIT += BONUSBETS // Limite de apostas para o bonus
         var time_roll = TIMEBONUS
-        writeGame(time_roll)
+        writeGame(time_roll--)
         val bonus = mutableListOf<Char>()
-        var timing = 0
-        val sleep = 1
+        val sleep = 1000
         TUI.showCursor(true)
-        time_roll--
 
-        while(time_roll >= 0){
+        var endTime = Time.getTimeInMillis() + sleep
+
+        while(true){
             if (bonus.size >= BONUSBETS) break
             if (updateCreds()) TUI.refreshPixels("$CREDS",1,15)
             val key = TUI.capture()
 
-            if (key !in invalidBets && canUpdateBets()) {
-                TUI.write(key, false, 1)
-                TUI.write(',')
+            if (key !in invalidBets && canUpdateBets(false)) {
+                if (bonus.isNotEmpty()) {
+                    TUI.write(',')
+                    TUI.write(key, false, 1)
+                }
+                else TUI.write(key, false, 1)
 
-                if (sudoMode && canUpdateBets()) bonus += key
-                else if (canUpdateBets()) {
+                if (sudoMode) bonus += key
+                else {
                     bonus += key; CREDS -= COST
                 }
 
                 TUI.writeRightLine(" $$CREDS",1)
             }
+            else if (key == BACK_OR_CLEAR) {
+                if (bonus.isNotEmpty()) {
+                    bonus.removeLast()
+                    CREDS += COST
+                    TUI.writeRightLine(" $$CREDS",1)
+                    if (bonus.isNotEmpty()) {
+                        TUI.clearChar()
+                        TUI.clearChar()
+                    }
+                    else TUI.clearChar()
+                }
+            }
+            if (time_roll < 0) break
 
-            Time.sleep(sleep.toLong())
-
-            timing++
-            if (timing >= 1000*sleep) {
+            if (Time.getTimeInMillis() >= endTime) {
                 TUI.writeRightLine("${time_roll}s")
                 time_roll--
-                timing = 0
+                endTime = Time.getTimeInMillis() + sleep
             }
         }
         TUI.showCursor(false)
+        doBonusEndAnimation(bonus)
+        BET_LIMIT -= BONUSBETS // Reseta o limite de apostas
         return bonus
+    }
+
+    fun doBonusEndAnimation(list: List<Char>) {
+        TUI.clearLine(0)
+        when (list.size) {
+            0 -> {
+                TUI.writeCenterLine("Meh..", 0)
+            }
+            BONUSBETS -> {
+                TUI.writeCenterLine("OH YEAH!", 0)
+                RouletteDisplay.animationC()
+                RouletteDisplay.animationC()
+            }
+            else -> {
+                TUI.writeCenterLine("Ok Ok", 0)
+                RouletteDisplay.animationB()
+            }
+        }
     }
 
     private fun writeGame(time_roll: Int) {
@@ -166,20 +266,57 @@ object APP {
 
     private fun m() {
         login_M()
-        writeM()
+        if (M.inM) writeM()
         while (M.inM){
             val key = TUI.capture()
             when(key){
-                CONFIRM_KEY -> {sudoMode = true ; lobby() ; game() ; writeM() ; sudoMode = false}
-                KEY_COIN_M -> { coinPage(); writeM() }
-                SORTED_NUM_M -> TODO()
-                GAME_OFF_M -> {writeAllStats() ; resetAll() ; TUI.clear() ; exitProcess(0) }
+                CONFIRM_KEY ->  { runMockGame() ; writeM() }
+                KEY_COIN_M ->   { coinPage()    ; writeM() }
+                SORTED_NUM_M -> { statsPage()   ; writeM() }
+                GAME_OFF_M ->   { shutdown() }
             }
         }
     }
 
-    private fun statsPage(){
+    private fun runMockGame() {
+        sudoMode = true
+        val lastCreds = CREDS
+        lobby()
+        game()
+        CREDS = lastCreds
+        sudoMode = false
+    }
 
+    private fun shutdown() {
+        TUI.clear()
+        TUI.writeCenterLine("Shutting down...", 0)
+        Time.sleep(1000)
+        writeAllStats()
+        resetAll()
+        TUI.clear()
+        exitProcess(0)
+    }
+
+    private fun statsPage(){
+        val page = Page(Statistics.getSortedList())
+        page.run {key, clear ->
+            when (key) {
+                CONFIRM_KEY -> {
+                    if (TUI.confirmMenu("Reset All?")) {
+                        Statistics.resetAll()
+                        clearWrite("Reset Completed")
+                        Time.sleep(1000)
+                        page.lines = Statistics.getSortedList()
+                    }
+                    clear()
+                    M.inM
+                }
+                BACK_OR_CLEAR -> {
+                    false
+                }
+                else -> M.inM
+            }
+        }
     }
 
     private fun coinPage() {
@@ -194,12 +331,22 @@ object APP {
 
         val page = Page(lines)
 
-        page.run{ key, func ->
+        page.run{ key, reset ->
             when (key) {
                 CONFIRM_KEY -> {
-                    resetAll()
-                    Time.sleep(1000)
-                    func()
+                    if (TUI.confirmMenu("Reset All?")) {
+                        resetAll()
+                        Time.sleep(1000)
+                        page.lines = listOf(
+                            "2 Coins: ${CoinDeposit.getTotal(0)}",
+                            "4 Coins: ${CoinDeposit.getTotal(1)}",
+                            "Total: ${CoinDeposit.getTotal(0) + CoinDeposit.getTotal(1)}",
+                            "Games: ${Statistics.getGames()}",
+                            "# to exit",
+                            "* to reset"
+                        )
+                    }
+                    reset()
                     M.inM
                 }
                 BACK_OR_CLEAR -> {
@@ -211,9 +358,11 @@ object APP {
     }
 
     private fun writeM(){
+        if (!M.inM) return
         TUI.clear()
         TUI.writeCenterLine("Manager Mode", 0)
         TUI.writeCenterLine("Active", 1)
+        RouletteDisplay.animationC()
     }
 
     private fun login_M() {
@@ -228,6 +377,8 @@ object APP {
         )
 
         TUI.showCursor(true)
+
+        RouletteDisplay.animationC()
 
         while(input != M.password){
             if (!M.inM) break
@@ -284,7 +435,7 @@ object APP {
     private fun canStartGame(): Boolean{
         if (BETS.isEmpty()){
             clearWrite("You need at least 1 Bet")
-            Time.sleep(2000)
+            RouletteDisplay.animationB()
             return false
         }
 
@@ -293,18 +444,22 @@ object APP {
         return true
     }
 
-    private fun canUpdateBets(): Boolean {
-        if (BETS.size >= 6) {
-            clearWrite("Bet Limit reached")
-            Time.sleep(2000)
+    private fun canUpdateBets(print : Boolean = true): Boolean {
+        if (BETS.size >= BET_LIMIT) {
+            if (print) {
+                clearWrite("Bet Limit reached")
+                RouletteDisplay.animationB()
+            }
             return false
         }
 
         if(sudoMode) return true
 
         if(CREDS <= 0){
-            clearWrite("Not enough Credits")
-            Time.sleep(2000)
+            if (print) {
+                clearWrite("Not enough Credits")
+                RouletteDisplay.animationB()
+            }
             return false
         }
         return true
@@ -319,6 +474,7 @@ object APP {
                 1 -> 4
                 else -> error("Invalid coin type")
             }
+            lastCoin = coin
             return true
         }
         return false
@@ -332,21 +488,76 @@ object APP {
             { writeCenterLine("Roulette Game!") },
             { writeRightLine(full, 1) }
         )
+        //RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
     }
 
-
-    fun updateStats(){
+    private fun updateStats(){
         if (sudoMode) return
         Statistics.addTotal(1)
-        Statistics.updateEntry(SORTED, 1, WON)
+        if (SORTED != TUI.NONE) {
+            Statistics.updateEntry(SORTED, 1, WON)
+        }
         SORTED = TUI.NONE
         WON = 0
     }
 
-    fun writeAllStats(){
+    private fun writeAllStats(){
         Statistics.writeToFile()
         CoinDeposit.writeToFile()
         Statistics.closeFileB()
         CoinDeposit.closeFileA()
+    }
+
+    private class Page(
+        var lines: List<String>,
+        val upKey : Char = 'A',
+        val downKey : Char = 'B',
+        val upSym : String = """/\""",
+        val downSym : String = """\/""",
+    ) {
+
+        val line1MAX = TUI.COLS-(upSym.length+2)
+        val line2MAX = TUI.COLS-(downSym.length+2)
+
+        private fun write(idx: Int, idx2: Int){
+            val line1 = lines[idx].padEnd(line1MAX, ' ')
+            val line2 = lines[idx2].padEnd(line2MAX, ' ')
+            if (line1.length <= line1MAX) TUI.refreshPixels (line1, 0, 0)
+            else error("Very Big, line length should be less than $line1MAX")
+            if (line2.length <= line2MAX) TUI.refreshPixels (line2, 1, 0)
+            else error("Very Big, line length should be less than $line2MAX")
+
+            TUI.refreshPixels(upSym+upKey, 0, line1MAX)
+            TUI.refreshPixels(downSym+downKey, 1, line2MAX)
+        }
+
+        fun run(func: (key: Char, reset: () -> Unit)->Boolean) {
+
+            TUI.clear()
+            var idx = 0
+            var idx2 = 1
+
+            write(idx, idx2)
+
+            RouletteDisplay.animationC()
+
+            while (true) {
+                val key = TUI.capture()
+                if (!func(key){ write(idx, idx2) }) break
+                when(key){
+                    upKey -> {
+                        idx2 = idx
+                        idx = capInside(idx-1, 0, lines.size - 1)
+
+                        write(idx, idx2)
+                    }
+                    downKey -> {
+                        idx = idx2
+                        idx2 = capInside(idx+1, 0, lines.size - 1)
+                        write(idx, idx2)
+                    }
+                }
+            }
+        }
     }
 }

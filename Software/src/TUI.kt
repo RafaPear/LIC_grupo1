@@ -13,8 +13,6 @@ object TUI {
     fun init() {
         LCD.init()
         KBD.init()
-        RouletteDisplay.init()
-        RouletteDisplay.clrAll()
         clear()
         Time.sleep(100)
     }
@@ -318,7 +316,7 @@ object TUI {
     }
 
     fun showCursor(on: Boolean) {
-        //LCD.showCursor(on)
+        LCD.showCursor(on)
     }
 
     fun hasSpace(ch: String,column: Int = LCD.cursorPos.second): Boolean = ch.length + column <= COLS
@@ -354,6 +352,7 @@ object TUI {
             RouletteDisplay.set(n[e],3)
             RouletteDisplay.set(u[r],2)
             RouletteDisplay.set(0x05,1)
+            RouletteDisplay.update()
 
             Time.sleep(10)
             i++

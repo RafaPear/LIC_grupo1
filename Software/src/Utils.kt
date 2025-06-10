@@ -12,6 +12,15 @@ fun readFile(path: String): List<String>{
     return File(path).readLines()
 }
 
+fun capInside(value: Int, min: Int, max: Int): Int {
+    val up = value % (max - min + 1)
+    return if (up < min) {
+        max
+    } else {
+        up
+    }
+}
+
 fun parsePins(pins: String): Int{
     var result = 0
     try {

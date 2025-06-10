@@ -1,3 +1,7 @@
+
+import RouletteDisplay.cursor
+import RouletteDisplay.timeANIM
+import Statistics.toHexInt
 import isel.leic.utils.Time
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -9,7 +13,7 @@ object RouletteDisplay {
     /**
      * Total de display na placa
      */
-    private const val TOTAL_DISPLAYS = 6
+    const val TOTAL_DISPLAYS = 6
 
     /**
      * Representação máxima do hexadecimal 15 ou F
@@ -39,18 +43,15 @@ object RouletteDisplay {
      * Indice de cada display
      */
     val POS = listOf(
-        0b0000_0000,
-        0b0000_0001,
-        0b0000_0010,
-        0b0000_0011,
-        0b0000_0100,
-        0b0000_0101
+        0b000, 0b001,
+        0b010, 0b011,
+        0b100, 0b101
     )
 
     /**
      * Sequencia de código para efetuar um ciclo da animação de girar
      */
-    val ANIM = listOf(
+    val ANIM_A = listOf(
         0x14,
         0x15,
         0x16,
@@ -58,22 +59,66 @@ object RouletteDisplay {
         0x12,
         0x13,
     )
-    const val TIME_FRAME_ANIME = 80
-    val timeANIM = TIME_FRAME_ANIME * ANIM.size
+
+    val ANIM_B = listOf(
+        listOf(0x15, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x11, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x19, 0x19, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x1F, 0x19, 0x19, 0x1F, 0x1F, 0x1F),
+        listOf(0x1F, 0x1F, 0x19, 0x19, 0x1F, 0x1F),
+        listOf(0x1F, 0x1F, 0x1F, 0x19, 0x19, 0x1F),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x19, 0x19),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x12),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x13),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x14),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1C, 0x1C),
+        listOf(0x1F, 0x1F, 0x1F, 0x1C, 0x1C, 0x1F),
+        listOf(0x1F, 0x1F, 0x1C, 0x1C, 0x1F, 0x1F),
+        listOf(0x1F, 0x1C, 0x1C, 0x1F, 0x1F, 0x1F),
+        listOf(0x1C, 0x1C, 0x1F, 0x1F, 0x1F, 0x1F)
+    )
+
+    val ANIM_D_2 = listOf(
+        listOf(0x18, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x18, 0x18, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x18, 0x18, 0x18, 0x1F, 0x1F, 0x1F),
+        listOf(0x1F, 0x18, 0x18, 0x18, 0x1F, 0x1F),
+        listOf(0x1F, 0x1F, 0x18, 0x18, 0x18, 0x1F),
+        listOf(0x1F, 0x1F, 0x1F, 0x18, 0x18, 0x18),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x18, 0x18),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x18),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F)
+    )
+    val ANIM_D_1 = listOf(
+        listOf(0x10, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x10, 0x10, 0x1F, 0x1F, 0x1F, 0x1F),
+        listOf(0x10, 0x10, 0x10, 0x1F, 0x1F, 0x1F),
+        listOf(0x1F, 0x10, 0x10, 0x10, 0x1F, 0x1F),
+        listOf(0x1F, 0x1F, 0x10, 0x10, 0x10, 0x1F),
+        listOf(0x1F, 0x1F, 0x1F, 0x10, 0x10, 0x10),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x10, 0x10),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x10),
+        listOf(0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F)
+    )
+
+    const val TIME_FRAME_ANIME_A = 80L
+    const val TIME_FRAME_ANIME_B = 70L
+    val timeANIM = TIME_FRAME_ANIME_A * ANIM_A.size
     /**
      * Inicia a classe, estabelecendo os valores iniciais.
      */
     fun init() {
         SerialEmitter.init()
         off(false)
+        clrAll()
     }
 
     /**
      * Realiza a animação do sorteio
      * Tem uma doração de [timeANIM], padrão é 480 ms
      */
-    fun animation() {
-        for (i in ANIM) {
+    fun animationA() {
+        for (i in ANIM_A) {
             for (j in 0 until TOTAL_DISPLAYS) {
                 SerialEmitter.send(
                     SerialEmitter.Destination.ROULETTE,
@@ -81,9 +126,76 @@ object RouletteDisplay {
                     TOTAL_SIZE
                 )
             }
-            Time.sleep(TIME_FRAME_ANIME.toLong())
+            Time.sleep(TIME_FRAME_ANIME_A)
             update()
         }
+    }
+
+    fun animationB(){
+        for (anim in ANIM_B) {
+            for (j in 0 until TOTAL_DISPLAYS) {
+                SerialEmitter.send(
+                    SerialEmitter.Destination.ROULETTE,
+                    anim[j].shl(CMD_SIZE) or POS[j],
+                    TOTAL_SIZE
+                )
+            }
+            Time.sleep(TIME_FRAME_ANIME_B)
+            update()
+        }
+    }
+
+    fun animationC() {
+        for (i in 0..1) {
+            Time.sleep(100)
+            for (i in 0 until TOTAL_DISPLAYS) {
+                SerialEmitter.send(
+                    SerialEmitter.Destination.ROULETTE,
+                    0x00.shl(CMD_SIZE) or POS[i],
+                    TOTAL_SIZE
+                )
+            }
+            update()
+            Time.sleep(100)
+            clrAll()
+        }
+    }
+
+    fun animationD(ammount: Int = 1) {
+        if (ammount !in 1..2) return
+        val anim = if (ammount == 1) ANIM_D_1 else ANIM_D_2
+        for (ani in anim) {
+            for (j in 0 until TOTAL_DISPLAYS) {
+                SerialEmitter.send(
+                    SerialEmitter.Destination.ROULETTE,
+                    ani[j].shl(CMD_SIZE) or POS[j],
+                    TOTAL_SIZE
+                )
+            }
+            Time.sleep(TIME_FRAME_ANIME_B/4)
+            update()
+        }
+        clrAll()
+    }
+
+    fun printIntList(list: List<Int>) {
+        clrAll()
+        cursor = 0
+        for (id in list) {
+            setValue(id)
+            cursor = (cursor + 1) % (TOTAL_DISPLAYS)
+        }
+        update()
+    }
+
+    fun printCharList(list: List<Char>, apply : (Char) -> Int = { it.toHexInt() }) {
+        clrAll()
+        cursor = 0
+        for (id in list) {
+            setValue(apply(id))
+            cursor = (cursor + 1) % (TOTAL_DISPLAYS)
+        }
+        update()
     }
 
     /**
@@ -144,6 +256,7 @@ object RouletteDisplay {
             setValue(0x1F)
         }
         update()
+        cursor = 0
     }
 
     /**
@@ -154,7 +267,6 @@ object RouletteDisplay {
     fun set(value: Int, indice: Int = 0) {
         cursor = indice
         setValue(value)
-        update()
     }
 
 }
