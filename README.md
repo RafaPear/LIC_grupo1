@@ -1,65 +1,53 @@
-# 🎰 Jogo da Roleta (Roulette Game)
+# 🎰 Jogo da Roleta
 
-## 📌 Introdução
-Este projeto consiste na implementação de um **Jogo da Roleta**, desenvolvido no contexto da disciplina de **Laboratório de Informática e Computadores**. O jogo permite que os jogadores realizem apostas num teclado, utilizando créditos adquiridos através da introdução de moedas num moedeiro virtual. A arquitetura do sistema combina hardware e software para simular uma máquina de roleta funcional.
+## Sobre o Projeto
+Este repositório apresenta a implementação de um **jogo de roleta** desenvolvido para a unidade curricular de **Laboratório de Informática e Computadores**. O jogador pode realizar apostas através de um teclado, utilizando créditos inseridos num moedeiro virtual. O hardware e o software trabalham em conjunto para simular uma máquina de roleta funcional, com os resultados mostrados num ecrã LCD.
 
-## ⚙️ Arquitetura do Sistema
-O sistema é composto pelos seguintes módulos principais:
+## Componentes Principais
+- **Keyboard Reader** – lê as teclas pressionadas.
+- **Coin Acceptor** – simula a introdução de moedas e converte em créditos.
+- **Serial LCD Controller (SLCDC)** – apresenta informações do jogo no LCD.
+- **Serial Roulette Controller (SRC)** – indica o número sorteado na roleta.
+- **Control (software em Kotlin)** – gere toda a lógica do jogo e a comunicação entre os módulos.
 
-1. **Keyboard Reader** – Lê as teclas pressionadas pelo jogador.
-2. **Coin Acceptor** – Simula a introdução de moedas e a atribuição de créditos.
-3. **Serial LCD Controller (SLCDC)** – Controla a exibição de informações no LCD.
-4. **Serial Roulette Controller (SRC)** – Controla a exibição do número sorteado na roleta.
-5. **Control** – Implementado em software (Kotlin), gerencia toda a lógica do jogo.
+Todos os módulos comunicam entre si através de ligações série.
 
-A comunicação entre os módulos ocorre através de protocolos série, garantindo um funcionamento coordenado do jogo.
+## Como Instalar
+### Pré-requisitos
+- Kotlin instalado.
+- Ambiente de desenvolvimento compatível (IntelliJ IDEA, VS Code com plugin Kotlin, etc.).
+- Hardware de simulação (opcional).
 
-## 🛠️ Instalação
-### Requisitos
-- Kotlin instalado
-- Ambiente de desenvolvimento compatível (IntelliJ IDEA, VS Code com plugin Kotlin, etc.)
-- Hardware de simulação (opcional, dependendo da implementação)
-
-### Como compilar e executar
-#### 🖥️ Windows
+### Compilação e Execução
+#### Windows
 ```sh
-# Clonar o repositório
-$ git clone https://github.com/seu-repositorio/jogo-roleta.git
-$ cd jogo-roleta
-
-# Compilar o projeto
-$ kotlinc src -include-runtime -d jogo-roleta.jar
-
-# Executar o jogo
-$ java -jar jogo-roleta.jar
-```
-
-#### 🐧 Linux
-```sh
-# Clonar o repositório
 git clone https://github.com/seu-repositorio/jogo-roleta.git
 cd jogo-roleta
-
-# Compilar o projeto
 kotlinc src -include-runtime -d jogo-roleta.jar
-
-# Executar o jogo
 java -jar jogo-roleta.jar
 ```
 
-## 🎮 Como Jogar
-1. **Iniciar o jogo** pressionando a tecla `*`, desde que haja créditos disponíveis.
-2. **Realizar apostas** pressionando teclas numéricas (0-9) ou alfabéticas (A-D).
-3. Cada aposta consome 1 crédito do saldo do jogador.
-4. **Finalizar as apostas** pressionando `#`, iniciando assim o sorteio.
-5. **A roleta gira e sorteia um número/letra**, e os ganhos são atualizados no saldo do jogador.
-6. **Modo Manutenção**:
-   - `A`: Consultar contadores de moedas e jogos.
-   - `C`: Consultar a lista de números sorteados.
-   - `D`: Desligar o sistema.
+#### Linux
+```sh
+git clone https://github.com/seu-repositorio/jogo-roleta.git
+cd jogo-roleta
+kotlinc src -include-runtime -d jogo-roleta.jar
+java -jar jogo-roleta.jar
+```
 
-## 📝 Licença
-Este projeto é de uso educacional e não possui uma licença específica. Caso pretenda utilizá-lo ou modificá-lo, cite a fonte original.
+## Jogabilidade
+1. Iniciar o jogo com `*` quando houver créditos disponíveis.
+2. Apostar utilizando as teclas numéricas (0-9) ou alfabéticas (A-D).
+3. Cada aposta consome 1 crédito.
+4. Finalizar as apostas com `#`, dando início ao sorteio.
+5. O número/letra sorteado é exibido e o saldo é atualizado.
+6. Modo de manutenção:
+   - `A`: consultar contadores de moedas e jogos.
+   - `C`: consultar a lista de números sorteados.
+   - `D`: desligar o sistema.
+
+## Licença
+Projeto de uso educacional, sem licença específica. Se o utilizar ou modificar, cite a fonte original.
 
 ---
-🚀 Desenvolvido para o **Laboratório de Informática e Computadores - 2024/2025** 
+Desenvolvido para **Laboratório de Informática e Computadores - 2024/2025**
