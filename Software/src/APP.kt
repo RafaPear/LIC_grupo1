@@ -21,12 +21,14 @@ object APP {
     fun init() {
         TUI.init()
         CoinAcceptor.init()
+        Statistics.init()
         M.init()
     }
 
     fun run(){
         lobby()
         game()
+        updateStats()
     }
 
     fun lobby() {
@@ -173,6 +175,18 @@ object APP {
             { writeCenterLine("Roulette Game!") },
             { writeRightLine(full, 1) }
         )
+    }
+
+    fun updateStats(){
+        if (sudoMode || !doStats) return
+        Statistics.addTotal(1)
+    }
+
+    fun writeAllStats(){
+        Statistics.writeToFile()
+        CoinDeposit.writeToFile()
+        Statistics.closeFileB()
+        CoinDeposit.closeFileA()
     }
 
     /**
