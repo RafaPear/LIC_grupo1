@@ -127,7 +127,7 @@ object LCD {
             0b0100_0010,
 
             0b0000_0010, // Return home
-            0b0000_1100 /// Cursor On / Blinking On
+            0b0000_1100, /// Cursor On / Blinking On
         )
 
         for (time in timeList) {

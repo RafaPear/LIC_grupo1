@@ -112,55 +112,58 @@ object APP {
             1 -> {
                 TUI.writeCenterLine("Really? 1?", 0)
                 Time.sleep(2000)
+                TUI.clear()
             }
             2 -> {
                 TUI.writeCenterLine("Only That?", 0)
                 RouletteDisplay.animationD(1)
                 Time.sleep(2000)
+                TUI.clear()
             }
             3 -> {
                 TUI.writeCenterLine("Ok, 3 is fine", 0)
                 RouletteDisplay.animationD(2)
                 Time.sleep(2000)
+                TUI.clear()
             }
             4 -> {
                 TUI.writeCenterLine("Lets Go!", 0)
                 RouletteDisplay.animationB()
+                TUI.clear()
             }
             5 -> {
                 TUI.writeCenterLine("OMG OMG!!", 0)
                 RouletteDisplay.animationB()
+                TUI.clear()
             }
             BET_LIMIT -> {
                 TUI.writeCenterLine("HERE WE GO!", 0)
                 RouletteDisplay.animationC()
                 RouletteDisplay.animationB()
+                TUI.clear()
             }
             else -> TUI.writeCenterLine("Ok Ok", 0)
         }
     }
 
     fun game() {
-        RouletteDisplay.clrAll()
         BETS += bonusBets()
-        RouletteDisplay.clrAll()
 
-        var timer = (3..10).random()
+        var time_roll = (3..9).random()
         TUI.refresh {
             writeCenterLine("ROLL!",0)
-            writeCenterLine("${timer}s",1)
+            writeCenterLine("${time_roll}s",1)
         }
-        timer--
-        var timing = 0
+        time_roll--
         val sleep = 1
-        while (timer >= 0) {
+        var endTime = Time.getTimeInMillis() + sleep
+        while (true) {
             RouletteDisplay.animationA()
-            timing++
-            //animation dura cerca 500 ms para ter 1 s é 2*sleep + animation time
-            if (timing >= 2*sleep) {
-                TUI.writeCenterLine("${timer}s ",1)
-                timer--
-                timing = 0
+            if (time_roll <= 0) break
+            if (Time.getTimeInMillis() >= endTime) {
+                time_roll--
+                TUI.writeCenterLine("${time_roll}s",1)
+                endTime = Time.getTimeInMillis() + sleep
             }
         }
         val sorted = validBets.random()
@@ -177,6 +180,7 @@ object APP {
         for (i in 0 until 4) {
             RouletteDisplay.animationB()
         }
+        Time.sleep(1)
         RouletteDisplay.clrAll()
     }
 
@@ -222,22 +226,21 @@ object APP {
                 }
             }
             if (time_roll < 0) break
-            Time.sleep(1)
             if (Time.getTimeInMillis() >= endTime) {
                 TUI.writeRightLine("${time_roll}s")
                 time_roll--
-                println(time_roll)
                 endTime = Time.getTimeInMillis() + sleep
             }
         }
         TUI.showCursor(false)
         doBonusEndAnimation(bonus)
+        Time.sleep(1000)
         BET_LIMIT -= BONUSBETS // Reseta o limite de apostas
         return bonus
     }
 
     fun doBonusEndAnimation(list: List<Char>) {
-        TUI.clearLine(0)
+        TUI.clear()
         when (list.size) {
             0 -> {
                 TUI.writeCenterLine("Meh..", 0)
@@ -257,7 +260,7 @@ object APP {
     private fun writeGame(time_roll: Int) {
         line1 = "Bonus bets!"
         TUI.clear()
-        TUI.write(line1)
+        TUI.write(line1,false,0)
 
         TUI.writeRightLine("${time_roll}s",0)
 
