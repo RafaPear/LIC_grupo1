@@ -124,7 +124,6 @@ object LCD {
         val initCode = intArrayOf(
             0b0000_0011,
             0b0010_0011,
-            0b0100_0010,
 
             0b0000_0010, // Return home
             0b0000_1100, /// Cursor On / Blinking On

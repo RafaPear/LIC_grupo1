@@ -61,7 +61,10 @@ object APP {
     }
 
     fun lobby() {
+        RouletteDisplay.clrAll()
         writeLobby()
+        RouletteDisplay.clrAll()
+
         val delay = 5000L
 
         var endTime = Time.getTimeInMillis() + delay
@@ -196,7 +199,7 @@ object APP {
         time_roll--
         while(true){
             if (bonus.size >= BONUSBETS) break
-            if (updateCreds()) TUI.refreshPixels("$CREDS",1,15)
+            if (updateCreds()) TUI.refreshPixels("$CREDS",1,TUI.COLS-"$CREDS".length)
             val key = TUI.capture()
 
             if (key !in invalidBets && canUpdateBets(false)) {

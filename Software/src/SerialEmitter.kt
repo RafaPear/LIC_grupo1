@@ -76,12 +76,12 @@ object SerialEmitter {
      * @param size
      */
     fun send(addr: Destination, data: Int, size: Int) {
+        Time.sleep(1)
         if (addr == Destination.LCD) {
             parseAndSend(data, size, SS_LCD_ID)
         } else if (addr == Destination.ROULETTE) {
             parseAndSend(data, size, SS_RD_ID)
         }
-        Time.sleep(1)
     }
 
     /**
@@ -92,16 +92,17 @@ object SerialEmitter {
      */
     private fun parseAndSend(data: Int, size: Int, addr: Int) {
         rst()
-        HAL.clrBits(addr)
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
         for (i in 0..size){
+            HAL.clrBits(addr)
             if (i == size) {
                 if (p.isBit(0))
                     HAL.setBits(SDX_ID)
                 else
                     HAL.clrBits(SDX_ID)
+
             }
             else {
                 if (data.isBit(i)) {
@@ -111,17 +112,19 @@ object SerialEmitter {
                     HAL.clrBits(SDX_ID)
                 }
             }
+            HAL.setBits(addr)
 
             HAL.setBits(SCLK_ID)
 
             HAL.clrBits(SCLK_ID)
+
+            HAL.clrBits(SDX_ID)
         }
-        HAL.setBits(addr)
         rst()
     }
 
     fun rst(){
-        HAL.setBits(SS_LCD_ID or SS_RD_ID)
-        HAL.clrBits(SDX_ID or SCLK_ID)
+        HAL.setBits(SS_LCD_ID + SS_RD_ID)
+        HAL.clrBits(SDX_ID + SCLK_ID)
     }
 }

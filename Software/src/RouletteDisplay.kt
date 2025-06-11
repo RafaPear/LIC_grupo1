@@ -208,10 +208,9 @@ object RouletteDisplay {
             return
         }
 
-        val command = POS[cursor] or (value shl CMD_SIZE)
         SerialEmitter.send(
             SerialEmitter.Destination.ROULETTE,
-            command,
+            value.shl(CMD_SIZE) or POS[cursor],
             TOTAL_SIZE
         )
     }
