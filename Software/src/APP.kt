@@ -46,7 +46,9 @@ object APP {
     fun init() {
         CoinAcceptor.init()
         Statistics.init()
+        CoinDeposit.init()
         M.init()
+
         RouletteDisplay.init()
         TUI.init()
     }
@@ -92,8 +94,10 @@ object APP {
                 CONFIRM_KEY -> { if (canStartGame()) break; writeLobby() }
                 TUI.NONE -> continue
                 BACK_OR_CLEAR -> {
-                    BETS = BETS.dropLast(1)
-                    CREDS += COST
+                    if (BETS.isNotEmpty()) {
+                        BETS = BETS.dropLast(1)
+                        CREDS += COST
+                    }
                     writeLobby()
                 }
                 else -> {
@@ -150,7 +154,9 @@ object APP {
     }
 
     fun game() {
+        RouletteDisplay.clrAll()
         BETS += bonusBets()
+        RouletteDisplay.clrAll()
 
         var time_roll = (3..9).random()
         TUI.refresh {
@@ -158,18 +164,18 @@ object APP {
             writeCenterLine("${time_roll}s",1)
         }
         time_roll--
-        val sleep = 1
+        val sleep = 1000
         var endTime = Time.getTimeInMillis() + sleep
         while (true) {
-            RouletteDisplay.animationA()
             if (time_roll <= 0) break
             if (Time.getTimeInMillis() >= endTime) {
-                time_roll--
                 TUI.writeCenterLine("${time_roll}s",1)
+                time_roll--
                 endTime = Time.getTimeInMillis() + sleep
             }
+            RouletteDisplay.animationA()
         }
-        val sorted = validBets.random()
+        val sorted = '5'/*validBets.random()*/
         var wonCredits = 0
         BETS.forEach { if(it == sorted) wonCredits += COST*2 }
         CREDS += wonCredits
@@ -183,7 +189,6 @@ object APP {
         for (i in 0 until 4) {
             RouletteDisplay.animationB()
         }
-        Time.sleep(1)
         RouletteDisplay.clrAll()
     }
 
@@ -199,7 +204,7 @@ object APP {
         time_roll--
         while(true){
             if (bonus.size >= BONUSBETS) break
-            if (updateCreds()) TUI.refreshPixels("$CREDS",1,TUI.COLS-"$CREDS".length)
+            if (updateCreds()) TUI.refreshPixels("$$CREDS",1,TUI.COLS-"$$CREDS".length)
             val key = TUI.capture()
 
             if (key !in invalidBets && canUpdateBets(false)) {

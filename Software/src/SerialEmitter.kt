@@ -1,5 +1,4 @@
 
-import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -76,7 +75,6 @@ object SerialEmitter {
      * @param size
      */
     fun send(addr: Destination, data: Int, size: Int) {
-        Time.sleep(1)
         if (addr == Destination.LCD) {
             parseAndSend(data, size, SS_LCD_ID)
         } else if (addr == Destination.ROULETTE) {
@@ -92,11 +90,11 @@ object SerialEmitter {
      */
     private fun parseAndSend(data: Int, size: Int, addr: Int) {
         rst()
+        HAL.clrBits(addr)
 
         val p = if (data.countOneBits() % 2 == 0) 1 else 0
 
         for (i in 0..size){
-            HAL.clrBits(addr)
             if (i == size) {
                 if (p.isBit(0))
                     HAL.setBits(SDX_ID)

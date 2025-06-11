@@ -61,7 +61,6 @@ object TUI {
                 LCD.clear()
                 canWrite = false
             } else if (canWrite && key != NONE) {
-                println("Key: $key")
                 LCD.write(key)
                 key == NONE
                 canWrite = false
@@ -77,7 +76,6 @@ object TUI {
     fun capture(): Char {
         val key = KBD.getKey()
         return if (canWrite && key != NONE) {
-            println("Key: $key")
             canWrite = false
             key
         } else if (key == NONE) {
