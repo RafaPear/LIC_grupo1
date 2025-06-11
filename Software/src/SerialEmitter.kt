@@ -115,6 +115,7 @@ object SerialEmitter {
             HAL.clrBits(SCLK_ID)
         }
         HAL.setBits(addr)
+        rst()
     }
 
     fun rst(){
