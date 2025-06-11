@@ -14,6 +14,8 @@ object SerialEmitter {
         LCD, ROULETTE
     }
 
+    private val SIMUL = isSimul()
+
     /**
      * Define o índice do sinal SS do LCD
      */
@@ -110,7 +112,8 @@ object SerialEmitter {
                     HAL.clrBits(SDX_ID)
                 }
             }
-            HAL.setBits(addr)
+            if (!SIMUL)
+                HAL.setBits(addr)
 
             HAL.setBits(SCLK_ID)
 
@@ -118,6 +121,8 @@ object SerialEmitter {
 
             HAL.clrBits(SDX_ID)
         }
+        if (SIMUL)
+            HAL.setBits(addr)
         rst()
     }
 

@@ -29,6 +29,8 @@ object LCD {
      */
     private const val SERIAL_INTERFACE = true
 
+    private val SIMUL = isSimul()
+
     /**
      * Define a posição, no [isel.leic.UsbPort], do bit que E
      */
@@ -121,13 +123,32 @@ object LCD {
         /**
          * Sequencia de comandos para inicializar a tela LCD
          */
-        val initCode = intArrayOf(
-            0b0000_0011,
-            0b0010_0011,
+        val initCode =
+            if(!SIMUL)
+                intArrayOf(
+                    0b0000_0011,
+                    0b0010_0011,
 
-            0b0000_0010, // Return home
-            0b0000_1100, /// Cursor On / Blinking On
-        )
+                    0b0000_0010, // Return home
+                    0b0000_1100, /// Cursor On / Blinking On
+                )
+            else
+                intArrayOf(
+                    0b0000_0011,
+                    0b0000_0010,
+                    0b0000_0010,
+                    0b0000_1000,
+                    0b0000_0000,
+                    0b0000_1000,
+                    0b0000_0000,
+                    0b0000_0001,
+                    0b0000_0000,
+                    0b0000_0110,
+
+                    0b0000_0001, // Clear display
+                    0b0000_0010, // Return home
+                    0b0000_1100 /// Cursor On / Blinking On
+                )
 
         for (time in timeList) {
             Time.sleep(time)

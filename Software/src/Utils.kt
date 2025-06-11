@@ -12,6 +12,21 @@ fun readFile(path: String): List<String>{
     return File(path).readLines()
 }
 
+fun isSimul(): Boolean {
+    try {
+        val file = File("USB_PORT.properties")
+        for (p in file.readLines()){
+            if (p.contains("simulation") && !p.contains('#')) {
+                return p.split("=")[1].trim().toBoolean()
+            }
+        }
+    }
+    catch (e: Exception){
+        return false
+    }
+    return false
+}
+
 fun capInside(value: Int, min: Int, max: Int): Int {
     val up = value % (max - min + 1)
     return if (up < min) {
