@@ -34,7 +34,7 @@ begin
         case state is
             when "00" =>
                 wrd <= '0';
-                Dout <= "00000000";
+                Dout <= "00000001";
                 done <= '0';
                 if Dval = '1' then
                     next_state <= "01";
