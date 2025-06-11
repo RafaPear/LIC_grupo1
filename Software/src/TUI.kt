@@ -354,7 +354,7 @@ object TUI {
             RouletteDisplay.set(0x05,1)
             RouletteDisplay.update()
 
-            Time.sleep(10)
+            Time.sleep(100)
             i++
         }
     }

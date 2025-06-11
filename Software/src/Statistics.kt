@@ -34,7 +34,7 @@ object Statistics {
     fun getSortedList(): List<String> {
         val list = mutableListOf<String>()
         for (i in SORTED) {
-            list += "${i.id.toCharId()};${i.total};${i.creds}\n"
+            list += "${i.id.toCharId()};${i.total};${i.creds}"
         }
         return list
     }

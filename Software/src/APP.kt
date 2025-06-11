@@ -47,8 +47,8 @@ object APP {
         CoinAcceptor.init()
         Statistics.init()
         M.init()
-        TUI.init()
         RouletteDisplay.init()
+        TUI.init()
     }
 
     fun run(){
@@ -70,7 +70,7 @@ object APP {
             if (Time.getTimeInMillis() >= endTime) {
                 RouletteDisplay.animationC()
                 endTime = Time.getTimeInMillis() + delay
-                writeLobby()
+                RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
             }
 
             if (M.inM && !sudoMode){
@@ -183,13 +183,13 @@ object APP {
     private fun bonusBets(): List<Char>{
         BET_LIMIT += BONUSBETS // Limite de apostas para o bonus
         var time_roll = TIMEBONUS
-        writeGame(time_roll--)
+        writeGame(time_roll)
         val bonus = mutableListOf<Char>()
         val sleep = 1000
         TUI.showCursor(true)
 
         var endTime = Time.getTimeInMillis() + sleep
-
+        time_roll--
         while(true){
             if (bonus.size >= BONUSBETS) break
             if (updateCreds()) TUI.refreshPixels("$CREDS",1,15)
@@ -222,10 +222,11 @@ object APP {
                 }
             }
             if (time_roll < 0) break
-
+            Time.sleep(1)
             if (Time.getTimeInMillis() >= endTime) {
                 TUI.writeRightLine("${time_roll}s")
                 time_roll--
+                println(time_roll)
                 endTime = Time.getTimeInMillis() + sleep
             }
         }
