@@ -1,4 +1,5 @@
 
+import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -80,6 +81,7 @@ object SerialEmitter {
         } else if (addr == Destination.ROULETTE) {
             parseAndSend(data, size, SS_RD_ID)
         }
+        Time.sleep(1)
     }
 
     /**
@@ -119,8 +121,7 @@ object SerialEmitter {
     }
 
     fun rst(){
-        // Ensure clock and data lines are low and both devices are deselected
-        HAL.clrBits(SDX_ID or SCLK_ID)
         HAL.setBits(SS_LCD_ID or SS_RD_ID)
+        HAL.clrBits(SDX_ID or SCLK_ID)
     }
 }
