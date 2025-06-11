@@ -1,7 +1,6 @@
 
 import RouletteDisplay.cursor
 import RouletteDisplay.timeANIM
-import Statistics.toHexInt
 import isel.leic.utils.Time
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -255,7 +254,6 @@ object RouletteDisplay {
             setValue(0x1F)
         }
         update()
-        cursor = 0
     }
 
     /**
@@ -268,4 +266,21 @@ object RouletteDisplay {
         setValue(value)
     }
 
+    fun setChar(ch: Char) = setValue(ch.toHexInt())
+
+    private fun setAllAny(value: Int) {
+        for (i in POS) {
+            cursor = i
+            setValue(value)
+        }
+        update()
+    }
+
+    fun setAll(value: Int) {
+        setAllAny(value)
+    }
+
+    fun setAll(value: Char) {
+        setAllAny(value.toHexInt())
+    }
 }

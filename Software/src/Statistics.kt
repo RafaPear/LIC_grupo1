@@ -6,7 +6,7 @@ object Statistics {
 
     private data class Entry(val id: Int, var total: Int = 0, var creds : Int = 0)
 
-    private const val MAX_ID = 16
+    const val MAX_ID = 16
 
     private var SORTED = Array<Entry>(MAX_ID) { Entry(it) }
 
@@ -27,22 +27,6 @@ object Statistics {
         catch (e: Exception){
             Logger.getLogger("Statistics").log(Level.WARNING, "Error while reading from file")
             SORTED = Array(MAX_ID) { Entry(it) }
-        }
-    }
-
-    fun Char.toHexInt(): Int {
-        return when (this) {
-            in '0'..'9' -> this.digitToInt()
-            in 'A'..'F' -> this.code - 'A'.code + 10
-            else -> error("Invalid character for hex conversion")
-        }
-    }
-
-    fun Int.toCharId(): Char{
-        return when (this) {
-            in 0..9 -> this.digitToChar()
-            in 10..MAX_ID -> ('A' + (this - 10))
-            else -> error("Invalid integer for char conversion")
         }
     }
 

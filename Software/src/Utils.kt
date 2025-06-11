@@ -1,4 +1,5 @@
 
+import Statistics.MAX_ID
 import java.io.File
 
 
@@ -71,24 +72,18 @@ private fun String.even(): String =
 
 private fun Int.isEven() = this and 1 == 0
 
-/** Constrói a linha de navegação (setas ou teclas) já centrada. */
-fun navLine(
-    text: String,
-    prefix: String,           // " <" ou "(1)"
-    suffix: String,           // "> " ou "(2)"
-    isFirst: Boolean,
-    isLast: Boolean,
-    width: Int = LCD.COLS
-): String {
-    val txt = text.even()
-    val gap = (width - txt.length) / 2
+fun Char.toHexInt(): Int {
+    return when (this) {
+        in '0'..'9' -> this.digitToInt()
+        in 'A'..'F' -> this.code - 'A'.code + 10
+        else -> error("Invalid character for hex conversion")
+    }
+}
 
-    val left  = prefix.padEnd(gap, ' ')
-    val right = suffix.padStart(gap, ' ')
-
-    return when {
-        isFirst -> (txt + right).padStart(width, ' ')
-        isLast  -> (left + txt).padEnd(width, ' ')
-        else    -> left + txt + right
+fun Int.toCharId(): Char{
+    return when (this) {
+        in 0..9 -> this.digitToChar()
+        in 10..MAX_ID -> ('A' + (this - 10))
+        else -> error("Invalid integer for char conversion")
     }
 }

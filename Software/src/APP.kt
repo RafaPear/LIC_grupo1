@@ -1,5 +1,4 @@
 
-import Statistics.toHexInt
 import TUI.capture
 import TUI.clearWrite
 import TUI.createCustomChar
@@ -302,6 +301,7 @@ object APP {
             val key = capture()
             when (key) {
                 CONFIRM_KEY -> { if (canStartGame()) break; writeBets() }
+                BACK_OR_CLEAR -> continue
                 TUI.NONE -> continue
                 else -> {
                     if(updateBets(key)) writeBet(key) else writeBets(true)
@@ -407,8 +407,12 @@ object APP {
         SORTED = sorted
         WON = wonCredits
         BETS.replaceAll { k, v -> 0 }
-        for (i in 0 until 4) {
-            RouletteDisplay.animationB()
+        endTime = Time.getTimeInMillis() + sleep*3
+        while(Time.getTimeInMillis() < endTime) {
+            RouletteDisplay.setAll(sorted)
+            Time.sleep(100)
+            RouletteDisplay.clrAll()
+            Time.sleep(100)
         }
         RouletteDisplay.clrAll()
     }
@@ -506,7 +510,7 @@ object APP {
                 CONFIRM_KEY ->  { runMockGame() ; writeM() }
                 KEY_COIN_M ->   { coinPage()    ; writeM() }
                 SORTED_NUM_M -> { statsPage()   ; writeM() }
-                GAME_OFF_M ->   { shutdown() }
+                GAME_OFF_M ->   { shutdown()    ; writeM() }
             }
         }
         TUI.clear()
@@ -522,13 +526,15 @@ object APP {
     }
 
     private fun shutdown() {
-        TUI.clear()
-        TUI.writeCenterLine("Shutting down...", 0)
-        Time.sleep(1000)
-        writeAllStats()
-        resetAll()
-        TUI.clear()
-        exitProcess(0)
+        if (TUI.confirmMenu("Are you sure?")) {
+            TUI.clear()
+            TUI.writeCenterLine("Shutting down...", 0)
+            Time.sleep(1000)
+            writeAllStats()
+            resetAll()
+            TUI.clear()
+            exitProcess(0)
+        }
     }
 
     private fun statsPage(){
