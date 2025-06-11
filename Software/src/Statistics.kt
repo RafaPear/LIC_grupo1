@@ -1,3 +1,6 @@
+import java.util.logging.Level
+import java.util.logging.Logger
+
 object Statistics {
     private var TOTAL_GAMES = 0
 
@@ -9,6 +12,22 @@ object Statistics {
 
     fun init(){
         FileAccess.init()
+        try {
+            TOTAL_GAMES = FileAccess.fileALines[0].toInt()
+            for (i in FileAccess.fileBLines) {
+                val values = i.split(';')
+                SORTED[values[0].toInt()] =
+                    Entry(
+                        values[0].toInt(),
+                        values[1].toInt(),
+                        values[2].toInt()
+                    )
+            }
+        }
+        catch (e: Exception){
+            Logger.getLogger("Statistics").log(Level.WARNING, "Error while reading from file")
+            SORTED = Array(MAX_ID) { Entry(it) }
+        }
     }
 
     fun Char.toHexInt(): Int {
@@ -63,7 +82,7 @@ object Statistics {
     }
 
     fun writeToFile() {
-        FileAccess.writeToFileA("Total Games: ${TOTAL_GAMES}\n")
+        FileAccess.writeToFileA("$TOTAL_GAMES")
         for (entry in SORTED) {
             FileAccess.writeToFileB("${entry.id};${entry.total};${entry.creds}")
         }

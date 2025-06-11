@@ -1,32 +1,44 @@
 
 import java.io.File
-import java.io.PrintWriter
 
 object FileAccess {
     const val FILE_A_NAME = "info.txt"
     const val FILE_B_NAME = "statistics.txt"
 
-    lateinit var fileA: PrintWriter
-    lateinit var fileB: PrintWriter
+    lateinit var fileA : File
+    lateinit var fileB : File
+
+    lateinit var fileALines : List<String>
+    lateinit var fileBLines : List<String>
+
+    var fileAbuffer = ""
+    var fileBbuffer = ""
 
     fun init(){
-        fileA = File(FILE_A_NAME).printWriter()
-        fileB = File(FILE_B_NAME).printWriter()
+        fileA = File(FILE_A_NAME)
+        fileB = File(FILE_B_NAME)
+
+        fileALines = fileA.readLines()
+        fileBLines = fileB.readLines()
     }
 
     fun writeToFileA(str: String) {
-        fileA.println(str)
+        fileAbuffer += (str + "\n")
     }
 
     fun writeToFileB(str: String) {
-        fileB.println(str)
+        fileBbuffer += (str + "\n")
     }
 
     fun closeFileA(){
-        fileA.close()
+        fileA.printWriter().use { out ->
+            out.print(fileAbuffer)
+        }
     }
 
     fun closeFileB(){
-        fileB.close()
+        fileB.printWriter().use { out ->
+            out.print(fileBbuffer)
+        }
     }
 }

@@ -2,16 +2,24 @@
 import Statistics.toHexInt
 import TUI.capture
 import TUI.clearWrite
+import TUI.createCustomChar
+import TUI.writeCenterLine
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
 object APP {
-    private var BETS = listOf<Char>()
+    private val invalidBets = charArrayOf('*','#',TUI.NONE)
+    private val validBets = charArrayOf(
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D'
+    )
+
+    private var BETS = mutableMapOf<Char, Int>()
+
     private var CREDS: Int = 0
     private var SORTED : Char = TUI.NONE
     private var WON: Int = 0
 
-    private var BET_LIMIT = 6 // Limite de apostas por jogo
+    private var BET_LIMIT = 9 // Limite de apostas por jogo
 
     private var lastCoin: Int = 0 // Guarda o último valor do coin acceptor
 
@@ -31,10 +39,6 @@ object APP {
     private const val GAME_OFF_M = 'D'
     private const val BACK_OR_CLEAR = '#'
 
-    private val invalidBets = charArrayOf('*','#',TUI.NONE)
-    private val validBets = charArrayOf(
-        '1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '0', 'D'
-    )
     private var COST = 1 // Custo de cada aposta
 
     private const val BONUSBETS = 3
@@ -42,6 +46,131 @@ object APP {
 
     private var sudoMode = false
     private var shouldRun = true
+
+    val pila = arrayOf(
+        intArrayOf(0, 1, 0, 1, 0 ),
+        intArrayOf(1, 1, 1, 1, 1 ),
+        intArrayOf(0, 1, 1, 1, 0 ),
+        intArrayOf(0, 1, 1, 1, 0 ),
+        intArrayOf(0, 1, 1, 1, 0 ),
+        intArrayOf(0, 1, 1, 1, 0 ),
+        intArrayOf(0, 0, 1, 0, 0 ),
+        intArrayOf(0, 0, 0, 0, 0 ),
+    )
+
+    // ⬆️  Seta para cima
+    val arrowUp = arrayOf(
+        intArrayOf(0,0,0,0,0),
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,1,1,1,0), // 0x0E
+        intArrayOf(1,0,1,0,1), // 0x15
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,0,0,0) // 0x04
+    )
+
+    // ⬇️  Seta para baixo
+    val arrowDown = arrayOf(
+        intArrayOf(0,0,0,0,0), // 0x04
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(1,0,1,0,1), // 0x15
+        intArrayOf(0,1,1,1,0), // 0x0E
+        intArrayOf(0,0,1,0,0), // 0x04
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+
+    // 💰 Moeda “2 créditos” – 2 quadradinhos no interior
+    val coin2 = arrayOf(
+        intArrayOf(0,0,0,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0), // 0x11
+        intArrayOf(1,1,1,1,1), // 0x1B
+        intArrayOf(1,0,0,1,1), // 0x1F
+        intArrayOf(1,0,0,0,1), // 0x19
+        intArrayOf(1,1,0,0,1), // 0x11
+        intArrayOf(1,1,1,1,1), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+
+    val coin4BIG_A = arrayOf(
+        intArrayOf(0,1,1,1,0), // 0x0E
+        intArrayOf(1,0,0,0,1), // 0x11
+        intArrayOf(1,1,0,1,1), // 0x1B
+        intArrayOf(1,1,1,1,1), // 0x1F
+        intArrayOf(1,1,0,0,1), // 0x19
+        intArrayOf(1,0,0,0,1), // 0x11
+        intArrayOf(0,1,1,1,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+
+    val coin4BIG_B = arrayOf(
+        intArrayOf(0,1,1,0,0), // 0x0E
+        intArrayOf(1,0,0,1,0), // 0x11
+        intArrayOf(1,0,1,0,1), // 0x1B
+        intArrayOf(1,0,1,1,1), // 0x1F
+        intArrayOf(1,0,0,1,1), // 0x19
+        intArrayOf(0,1,0,0,1), // 0x11
+        intArrayOf(0,0,1,1,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+
+    val coin4BIG_C = arrayOf(
+        intArrayOf(0,0,1,0,0), // 0x0E
+        intArrayOf(0,0,1,0,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x1B
+        intArrayOf(0,0,1,0,0), // 0x1F
+        intArrayOf(0,0,1,0,0), // 0x19
+        intArrayOf(0,0,1,0,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+
+    val coin4BIG_D = arrayOf(
+        intArrayOf(0,1,1,0,0).reversed().toIntArray(), // 0x0E
+        intArrayOf(1,0,0,1,0).reversed().toIntArray(), // 0x11
+        intArrayOf(1,0,1,0,1).reversed().toIntArray(), // 0x1B
+        intArrayOf(1,0,1,1,1).reversed().toIntArray(), // 0x1F
+        intArrayOf(1,0,0,1,1).reversed().toIntArray(), // 0x19
+        intArrayOf(0,1,0,0,1).reversed().toIntArray(), // 0x11
+        intArrayOf(0,0,1,1,0).reversed().toIntArray(), // 0x0E
+        intArrayOf(0,0,0,0,0).reversed().toIntArray()  // 0x00
+    )
+
+    // 💰 Moeda “4 créditos” – 4 quadradinhos no interior
+    val coin4_A = arrayOf(
+        intArrayOf(0,0,0,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0), // 0x11
+        intArrayOf(0,1,1,1,0), // 0x1B
+        intArrayOf(1,0,1,0,1), // 0x1F
+        intArrayOf(1,1,0,1,1), // 0x19
+        intArrayOf(1,0,1,0,1), // 0x11
+        intArrayOf(0,1,1,1,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+    // 💰 Moeda “4 créditos” – 4 quadradinhos no interior
+    val coin4_B = arrayOf(
+        intArrayOf(0,0,0,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x1B
+        intArrayOf(0,1,1,1,0), // 0x1F
+        intArrayOf(0,1,0,1,0), // 0x19
+        intArrayOf(0,1,1,1,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
+    // 💰 Moeda “4 créditos” – 4 quadradinhos no interior
+    val coin4_C = arrayOf(
+        intArrayOf(0,0,0,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x1B
+        intArrayOf(0,0,1,0,0), // 0x1F
+        intArrayOf(0,0,1,0,0), // 0x19
+        intArrayOf(0,0,1,0,0), // 0x11
+        intArrayOf(0,0,1,0,0), // 0x0E
+        intArrayOf(0,0,0,0,0)  // 0x00
+    )
 
     fun init() {
         CoinAcceptor.init()
@@ -51,6 +180,13 @@ object APP {
 
         RouletteDisplay.init()
         TUI.init()
+
+        createCustomChar(0, arrowUp)
+        createCustomChar(1, arrowDown)
+        createCustomChar(2, coin2)
+        createCustomChar(3, coin4_A)
+        createCustomChar(4, coin4_B)
+        createCustomChar(5, coin4_C)
     }
 
     fun run(){
@@ -62,9 +198,35 @@ object APP {
         writeAllStats()
     }
 
+    fun animTest(){
+        //val list = listOf(3, 4, 5, 4, 3)
+
+        createCustomChar(3, coin4BIG_A)
+        createCustomChar(4, coin4BIG_B)
+        createCustomChar(5, coin4BIG_C)
+        createCustomChar(6, coin4BIG_D)
+        val list = listOf(3, 4, 5, 6, 3)
+        while (true) {
+            for (i in list) {
+                Time.sleep(100)
+                TUI.refreshPixel(i.toChar(), 0, 0)
+            }
+        }
+    }
+
     fun lobby() {
+        fun writeLobbyCreds(){
+            val creds = " $$CREDS"
+            TUI.refreshPixels(creds, 1, TUI.COLS-creds.length)
+        }
+
+        fun writeLobby(doCreds : Boolean = false) {
+            writeCenterLine("Roulette Game!")
+            if (doCreds) writeLobbyCreds()
+        }
+        TUI.clear()
         RouletteDisplay.clrAll()
-        writeLobby()
+        writeLobby(true)
         RouletteDisplay.clrAll()
 
         val delay = 5000L
@@ -75,46 +237,101 @@ object APP {
             if (Time.getTimeInMillis() >= endTime) {
                 RouletteDisplay.animationC()
                 endTime = Time.getTimeInMillis() + delay
-                RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
             }
 
             if (M.inM && !sudoMode){
                 m()
-                writeLobby()
+                writeLobby(true)
             }
 
             if (updateCreds()) {
-                writeLobby()
                 RouletteDisplay.animationD(if (lastCoin == 0) 1 else 2)
-                RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
+                writeLobbyCreds()
+            }
+
+            if (capture() == CONFIRM_KEY) break
+
+        }
+        TUI.clear()
+        doBets()
+    }
+
+    private fun doBets(){
+        RouletteDisplay.clrAll()
+        var tempLine2 = validBets.joinToString("")
+
+        fun writeBets(writeBottom: Boolean = false){
+            TUI.clear()
+            for (bet in BETS) {
+                TUI.refreshPixel(
+                    if(bet.value != 0) bet.value.digitToChar() else ' ',
+                    0, bet.key.toHexInt() + 1
+                )
+            }
+            if (writeBottom) writeCenterLine(tempLine2, 1)
+            RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
+        }
+
+        fun writeBet(key: Char){
+            val bet = BETS[key]
+            TUI.refreshPixel(
+                if(bet != 0 && bet != null) bet.digitToChar() else ' ',
+                0, key.toHexInt()  + 1
+            )
+            RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
+        }
+
+        RouletteDisplay.clrAll()
+        writeBets(true)
+
+        val delay = 5000L
+
+        var endTime = Time.getTimeInMillis() + delay
+        while (true){
+
+            if (M.inM && !sudoMode){
+                m()
+                writeBets(true)
+            }
+
+            if (updateCreds()) {
+                RouletteDisplay.animationD(if (lastCoin == 0) 1 else 2)
+                RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
             }
 
             val key = capture()
             when (key) {
-                CONFIRM_KEY -> { if (canStartGame()) break; writeLobby() }
+                CONFIRM_KEY -> { if (canStartGame()) break; writeBets() }
                 TUI.NONE -> continue
-                BACK_OR_CLEAR -> {
-                    if (BETS.isNotEmpty()) {
-                        BETS = BETS.dropLast(1)
-                        CREDS += COST
-                    }
-                    writeLobby()
-                }
                 else -> {
-                    if (sudoMode && canUpdateBets()) {
-                        BETS += key
-                    }
-                    else if (canUpdateBets()) {
-                        BETS += key; CREDS -= COST
-                    }; writeLobby()
+                    if(updateBets(key)) writeBet(key) else writeBets(true)
                 }
             }
         }
         TUI.clear()
-        doLobbyEndAnimation(BETS)
+        doLobbyEndAnimation()
     }
 
-    fun doLobbyEndAnimation(list: List<Char>) {
+    fun updateBets(key: Char): Boolean {
+        if (sudoMode && canUpdateBets(key = key)) {
+            BETS.computeIfPresent(key){k, v ->
+                v + 1
+            }
+            BETS.computeIfAbsent(key){k -> 1 }
+            return true
+        }
+        else if (canUpdateBets(key = key)) {
+            BETS.computeIfPresent(key){k, v ->
+                v + 1
+            }
+            BETS.computeIfAbsent(key){k -> 1 }
+            CREDS -= COST
+            return true
+        }
+        return false
+    }
+
+    fun doLobbyEndAnimation() {
         when (BETS.size) {
             1 -> {
                 TUI.writeCenterLine("Really? 1?", 0)
@@ -155,7 +372,11 @@ object APP {
 
     fun game() {
         RouletteDisplay.clrAll()
-        BETS += bonusBets()
+        for (i in bonusBets()){
+            BETS.computeIfPresent(i) { k, v ->
+                v + 1
+            }
+        }
         RouletteDisplay.clrAll()
 
         var time_roll = (3..9).random()
@@ -175,9 +396,9 @@ object APP {
             }
             RouletteDisplay.animationA()
         }
-        val sorted = '5'/*validBets.random()*/
+        val sorted = validBets.random()
         var wonCredits = 0
-        BETS.forEach { if(it == sorted) wonCredits += COST*2 }
+        BETS.forEach { if(it.key == sorted) wonCredits += COST*2 }
         CREDS += wonCredits
         TUI.refresh {
             TUI.writeCenterLine("Sorted: $sorted",0)
@@ -185,7 +406,7 @@ object APP {
         }
         SORTED = sorted
         WON = wonCredits
-        BETS = emptyList()
+        BETS.replaceAll { k, v -> 0 }
         for (i in 0 until 4) {
             RouletteDisplay.animationB()
         }
@@ -207,7 +428,7 @@ object APP {
             if (updateCreds()) TUI.refreshPixels("$$CREDS",1,TUI.COLS-"$$CREDS".length)
             val key = TUI.capture()
 
-            if (key !in invalidBets && canUpdateBets(false)) {
+            if (key !in invalidBets && canUpdateBets(false, key)) {
                 if (bonus.isNotEmpty()) {
                     TUI.write(',')
                     TUI.write(key, false, 1)
@@ -288,6 +509,7 @@ object APP {
                 GAME_OFF_M ->   { shutdown() }
             }
         }
+        TUI.clear()
     }
 
     private fun runMockGame() {
@@ -436,7 +658,7 @@ object APP {
     }
 
     private fun resetAll(){
-        BETS = emptyList()
+        BETS.replaceAll { k, v -> 0 }
         CREDS = 0
         CoinDeposit.resetTotal(0)
         CoinDeposit.resetTotal(1)
@@ -456,11 +678,12 @@ object APP {
         return true
     }
 
-    private fun canUpdateBets(print : Boolean = true): Boolean {
-        if (BETS.size >= BET_LIMIT) {
+    private fun canUpdateBets(print : Boolean = true, key: Char): Boolean {
+        if ((BETS[key] ?: 0) >= BET_LIMIT) {
             if (print) {
                 clearWrite("Bet Limit reached")
                 RouletteDisplay.animationB()
+                TUI.clear()
             }
             return false
         }
@@ -471,6 +694,7 @@ object APP {
             if (print) {
                 clearWrite("Not enough Credits")
                 RouletteDisplay.animationB()
+                TUI.clear()
             }
             return false
         }
@@ -490,17 +714,6 @@ object APP {
             return true
         }
         return false
-    }
-
-    private fun writeLobby() {
-        val bets = BETS.joinToString(",").trim()
-        val creds = " $$CREDS"
-        val full = bets + creds
-        TUI.refresh(
-            { writeCenterLine("Roulette Game!") },
-            { writeRightLine(full, 1) }
-        )
-        //RouletteDisplay.printCharList(BETS.reversed()){ it.toHexInt() }
     }
 
     private fun updateStats(){
@@ -524,12 +737,12 @@ object APP {
         var lines: List<String>,
         val upKey : Char = 'A',
         val downKey : Char = 'B',
-        val upSym : String = """/\""",
-        val downSym : String = """\/""",
+        val upSym : Int = 0,
+        val downSym : Int = 1,
     ) {
 
-        val line1MAX = TUI.COLS-(upSym.length+2)
-        val line2MAX = TUI.COLS-(downSym.length+2)
+        val line1MAX = TUI.COLS-3
+        val line2MAX = TUI.COLS-3
 
         private fun write(idx: Int, idx2: Int){
             val line1 = lines[idx].padEnd(line1MAX, ' ')
@@ -539,8 +752,8 @@ object APP {
             if (line2.length <= line2MAX) TUI.refreshPixels (line2, 1, 0)
             else error("Very Big, line length should be less than $line2MAX")
 
-            TUI.refreshPixels(upSym+upKey, 0, line1MAX)
-            TUI.refreshPixels(downSym+downKey, 1, line2MAX)
+            TUI.refreshPixels(upSym.toChar()+upKey.toString(), 0, line1MAX)
+            TUI.refreshPixels(downSym.toChar()+downKey.toString(), 1, line2MAX)
         }
 
         fun run(func: (key: Char, reset: () -> Unit)->Boolean) {

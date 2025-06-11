@@ -10,6 +10,8 @@ object TUI {
     const val COLS = LCD.COLS
     const val LINES = LCD.LINES
 
+    private var CGRAMaddr = 0
+
     fun init() {
         LCD.init()
         KBD.init()
@@ -328,6 +330,33 @@ object TUI {
             LCD.write(clean)
         }
         LCD.cursor(cursor.first,cursor.second)
+    }
+
+    fun createCustomChar(index: Int, bitmap: Array<IntArray>) {
+        require(index in 0..7) { "Índice CGRAM tem de ser 0-7" }
+        require(bitmap.size == 8 && bitmap.all { it.size == 5 }) { "Bitmap tem de ser 5×8" }
+
+        // 1️⃣ Apontar a CGRAM
+        val addr = 0x40 or (index shl 3)            // cada char ocupa 8 bytes
+        LCD.sendCMD(addr)                           // RS = 0 → comando
+
+        // 2️⃣ Enviar 8 linhas (RS = 1 → dados)
+        for (row in bitmap) {
+            var byte = 0
+            for (col in 0 until 5) {
+                byte = byte or ((row[col] and 1) shl col)
+            }
+            LCD.write(byte, wrap = false)           // envia byte à CGRAM
+        }
+
+        // 3️⃣ Voltar à DDRAM (por ex. cursor home)
+        LCD.cursor(0, 0)
+    }
+
+    private fun setCGRAMaddr(add : Int){
+        CGRAMaddr += add
+        val base = 0b10 + CGRAMaddr.shl(2)
+        LCD.sendCMD(base)
     }
 
     fun animtest() {

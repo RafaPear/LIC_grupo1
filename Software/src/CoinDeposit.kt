@@ -1,8 +1,19 @@
+import java.util.logging.Level
+import java.util.logging.Logger
+
 object CoinDeposit {
     private var coins = arrayOf(0, 0) // COIN0, COIN1
 
     fun init(){
         FileAccess.init()
+        try {
+            coins[0] = FileAccess.fileALines[1].toInt()
+            coins[1] = FileAccess.fileALines[2].toInt()
+        }
+        catch (e:Exception){
+            Logger.getLogger("CoinDeposit").log(Level.WARNING, "Error while reading file")
+            coins = arrayOf(0, 0)
+        }
     }
 
     fun updateTotal(coin: Int,value: Int) {
@@ -31,7 +42,7 @@ object CoinDeposit {
 
     fun writeToFile() {
         FileAccess.writeToFileA(
-            "Total of Coins: ${coins[0] + coins[1]}\n\nTotal of 2 Coins: ${coins[0]}\nTotal of 4 Coins: ${coins[1]}"
+            "${coins[0]}\n${coins[1]}"
         )
     }
 
