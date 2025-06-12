@@ -7,7 +7,8 @@ object M {
     private var idx_M = 7
 
     val password = "1234"
-    var inM = false
+
+    val inM: Boolean
         get() = HAL.isBit(idx_M)
 
     fun init(){
