@@ -41,8 +41,11 @@ begin
                 OBfree <= '0';
                 Wreg <= '1';
                 Dval <= '0';
-
-                next_state <= "10"; 
+                if Load = '0' then
+                    next_state <= "10";
+                else
+                    next_state <= "01";
+                end if;
             when "10" =>
                 OBfree <= '0';
                 Wreg <= '0';

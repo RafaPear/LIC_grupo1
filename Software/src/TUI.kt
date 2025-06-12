@@ -32,7 +32,7 @@ object TUI {
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
     fun write(ch: Char,wrap: Boolean = true, line: Int = LCD.cursorPos.first,
-                column: Int = LCD.cursorPos.second
+              column: Int = LCD.cursorPos.second
     ){
         if (line !in 0..1 || column > LCD.COLS) error("invalid line or column")
         LCD.cursor(line,column)
@@ -45,7 +45,7 @@ object TUI {
      * @param wrap quando 'false' não utiliza o salto automático de linha
      */
     fun write(line1: String, wrap: Boolean = true, line: Int = LCD.cursorPos.first,
-                column: Int = LCD.cursorPos.second) =
+              column: Int = LCD.cursorPos.second) =
         if (line1.length > LCD.COLS * 2)
             error("String very Big")
         else {

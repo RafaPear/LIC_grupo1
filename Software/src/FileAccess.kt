@@ -1,5 +1,7 @@
 
 import java.io.File
+import java.util.logging.Level
+import java.util.logging.Logger
 
 object FileAccess {
     const val FILE_A_NAME = "info.txt"
@@ -14,9 +16,19 @@ object FileAccess {
     var fileAbuffer = ""
     var fileBbuffer = ""
 
-    fun init(){
+    fun init() {
         fileA = File(FILE_A_NAME)
         fileB = File(FILE_B_NAME)
+
+        if (!fileA.exists()) {
+            Logger.getLogger("File").log(Level.WARNING, "File not found: $FILE_A_NAME, creating it")
+            fileA.createNewFile()
+        }
+
+        if (!fileB.exists()) {
+            Logger.getLogger("File").log(Level.WARNING, "File not found: $FILE_B_NAME, creating it")
+            fileB.createNewFile()
+        }
 
         fileALines = fileA.readLines()
         fileBLines = fileB.readLines()

@@ -6,22 +6,22 @@ import isel.leic.UsbPort
 object HAL {
 
     /**
-    * Guarda o valor do array de LEDs
-    */
+     * Guarda o valor do array de LEDs
+     */
     var light = 0b0000_0000
 
     var configPath = "rouletteGame.simul"
 
     /**
-    * Inicia o objeto, escrevendo no [UsbPort] os bits do [light]
-    */
+     * Inicia o objeto, escrevendo no [UsbPort] os bits do [light]
+     */
     fun init(){
         writeBits(0b1111_1111,light)
     }
 
     /**
      * Retorna 'true' se o bit definido pela [mask] está com o valor lógico '1' no [UsbPort],
-      * se a [mask] tiver com mais que um bit com valor lógico '1' retorna 'false'
+     * se a [mask] tiver com mais que um bit com valor lógico '1' retorna 'false'
      * @param mask recebe uma máscara com apenas um bit a '1'
      * @return [Boolean]
      */
@@ -33,10 +33,10 @@ object HAL {
         return false
     }
     /**
-    * Retorna os valores dos bits representados por [mask] presentes no [UsbPort]
+     * Retorna os valores dos bits representados por [mask] presentes no [UsbPort]
      * @param mask define os bits desejados
      * @return [Int]
-    */
+     */
     fun readBits(mask: Int): Int{
         return UsbPort.read().and(mask)
     }

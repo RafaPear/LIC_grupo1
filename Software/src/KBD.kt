@@ -1,7 +1,4 @@
 
-import KBD.init
-import KBD.kPins
-import KBD.valPins
 import KBD.waitKey
 import isel.leic.utils.Time
 import java.io.File
@@ -129,13 +126,5 @@ object KBD {
 			}
 		}
 		return -1
-	}
-}
-
-
-fun main(){
-	init()
-	while (true) {
-		println(waitKey(10000))
 	}
 }

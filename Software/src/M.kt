@@ -4,7 +4,7 @@ import java.util.logging.Logger
 
 object M {
 
-    var idx_M = 7
+    private var idx_M = 7
 
     val password = "1234"
     var inM = false
