@@ -29,25 +29,15 @@ fun isSimul(): Boolean {
 }
 
 fun capInside(value: Int, min: Int, max: Int): Int {
-    val up = value % (max - min + 1)
-    return if (up < min) {
-        max
-    } else {
-        up
-    }
+    val range = max - min + 1
+    return Math.floorMod(value - min, range) + min
 }
 
-fun parsePins(pins: String): Int{
-    var result = 0
-    try {
-        result += pow(2, pins.toInt())
-    } catch (_: NumberFormatException) {
-        val badPins = pins.split("-")
-        for (i in badPins[0].toInt()..badPins[1].toInt()) {
-            result += pow(2, i)
-        }
-    }
-    return result
+fun parsePins(pins: String): Int {
+    val values = pins.split('-').map { it.trim().toInt() }
+    val start = values.first()
+    val end = values.getOrElse(1) { start }
+    return (start..end).fold(0) { acc, i -> acc or pow(2, i) }
 }
 
 fun getInputPins(line: String): Int {
