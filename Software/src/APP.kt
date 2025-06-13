@@ -272,7 +272,7 @@ object APP {
                 )
             }
             if (writeBottom) writeCenterLine(tempLine2, 1)
-            RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
+            displayCredits()
         }
 
         fun writeBet(key: Char){
@@ -281,7 +281,7 @@ object APP {
                 if(bet != 0 && bet != null) bet.digitToChar() else ' ',
                 0, key.toHexInt()  + 1
             )
-            RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
+            displayCredits()
         }
 
         RouletteDisplay.clrAll()
@@ -296,7 +296,7 @@ object APP {
 
             if (updateCreds()) {
                 RouletteDisplay.animationD(if (lastCoin == 0) 1 else 2)
-                RouletteDisplay.printIntList(CREDS.toString().toList().map { it.toHexInt() }.reversed())
+                displayCredits()
             }
 
             val key = capture()
@@ -314,22 +314,25 @@ object APP {
     }
 
     fun updateBets(key: Char): Boolean {
-        if (sudoMode && canUpdateBets(key = key)) {
-            BETS.computeIfPresent(key){k, v ->
-                v + 1
-            }
-            BETS.computeIfAbsent(key){k -> 1 }
-            return true
-        }
-        else if (canUpdateBets(key = key)) {
-            BETS.computeIfPresent(key){k, v ->
-                v + 1
-            }
-            BETS.computeIfAbsent(key){k -> 1 }
-            CREDS -= COST
-            return true
-        }
-        return false
+        if (!canUpdateBets(key = key)) return false
+
+        BETS.compute(key) { _, v -> (v ?: 0) + 1 }
+
+        if (!sudoMode) CREDS -= COST
+
+        return true
+    }
+
+    private fun displayCredits() {
+        RouletteDisplay.printIntList(
+            CREDS.toString().map { it.toHexInt() }.reversed()
+        )
+    }
+
+    private fun showError(msg: String) {
+        clearWrite(msg)
+        RouletteDisplay.animationB()
+        TUI.clear()
     }
 
     fun doLobbyEndAnimation() {
@@ -702,7 +705,7 @@ object APP {
         CoinDeposit.resetTotal(0)
         CoinDeposit.resetTotal(1)
         Statistics.resetGames()
-        clearWrite("Reset Completed")
+        showError("Reset Completed")
     }
 
     private fun canStartGame(): Boolean{
@@ -711,30 +714,19 @@ object APP {
             RouletteDisplay.animationB()
             return false
         }
-
-        if(sudoMode) return true
-
         return true
     }
 
     private fun canUpdateBets(print : Boolean = true, key: Char): Boolean {
         if ((BETS[key] ?: 0) >= BET_LIMIT) {
-            if (print) {
-                clearWrite("Bet Limit reached")
-                RouletteDisplay.animationB()
-                TUI.clear()
-            }
+            if (print) showError("Bet Limit reached")
             return false
         }
 
         if(sudoMode) return true
 
         if(CREDS <= 0){
-            if (print) {
-                clearWrite("Not enough Credits")
-                RouletteDisplay.animationB()
-                TUI.clear()
-            }
+            if (print) showError("Not enough Credits")
             return false
         }
         return true
