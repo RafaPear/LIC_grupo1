@@ -1,5 +1,6 @@
 
-import KBD.waitKey
+import KBD.kPins
+import KBD.valPins
 import isel.leic.utils.Time
 import java.io.File
 import java.util.logging.Level
@@ -68,10 +69,10 @@ object KBD {
 		if (HAL.isBit(valPins)) {
 			val key = CHAR_LIST[HAL.readBits(kPins)]
 			HAL.setBits(ack)
+			while (HAL.isBit(valPins)) { }
 			HAL.clrBits(ack)
-			Time.sleep(10)
 			return key
-		}else return NONE
+		} else return NONE
 	}
 
 	/**

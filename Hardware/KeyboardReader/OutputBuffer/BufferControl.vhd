@@ -58,7 +58,7 @@ begin
             when "11" =>
                 OBfree <= '0';
                 Wreg <= '0';
-                Dval <= '1';
+                Dval <= '0';
                 if ACK = '0' then
                     next_state <= "00";
                 else
