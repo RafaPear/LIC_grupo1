@@ -51,12 +51,21 @@ begin
                 Wreg <= '0';
                 Dval <= '1';
                 if ACK = '1' then
-                    next_state <= "00";
+                    next_state <= "11";
                 else
                     next_state <= "10";
                 end if;
+            when "11" =>
+                OBfree <= '0';
+                Wreg <= '0';
+                Dval <= '1';
+                if ACK = '0' then
+                    next_state <= "00";
+                else
+                    next_state <= "11";
+                end if;
             when others =>
-				    OBfree <= '1';
+				OBfree <= '1';
                 Wreg <= '0';
                 Dval <= '0';
                 next_state <= "00";
