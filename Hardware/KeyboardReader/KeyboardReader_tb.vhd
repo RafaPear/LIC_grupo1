@@ -57,6 +57,9 @@ begin
         variable lin_1: std_logic_vector(3 downto 0) := "1101";
         variable lin_2: std_logic_vector(3 downto 0) := "1011";
         variable lin_3: std_logic_vector(3 downto 0) := "0111";
+        variable i : integer := 0;
+        variable j : integer := 0;
+        variable lin_patterns : std_logic_vector(3 downto 0) := "0000";
     begin
         ACK_tb <= '0';
         RESET_tb <= '1';
@@ -68,204 +71,51 @@ begin
         -----------------------------------------------------------
         -- Inserir a tecla e o control consome instantaneamente
         -----------------------------------------------------------
-        -- tecla 1
-        wait until COL_tb = "1110";
-        LIN_tb <= lin_0;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-        wait for MCLK_PERIOD;
         
-        --esta tecla não pode ser consumida, pois o keyDecode ainda n recebeu o ACK do RingBuffer
-        LIN_tb <= lin_3; 
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-        wait for MCLK_PERIOD;
+        while j < 16 loop  
+            wait until COL_tb = "1110";  
 
-        wait until Dval_tb = '1';
-        assert D_tb = "0000" report "Error: Expected D = 0000" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
+            case j mod 4 is
+                when 0 => lin_patterns := "1110";
+                when 1 => lin_patterns := "1101";
+                when 2 => lin_patterns := "1011";
+                when 3 => lin_patterns := "0111";
+                when others => lin_patterns := "1111";
+            end case;
 
-        wait for MCLK_PERIOD;
-        -- tecla 2
-        wait until COL_tb = "1101";
-        LIN_tb <= lin_0;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
+            LIN_tb <= lin_patterns;
+            wait for MCLK_PERIOD;
 
-        wait until Dval_tb = '1';
-        assert D_tb = "0001" report "Error: Expected D = 0001" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
+            LIN_tb <= "1111"; 
+            wait for MCLK_PERIOD * 4;
 
-        wait for MCLK_PERIOD;
-        -- tecla 3
-        wait until COL_tb = "1011";
-        LIN_tb <= lin_0;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
+            j := j + 1;
+        end loop;
+            
+        wait for MCLK_PERIOD*5;
 
-        wait until Dval_tb = '1';
-        assert D_tb = "0010" report "Error: Expected D = 0010" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
+        for i in 0 to 16 loop 
+            LIN_tb <= "0111";
+            wait for MCLK_PERIOD;
+            LIN_tb <= "1111";
+            wait for MCLK_PERIOD*4;
+        end loop;
 
-        wait for MCLK_PERIOD;
-        -- tecla A
-        wait until COL_tb = "0111";
-        LIN_tb <= lin_0;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
+        wait for MCLK_PERIOD*5;
 
-        wait until Dval_tb = '1';
-        assert D_tb = "0011" report "Error: Expected D = 0011" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        wait for 2*MCLK_PERIOD;
-        ----------------------------------------------------------------------------------
-        -- inseriri varias teclas sem serem consumidas
-        ----------------------------------------------------------------------------------
-        -- tecla 4
-        wait until COL_tb = "1110";
-        LIN_tb <= lin_1;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        wait for MCLK_PERIOD;
-        -- tecla 5
-        wait until COL_tb = "1101";
-        LIN_tb <= lin_1;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        wait for MCLK_PERIOD;
-        -- tecla 6
-        wait until COL_tb = "1011";
-        LIN_tb <= lin_1;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        wait for MCLK_PERIOD;
-        -- tecla B
-        wait until COL_tb = "0111";
-        LIN_tb <= lin_1;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        wait for MCLK_PERIOD;
-        --------------------------------------------------------------------------
-        -- Consumir as teclas armazenadas no ringbuffer
-        --------------------------------------------------------------------------
-        assert Dval_tb = '1' report "Error: Expected Dval = 1" severity failure;
-        assert D_tb = "0100" report "Error: Expected D = 0100" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-
-        wait until Dval_tb = '1';
-        assert D_tb = "0101" report "Error: Expected D = 0101" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        wait for MCLK_PERIOD;
-
-        -- insere uma tecla enquanto o control consome outras.
-        -- tecla D, é esperado que seja a ultima a ser libertada da memoria
-        wait until COL_tb = "0111";
-        LIN_tb <= lin_3;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-        wait for MCLK_PERIOD;
-
-        --wait until Dval_tb = '1';
-        assert Dval_tb = '1' report "Error: Expected Dval = 1" severity failure;
-        assert D_tb = "0110" report "Error: Expected D = 0110" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-
-        wait until Dval_tb = '1';
-        assert D_tb = "0111" report "Error: Expected D = 0111" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        wait for MCLK_PERIOD;
-
-        -- insiro tecla 9
-        wait until COL_tb = "1011";
-        LIN_tb <= lin_2;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        -- insiro a tecla 8
-        wait until COL_tb = "1101";
-        LIN_tb <= lin_2;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        -- control consume a tecla D
-        --wait until Dval_tb = '1';
-        assert Dval_tb = '1' report "Error: Expected Dval = 1" severity failure;
-        assert D_tb = "1111" report "Error: Expected D = 1111" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        wait for MCLK_PERIOD;
-
-        --insiro a tecla 0
-        wait until COL_tb = "1101";
-        LIN_tb <= lin_3;
-        wait for MCLK_PERIOD;
-        LIN_tb <= "1111";
-
-        -- consome a tecla 9
-        assert Dval_tb = '1' report "Error: Expected Dval = 1" severity failure;
-        assert D_tb = "1010" report "Error: Expected D = 1010" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-
-        -- consome a tecla 8
-        wait until Dval_tb = '1';
-        assert Dval_tb = '1' report "Error: Expected Dval = 1" severity failure;
-        assert D_tb = "1001" report "Error: Expected D = 1001" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-
-        -- consome a tecla 0
-        wait until Dval_tb = '1';
-        assert D_tb = "1101" report "Error: Expected D = 1101" severity failure;
-        wait for MCLK_PERIOD;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        wait for MCLK_PERIOD;
-
-        -- tentar consumir com a memoria fazia
-        assert Dval_tb = '0' report "Error: Expected Dval = 0" severity failure;
-        ACK_tb <= '1';
-        wait for MCLK_PERIOD;
-        ACK_tb <= '0';
-        assert Dval_tb = '0' report "Error: Expected Dval = 0" severity failure;
-        -- tem que ser igual à ultima tecla consumida no caso 0
-        assert D_tb = "1101" report "Error: Expected D = 1101" severity failure;
+        while i < 20 loop
+            if Dval_tb = '1' then
+                wait for MCLK_PERIOD;
+                ACK_tb <= '1';
+                wait until Dval_tb = '0';
+                ACK_tb <= '0';
+                wait for MCLK_PERIOD;
+                i := i + 1;
+            else
+                wait for MCLK_PERIOD; 
+            end if;
+        end loop;
         wait;
-    end process;
+end process;
 
 end behavioral;

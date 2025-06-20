@@ -41,7 +41,7 @@ begin
 
         case state is
             when "000" =>
-					-- Não altera selPG neste estado: mantem valor anterior de propósito
+				-- Não altera selPG neste estado: mantem valor anterior de propósito
                 DAC    <= '0';
                 incPut <= '0';
                 incGet <= '0';

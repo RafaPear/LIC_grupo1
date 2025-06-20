@@ -35,6 +35,7 @@ begin
             EN => '1',     
             Q => Q      
         );
+        
     temp_Q <= Q xor data_in;
     error <= not Q;
 end Behavioral;

@@ -25,13 +25,13 @@ component OutputRegister is
 end component;
 component BufferControl is
     port (
-        clk: in std_logic; 
-        reset: in std_logic;   
-        Load: in std_logic;  
-        ACK: in std_logic;  
-        Wreg: out std_logic;  
-        OBfree: out std_logic; 
-        Dval: out std_logic  
+        clk: in std_logic;
+        reset: in std_logic;
+        Load: in std_logic;
+        ACK: in std_logic;
+        Wreg: out std_logic;
+        OBfree: out std_logic;
+        Dval: out std_logic
     );
 end component;
 
