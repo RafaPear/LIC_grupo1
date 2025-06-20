@@ -83,8 +83,22 @@ begin
         Kpress_tb <= '0';
         wait for MCLK_PERIOD;
 
-        assert (KSCAN_tb = '1' and KVAL_tb = '0') report "Test 7/7 Failed" severity failure;
-        report "Test 7/7 Passed" severity note;
+        -- enquanto ACK se mantiver ativo, a tecla continua valida
+        assert (KSCAN_tb = '0' and KVAL_tb = '1') report "Test 7/8 Failed" severity failure;
+        report "Test 7/8 Passed" severity note;
+
+        Kack_tb <= '0';
+        Kpress_tb <= '0';
+        wait for MCLK_PERIOD;
+
+        -- transicao para o estado de espera da libertacao
+        assert (KSCAN_tb = '0' and KVAL_tb = '0') report "Test 8/9 Failed" severity failure;
+        report "Test 8/9 Passed" severity note;
+
+        wait for MCLK_PERIOD;
+
+        assert (KSCAN_tb = '1' and KVAL_tb = '0') report "Test 9/9 Failed" severity failure;
+        report "Test 9/9 Passed" severity note;
         wait for MCLK_PERIOD;
 
         report "All tests passed" severity note;
