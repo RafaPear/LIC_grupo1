@@ -44,7 +44,6 @@ object APP {
     private const val TIMEBONUS = 5 // tem que ser < 10
 
     private var sudoMode = false
-    private var shouldRun = true
 
     // ⬆️  Seta para cima
     val arrowUp = arrayOf(
@@ -179,17 +178,18 @@ object APP {
 
     }
 
-    fun run(){
-        while (shouldRun) {
+    fun run(loop: Boolean = true){
+        while (true) {
             lobby()
             game()
             updateStats()
+            if (!loop) break
         }
-        writeAllStats()
     }
 
     fun lobby() {
         fun writeLobbyCreds(){
+            if (sudoMode) return
             val creds = " $$CREDS"
             TUI.refreshPixels(creds, 1, TUI.COLS-creds.length)
 
@@ -200,6 +200,7 @@ object APP {
             if (doCreds) writeLobbyCreds()
             if (doCoins) animateCoins()
         }
+
         TUI.clear()
         RouletteDisplay.clrAll()
         writeLobby(true, true)
@@ -324,6 +325,7 @@ object APP {
     }
 
     private fun displayCredits() {
+        if (sudoMode) return
         RouletteDisplay.printIntList(
             CREDS.toString().map { it.toHexInt() }.reversed()
         )
@@ -332,40 +334,41 @@ object APP {
     private fun showError(msg: String) {
         clearWrite(msg)
         RouletteDisplay.animationB()
+        RouletteDisplay.animationB()
         TUI.clear()
     }
 
     fun doLobbyEndAnimation() {
         val sum = BETS.values.sum()
         when (sum) {
-            in 1..19 -> {
+            in 1..5 -> {
                 writeCenterLine("Really?", 0)
                 Time.sleep(2000)
                 TUI.clear()
             }
-            in 20..39 -> {
+            in 6..10 -> {
                 writeCenterLine("Only That?", 0)
                 RouletteDisplay.animationD(1)
                 Time.sleep(2000)
                 TUI.clear()
             }
-            in 40..59 -> {
+            in 11..15 -> {
                 writeCenterLine("Ok, $sum is fine", 0)
                 RouletteDisplay.animationD(2)
                 Time.sleep(2000)
                 TUI.clear()
             }
-            in 60..79 -> {
+            in 16..20 -> {
                 writeCenterLine("Lets Go!", 0)
                 RouletteDisplay.animationB()
                 TUI.clear()
             }
-            in 80..99 -> {
+            in 21..25 -> {
                 writeCenterLine("OMG OMG!!", 0)
                 RouletteDisplay.animationB()
                 TUI.clear()
             }
-            in 100..200 -> {
+            else -> {
                 writeCenterLine("HERE WE GO!", 0)
                 RouletteDisplay.animationC()
                 RouletteDisplay.animationB()
@@ -451,19 +454,6 @@ object APP {
                 if (!sudoMode)
                     TUI.writeRightLine(" $$CREDS",1)
             }
-            else if (key == BACK_OR_CLEAR) {
-                if (bonus.isNotEmpty()) {
-                    bonus.removeLast()
-                    CREDS += COST
-                    if (!sudoMode)
-                        TUI.writeRightLine(" $$CREDS",1)
-                    if (bonus.isNotEmpty()) {
-                        TUI.clearChar()
-                        TUI.clearChar()
-                    }
-                    else TUI.clearChar()
-                }
-            }
             if (timeRoll < 0) break
             if (Time.getTimeInMillis() >= endTime) {
                 TUI.writeRightLine("${timeRoll}s")
@@ -533,6 +523,7 @@ object APP {
             }
         }
         TUI.clear()
+        sudoMode = false
     }
 
     private fun drawM(id: Int,refresh: Boolean = false,line1: Boolean = true, line2: Boolean = true, icon:Boolean = true){
@@ -559,6 +550,7 @@ object APP {
             writeAllStats()
             resetAll()
             TUI.clear()
+            RouletteDisplay.clrAll()
             exitProcess(0)
         }
     }
@@ -798,8 +790,6 @@ object APP {
             var idx2 = 1
 
             write(idx, idx2)
-
-            RouletteDisplay.animationC()
 
             while (true) {
                 val key = capture()
