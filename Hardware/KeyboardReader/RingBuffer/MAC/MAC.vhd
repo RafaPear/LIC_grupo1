@@ -103,9 +103,9 @@ begin
     if reset = '1' then
         count <= (others => '0');
     elsif rising_edge(clk) then
-        if incPut = '1' and incGet = '0' and count /= "10000" then
+        if incPut = '1' and incGet = '0' and count < "10000" then
             count <= count + 1;
-        elsif incGet = '1' and incPut = '0' and count /= "00000" then
+        elsif incGet = '1' and incPut = '0' and count > "00000" then
             count <= count - 1;
         end if;
     end if;
