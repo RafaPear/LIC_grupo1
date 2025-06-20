@@ -56,7 +56,6 @@ end component;
 
 signal adder_out, mux_out, putReg_out, getReg_out: std_logic_vector (3 downto 0);
 signal equ : std_logic;
-signal count: unsigned(4 downto 0);
 
 begin
 
@@ -98,21 +97,8 @@ UEQ: Equality port map(
     O => equ
 );
 
-process(clk, reset)
-begin
-    if reset = '1' then
-        count <= (others => '0');
-    elsif rising_edge(clk) then
-        if incPut = '1' and incGet = '0' and count /= "10000" then
-            count <= count + 1;
-        elsif incGet = '1' and incPut = '0' and count /= "00000" then
-            count <= count - 1;
-        end if;
-    end if;
-end process;
-
-full <= '1' when count = "10000" else '0';
-empty <= '1' when count = "00000" else '0';
+full <= equ and PUTGET;
+empty <= equ and (not PUTGET);
 
 ADDR <= mux_out;
 end arc_MAC;
